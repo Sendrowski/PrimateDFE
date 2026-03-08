@@ -1,0 +1,14 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA14464445	PD_0078	PD_0078	ERS12091918	PRJEB59576	Cebus_albifrons_ssp	Cebus_albifrons_ssp	Sapajus_apella_ssp	Cebus	albifrons	ssp	M	M	41.06	0.984	22.161	0.983	Unknown	Unknown
+SAMEA14464446	PD_0141	PD_0141	ERS12091919	PRJEB59576	Cebus_albifrons_ssp	Cebus_albifrons_ssp	Sapajus_apella_ssp	Cebus	albifrons	ssp	F	F	35.88	0.984	37.954	0.983	Unknown	Unknown
+SAMEA14464447	PD_0402	PD_0402	ERS12091920	PRJEB59576	Cebus_albifrons_ssp	Cebus_albifrons_ssp	Sapajus_apella_ssp	Cebus	albifrons	ssp	F	F	28.081	0.984	28.156	0.983	Unknown	Unknown
+SAMN07678068	SAMN07678068	SAMN07678068	SRS6380534	PRJNA399379	Cebus_albifrons_ssp	Cebus_albifrons_ssp	Sapajus_apella_ssp	Cebus	albifrons	ssp	Unknown	M	20.699	0.982	11.464	0.978	Unknown	Unknown
+SAMN23530500	SAMN23530500	SAMN23530500	SRS11219891	PRJNA785018	Cebus_albifrons_ssp	Cebus_albifrons_ssp	Sapajus_apella_ssp	Cebus	albifrons	ssp	M	M	43.007	0.984	23.117	0.982	Unknown	Unknown
+SAMN04274558	SAMN04274558	SAMN04274558	SRS1166858	PRJNA298580	Cebus_imitator_ssp	Cebus_imitator_ssp	Sapajus_apella_ssp	Cebus	imitator	ssp	Unknown	F	48.215	0.984	47.364	0.984	Unknown	Unknown
+SAMN04274559	SAMN04274559	SAMN04274559	SRS1166891	PRJNA298580	Cebus_imitator_ssp	Cebus_imitator_ssp	Sapajus_apella_ssp	Cebus	imitator	ssp	Unknown	M	75.721	0.985	41.902	0.985	Unknown	Unknown
+SAMEA14464448	PD_0007	PD_0007	ERS12091921	PRJEB59576	Cebus_olivaceus_ssp	Cebus_olivaceus_ssp	Sapajus_apella_ssp	Cebus	olivaceus	ssp	F	F	34.491	0.984	34.738	0.983	Unknown	Unknown
+SAMEA14464449	PD_0079	PD_0079	ERS12091922	PRJEB59576	Cebus_olivaceus_ssp	Cebus_olivaceus_ssp	Sapajus_apella_ssp	Cebus	olivaceus	ssp	F	F	41.083	0.984	41.649	0.983	Unknown	Unknown
+SAMEA14464450	PD_0013	PD_0013	ERS12091923	PRJEB59576	Cebus_unicolor_ssp	Cebus_unicolor_ssp	Sapajus_apella_ssp	Cebus	unicolor	ssp	F	F	34.492	0.984	33.075	0.984	Unknown	Unknown
+SAMEA14464451	PD_0077	PD_0077	ERS12091924	PRJEB59576	Cebus_unicolor_ssp	Cebus_unicolor_ssp	Sapajus_apella_ssp	Cebus	unicolor	ssp	M	M	39.511	0.984	20.997	0.983	Unknown	Unknown
+SAMEA14464452	PD_0310	PD_0310	ERS12091925	PRJEB59576	Cebus_unicolor_ssp	Cebus_unicolor_ssp	Sapajus_apella_ssp	Cebus	unicolor	ssp	F	F	27.846	0.984	28.1	0.983	Unknown	Unknown
+SAMEA14464453	PD_0311	PD_0311	ERS12091926	PRJEB59576	Cebus_unicolor_ssp	Cebus_unicolor_ssp	Sapajus_apella_ssp	Cebus	unicolor	ssp	F	F	29.116	0.984	28.883	0.983	Unknown	Unknown

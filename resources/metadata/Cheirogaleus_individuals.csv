@@ -1,0 +1,11 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMN11334319	SAMN11334319	SAMN11334319	SRS6936664	PRJNA523575	Cheirogaleus_crossleyi_ssp	Cheirogaleus_crossleyi_ssp	Cheirogaleus_medius_ssp	Cheirogaleus	crossleyi	ssp	M	M	39.109	0.984	23.621	0.963	Unknown	Unknown
+SAMEA112483134	PD_0605	PD_0605	ERS14600485	PRJEB59576	Cheirogaleus_major_ssp	Cheirogaleus_major_ssp	Cheirogaleus_medius_ssp	Cheirogaleus	major	ssp	F	F	42.623	0.984	45.542	0.965	Unknown	Unknown
+SAMEA116330134	SAMEA116330134	SAMEA116330134	ERS21378980	PRJEB77609	Cheirogaleus_major_ssp	Cheirogaleus_major_ssp	Cheirogaleus_medius_ssp	Cheirogaleus	major	ssp	Unknown	F	30.538	0.879	35.68	0.834	Unknown	Unknown
+SAMN11334318	SAMN11334318	SAMN11334318	SRS6936663	PRJNA523575	Cheirogaleus_major_ssp	Cheirogaleus_major_ssp	Cheirogaleus_medius_ssp	Cheirogaleus	major	ssp	M	M	48.889	0.983	30.135	0.958	Unknown	Unknown
+SAMEA112483135	PD_0606	PD_0606	ERS14600486	PRJEB59576	Cheirogaleus_medius_ssp	Cheirogaleus_medius_ssp	Cheirogaleus_medius_ssp	Cheirogaleus	medius	ssp	M	M	48.133	0.994	27.782	0.992	Unknown	Unknown
+SAMEA116330135	SAMEA116330135	SAMEA116330135	ERS21378981	PRJEB77609	Cheirogaleus_medius_ssp	Cheirogaleus_medius_ssp	Cheirogaleus_medius_ssp	Cheirogaleus	medius	ssp	Unknown	M	31.005	0.873	18.803	0.808	Unknown	Unknown
+SAMN07678072	SAMN07678072	SAMN07678072	SRS9005502	PRJNA399382	Cheirogaleus_medius_ssp	Cheirogaleus_medius_ssp	Cheirogaleus_medius_ssp	Cheirogaleus	medius	ssp	F	F	62.936	0.994	67.3	0.992	Unknown	Unknown
+SAMN11334317	SAMN11334317	SAMN11334317	SRS6936662	PRJNA523575	Cheirogaleus_medius_ssp	Cheirogaleus_medius_ssp	Cheirogaleus_medius_ssp	Cheirogaleus	medius	ssp	M	M	44.978	0.989	26.608	0.973	Unknown	Unknown
+SAMN11334321	SAMN11334321	SAMN11334321	SRS6936661	PRJNA523575	Cheirogaleus_medius_ssp	Cheirogaleus_medius_ssp	Cheirogaleus_medius_ssp	Cheirogaleus	medius	ssp	F	F	64.61	0.994	68.533	0.992	Unknown	Unknown
+SAMN11334320	SAMN11334320	SAMN11334320	SRS6936660	PRJNA523575	Cheirogaleus_sibreei_ssp	Cheirogaleus_sibreei_ssp	Cheirogaleus_medius_ssp	Cheirogaleus	sibreei	ssp	F	F	46.446	0.982	48.978	0.96	Unknown	Unknown

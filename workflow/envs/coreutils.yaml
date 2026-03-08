@@ -1,0 +1,5 @@
+name: coreutils-primate-dfe
+channels:
+  - conda-forge
+dependencies:
+  - coreutils

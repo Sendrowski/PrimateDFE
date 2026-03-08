@@ -1,0 +1,5 @@
+name: minimap-primate-dfe
+channels:
+  - bioconda
+dependencies:
+  - minimap2

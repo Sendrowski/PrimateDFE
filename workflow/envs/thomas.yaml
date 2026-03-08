@@ -1,0 +1,17 @@
+name: thomas-primate-dfe
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - r-base
+  - r-ape
+  - r-tidyverse
+  - r-ggthemes
+  - r-nlme
+  - r-car
+  - r-readr
+  - r-knitr
+  - r-rmarkdown
+  - r-irkernel
+  - jupyterlab
+  - jupyter

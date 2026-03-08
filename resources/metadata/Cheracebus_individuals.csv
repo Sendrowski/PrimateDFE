@@ -1,0 +1,16 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA14464454	PD_0288	PD_0288	ERS12091927	PRJEB59576	Cheracebus_lucifer_ssp	Cheracebus_lucifer_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lucifer	ssp	F	F	33.199	0.974	34.034	0.954	Unknown	Unknown
+SAMEA14464455	PD_0312	PD_0312	ERS12091928	PRJEB59576	Cheracebus_lucifer_ssp	Cheracebus_lucifer_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lucifer	ssp	F	F	29.226	0.973	35.478	0.953	Unknown	Unknown
+SAMEA14464456	PD_0313	PD_0313	ERS12091929	PRJEB59576	Cheracebus_lucifer_ssp	Cheracebus_lucifer_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lucifer	ssp	F	F	43.926	0.974	47.076	0.955	Unknown	Unknown
+SAMEA14464457	PD_0314	PD_0314	ERS12091930	PRJEB59576	Cheracebus_lucifer_ssp	Cheracebus_lucifer_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lucifer	ssp	M	M	31.158	0.973	17.683	0.956	Unknown	Unknown
+SAMEA14464458	PD_0001	PD_0001	ERS12091931	PRJEB59576	Cheracebus_lugens_ssp	Cheracebus_lugens_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lugens	ssp	F	F	37.441	0.974	37.076	0.954	Unknown	Unknown
+SAMEA14464459	PD_0315	PD_0315	ERS12091932	PRJEB59576	Cheracebus_lugens_ssp	Cheracebus_lugens_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lugens	ssp	M	M	33.007	0.973	19.054	0.957	Unknown	Unknown
+SAMEA14464460	PD_0316	PD_0316	ERS12091933	PRJEB59576	Cheracebus_lugens_ssp	Cheracebus_lugens_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lugens	ssp	M	M	32.857	0.973	19.482	0.957	Unknown	Unknown
+SAMEA14464461	PD_0317	PD_0317	ERS12091934	PRJEB59576	Cheracebus_lugens_ssp	Cheracebus_lugens_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lugens	ssp	F	F	31.263	0.972	32.637	0.952	Unknown	Unknown
+SAMEA14464462	PD_0318	PD_0318	ERS12091935	PRJEB59576	Cheracebus_lugens_ssp	Cheracebus_lugens_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lugens	ssp	M	M	32.137	0.972	18.914	0.957	Unknown	Unknown
+SAMEA14464463	PD_0319	PD_0319	ERS12091936	PRJEB59576	Cheracebus_lugens_ssp	Cheracebus_lugens_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lugens	ssp	F	F	31.51	0.973	31.697	0.953	Unknown	Unknown
+SAMEA14464464	PD_0320	PD_0320	ERS12091937	PRJEB59576	Cheracebus_lugens_ssp	Cheracebus_lugens_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lugens	ssp	F	F	31.672	0.973	33.634	0.953	Unknown	Unknown
+SAMEA14464465	PD_0321	PD_0321	ERS12091938	PRJEB59576	Cheracebus_lugens_ssp	Cheracebus_lugens_ssp	Plecturocebus_cupreus_ssp	Cheracebus	lugens	ssp	M	M	41.083	0.974	23.357	0.958	Unknown	Unknown
+SAMEA14464466	PD_0284	PD_0284	ERS12091939	PRJEB59576	Cheracebus_regulus_ssp	Cheracebus_regulus_ssp	Plecturocebus_cupreus_ssp	Cheracebus	regulus	ssp	M	M	34.436	0.973	19.891	0.956	Unknown	Unknown
+SAMEA14464467	PD_0322	PD_0322	ERS12091940	PRJEB59576	Cheracebus_regulus_ssp	Cheracebus_regulus_ssp	Plecturocebus_cupreus_ssp	Cheracebus	regulus	ssp	F	F	32.267	0.973	31.859	0.952	Unknown	Unknown
+SAMEA14464468	PD_0285	PD_0285	ERS12091941	PRJEB59576	Cheracebus_torquatus_ssp	Cheracebus_torquatus_ssp	Plecturocebus_cupreus_ssp	Cheracebus	torquatus	ssp	F	F	39.783	0.975	40.713	0.954	Unknown	Unknown

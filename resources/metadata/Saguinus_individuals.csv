@@ -1,0 +1,16 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA14464520	PD_0346	PD_0346	ERS12091993	PRJEB59576	Saguinus_bicolor_ssp	Saguinus_bicolor_ssp	Saguinus_oedipus_ssp	Saguinus	bicolor	ssp	M	M	28.539	0.946	15.395	0.979	24.466	0.692
+SAMEA14464527	PD_0080	PD_0080	ERS12092000	PRJEB59576	Saguinus_bicolor_ssp	Saguinus_bicolor_ssp	Saguinus_oedipus_ssp	Saguinus	bicolor	ssp	Unknown							
+SAMEA14464528	PD_0324	PD_0324	ERS12092001	PRJEB59576	Saguinus_bicolor_ssp	Saguinus_bicolor_ssp	Saguinus_oedipus_ssp	Saguinus	bicolor	ssp	Unknown							
+SAMEA14464521	PD_0174	PD_0174	ERS12091994	PRJEB59576	Saguinus_geoffroyi_ssp	Saguinus_geoffroyi_ssp	Saguinus_oedipus_ssp	Saguinus	geoffroyi	ssp	M	M	40.988	0.988	27.25	0.996	19.257	0.888
+SAMEA112482894	PD_0119	PD_0119	ERS14600245	PRJEB59576	Saguinus_imperator_ssp	Saguinus_imperator_ssp	Saguinus_oedipus_ssp	Saguinus	imperator	ssp	F	F	35.476	0.942	34.183	0.976	13.313	0.254
+SAMN07678110	SAMN07678110	SAMN07678110	SRS9005609	PRJNA399417	Saguinus_imperator_ssp	Saguinus_imperator_ssp	Saguinus_oedipus_ssp	Saguinus	imperator	ssp	M	M	39.772	0.929	21.719	0.964	27.126	0.49
+SAMEA14464522	PD_0009	PD_0009	ERS12091995	PRJEB59576	Saguinus_inustus_ssp	Saguinus_inustus_ssp	Saguinus_oedipus_ssp	Saguinus	inustus	ssp	M	M	34.669	0.941	19.889	0.972	20.476	0.548
+SAMEA112482895	PD_0120	PD_0120	ERS14600246	PRJEB59576	Saguinus_labiatus_ssp	Saguinus_labiatus_ssp	Saguinus_oedipus_ssp	Saguinus	labiatus	ssp	M	M	36.456	0.944	21.122	0.973	24.659	0.571
+SAMEA14464523	PD_0348	PD_0348	ERS12091996	PRJEB59576	Saguinus_labiatus_ssp	Saguinus_labiatus_ssp	Saguinus_oedipus_ssp	Saguinus	labiatus	ssp	M	M	27.99	0.94	15.392	0.97	22.199	0.574
+SAMEA112482896	PD_0121	PD_0121	ERS14600247	PRJEB59576	Saguinus_midas_ssp	Saguinus_midas_ssp	Saguinus_oedipus_ssp	Saguinus	midas	ssp	F	F	39.471	0.952	39.196	0.982	10.732	0.255
+SAMEA14464524	PD_0349	PD_0349	ERS12091997	PRJEB59576	Saguinus_midas_ssp	Saguinus_midas_ssp	Saguinus_oedipus_ssp	Saguinus	midas	ssp	F	F	27.87	0.946	26.6	0.981	6.797	0.356
+SAMEA14464525	PD_0350	PD_0350	ERS12091998	PRJEB59576	Saguinus_midas_ssp	Saguinus_midas_ssp	Saguinus_oedipus_ssp	Saguinus	midas	ssp	M	M	27.551	0.949	16.868	0.98	27.563	0.692
+SAMN23530521	SAMN23530521	SAMN23530521	SRS11219886	PRJNA785018	Saguinus_midas_ssp	Saguinus_midas_ssp	Saguinus_oedipus_ssp	Saguinus	midas	ssp	M	M	89.453	0.965	53.482	0.988	81.574	0.785
+SAMEA14464526	PD_0351	PD_0351	ERS12091999	PRJEB59576	Saguinus_mystax_ssp	Saguinus_mystax_ssp	Saguinus_oedipus_ssp	Saguinus	mystax	ssp	M	M	30.826	0.943	16.783	0.971	21.642	0.569
+SAMEA112482897	PD_0122	PD_0122	ERS14600248	PRJEB59576	Saguinus_oedipus_ssp	Saguinus_oedipus_ssp	Saguinus_oedipus_ssp	Saguinus	oedipus	ssp	F	F	41.455	0.998	40.852	1.0	5.45	0.533

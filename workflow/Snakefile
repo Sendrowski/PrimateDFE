@@ -1,0 +1,2194 @@
+"""
+New workflow file using pairwise alignments of reference genomes rather than liftover maps
+"""
+import re
+
+import pandas as pd
+
+scatter_count = 100
+
+from scripts.populations import Populations
+
+# samples = pd.read_csv("resources/samples.csv")
+species = pd.read_csv("resources/Kuderna/species.csv")
+
+populations = Populations.names
+groups = Populations.groups
+populations_castellano = Populations.names_castellano
+populations_castellano_english = Populations.names_castellano_english
+populations_castellano_mapping = dict(zip(populations_castellano, populations_castellano_english))
+dfe_vs_ne_stats = Populations.dfe_vs_ne_stats
+human_chrs = Populations.human_chrs
+ingroup_outgroups = Populations.ingroup_outgroups
+get_group_from_pop = Populations.get_group_from_pop
+get_individuals_from_pop = Populations.get_individuals_from_pop
+
+
+def get_ref_from_species(species: str) -> str:
+    """
+    Map species to its reference.
+    """
+    genus = species.split('_')[0]
+    df = pd.read_csv(f"resources/metadata/{genus}_individuals.csv",sep="\t")
+
+    rows = df[df["BAM_FOLDER"].str.contains(species)]
+    if rows.empty:
+        raise ValueError(f"No reference entry found for species: {species}")
+
+    return rows.iloc[0].REFERENCE_FOLDER.replace('_ssp','')
+
+
+def get_ref_from_pop(pop: str) -> str:
+    """
+    Get reference name from pop name.
+    """
+    return get_ref_from_species(get_species_from_pop(pop))
+
+
+def get_species_from_pop(pop: str) -> str:
+    """
+    Get species name from pop name.
+    Population often contain a subspecies identifier after the second underscore,
+    but they might also just be species names.
+    """
+    return '_'.join(pop.split('_')[:2])
+
+def get_species_metadata(s: str) -> pd.Series:
+    """
+    Get metadata for a given species.
+    """
+    return species[species['SPECIES_BINOMIAL'] == s].iloc[0]
+
+
+def get_fasta_path(species: str) -> str:
+    """
+    Get the reference fasta file path for a given species.
+    """
+    genus = species.split('_')[0]
+
+    df = pd.read_csv(f"resources/metadata/{genus}_references.csv",sep="\t")
+
+    # find the row for this species
+    row = df.loc[df["REFERENCE_FOLDER"].str.contains(species)].iloc[0]
+
+    ref_name = os.path.basename(row["FTP"]).replace('.gz','')
+
+    return f"../primatediversity/data/gVCFs_recalling_10_12_2024/{row.REFERENCE_FOLDER}/ref/{ref_name}"
+
+
+def get_gff_path(species: str) -> str:
+    """
+    Get the reference fasta file path for a given species.
+    """
+    # special GFF links
+    gff_links = dict(
+        Homo_sapiens='https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_48/gencode.v48.annotation.gff3.gz',
+    )
+
+    if species in gff_links:
+        return gff_links[species]
+
+    genus = species.split('_')[0]
+
+    df = pd.read_csv(f"resources/metadata/{genus}_references.csv",sep="\t")
+
+    row = df.loc[df["REFERENCE_FOLDER"].str.contains(species)].iloc[0]
+
+    return re.sub(r'\.(fna|fasta)\.','.gff.',row.FTP)
+
+
+wildcard_constraints:
+    opts=r'[^/]*',
+    chr=r'\w+',
+    query=r'\w+',
+    ref=r'\w+',
+    species=r'\w+',
+    population=r'\w+',
+    n=r'\d+',
+    i=r'\d+',
+    chunk=r'\d+',
+    folded='folded|unfolded',
+    parametrization='gamma|discrete',
+    sub_model=r'[\w.-=]+',
+    eps='eps|noeps',
+    shared=r'[\w+]+',
+    # ref species pairs
+    ref_species=r'|'.join(f"{get_ref_from_pop(p)}/{get_species_from_pop(p)}" for p in populations)
+#ref_gff_unavailable='|'.join(gff_unavailable),
+#species_alt_ref='|'.join(ref_mapping.keys())
+#print(get_individuals_from_pop('Pygathrix_cinerea'))
+ruleorder:
+    link_ingroup_vcf_standard_reference > gather_lifted_vcf >
+    create_mock_alignment > merge_fasta_chunks >
+    mock_liftover_stats > gather_liftover_stats >
+    download_hg38 > link_fasta >
+    combine_spectra_castellano_pops_original_ref > combine_spectra_for_group >
+    plot_joint_DFE_against_Ne_Castellano_pops > plot_joint_DFE_against_castellano_Ne_castellano_pops > plot_joint_DFE_against_Ne >
+
+
+rule all:
+    input:
+        (
+            #expand("resources/vcf/ingroup/{species}.vcf.gz",species=ingroups),
+            #expand("resources/ref/{species}.fasta",species=ingroups),
+            #expand("results/minimap2/{ref}/{query}.fasta",ref='Homo_sapiens',query=ingroups),
+            #expand("results/vcf/ingroup/{ref}/{query}.vcf.gz",ref='Homo_sapiens',query=ingroups),
+            #expand("results/vcf/Homo_sapiens/Homo_sapiens.vcf.gz"),
+            #expand('results/stats/sample_names/counts/population_counts.csv'),
+            #expand("results/graphs/sfs/Homo_sapiens/{population}/sfs.unfolded.{n}.png",population='Gorilla_beringei',n=[20]),
+            #expand("results/graphs/comp/sfs/ref/{ref}/sfs.unfolded.{n}.png",ref=['Homo_sapiens'],n=[20]),
+            #expand("results/graphs/comp/sfs/ref/Homo_sapiens/sfs.unfolded.8.castellano_comparison.png"),
+            #expand("results/dfe/Homo_sapiens/{population}/result.unfolded.10.gamma.full.eps.json", population=populations_castellano_latin),
+            #expand("results/graphs/comp/dfe_vs_Ne/{ref}/dfe_vs_Ne.unfolded.8.gamma.full.eps.png", ref='Homo_sapiens')
+            #expand("results/graphs/comp/dfe/Castellano_comp/{ref}/{plot_type}.unfolded.{n}.{parametrization}.{sub_model}.{eps}.png", ref=['Homo_sapiens', 'Pan_troglodytes', 'Pongo_abelii'], plot_type=['discretized', 'sfs_comparison'], n=8, parametrization=['gamma'], sub_model=['full', 'del'],eps='eps'),
+            #expand("results/graphs/comp/sfs/ref_comparison/sfs.unfolded.8.castellano_comparison.png"),
+            #expand("results/graphs/comp/dfe/ref_comparison/discretized.castellano_comparison.unfolded.8.gamma.del.eps.png"),
+            #expand("results/graphs/comp/dfe_vs_Ne/ref_comparison/dfe_vs_Ne.unfolded.8.gamma.del.eps.png"),
+            #expand("results/graphs/comp/dfe_vs_Ne/ref_comparison/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.eps.castellano.png", parametrization='gamma_full', n=8),
+            #expand("results/sfs/comp/Castellano/sfs.unfolded.{n}.csv", n=8)
+            #expand("results/graphs/dfe/Castellano/joint/Homo_sapiens/b/discretized.unfolded.8.gamma.del.noeps.png"),
+            #expand("results/graphs/comp/dfe_vs_Ne/Castellano/ref_comparison/joint/b/dfe_vs_Ne.unfolded.8.{parametrization}.{sub_model}.noeps.png",parametrization=['gamma'], sub_model=['del']),
+            #expand("results/graphs/comp/sfs/ref_comparison/sfs.unfolded.8.castellano_comparison.png"),
+            #expand("results/graphs/comp/sfs/ref/{ref}/sfs.unfolded.8.castellano_comparison.png",ref=populations,allow_missing=True),
+            #expand("results/graphs/comp/dfe_vs_Ne/Castellano_pops/joint/original_ref/b/dfe_vs_Ne.unfolded.8.gamma.del.noeps.png"),
+            #expand("results/graphs/comp/dfe_vs_Ne/{group}/joint/original_ref/b/dfe_vs_Ne.unfolded.8.gamma.del.noeps.png",group="macaca"),
+            #expand("results/graphs/dfe_vs_Ne/{group}/joint/original_ref/b+p_b/dfe_vs_Ne.unfolded.8.gamma.full.noeps.png",group="catarrhini"),
+            #expand("results/graphs/comp/sfs/original_ref/{group}/sfs.unfolded.{n}.png", group=["macaques", "baboons", 'great_apes'], n=8),
+            #expand("results/graphs/comp/dfe_vs_Ne/{group}/{mode}/original_ref/b/dfe_vs_Ne.unfolded.8.{parametrization}.{sub_model}.noeps.png",group=["macaques", "baboons", 'great_apes'], mode=['joint', 'marginal'], parametrization=['gamma'], sub_model=['full', 'del']),
+            #expand("results/graphs/comp/pca/all.8.png"),
+            #expand("results/graphs/comp/dfe_vs_Ne/{group}/{mode}/original_ref/S1+S2+S3+S4+S5/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.noeps.png",group=["macaques", "baboons", 'great_apes', 'all'],mode=['joint', 'marginal'],n=[8, 13, 20],parametrization=['discrete'],sub_model=['full']),
+            #expand("results/graphs/comp/dfe_vs_Ne/{group}/{mode}/original_ref/S1+S2+S3+S4+S5/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.noeps.png",group=['all'],mode=['marginal'],n=[8],parametrization=['discrete'],sub_model=['full']),
+            #expand("results/graphs/comp/dfe_vs_Ne/{group}/{mode}/original_ref/S1+S2+S3/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.noeps.png",group=["macaques", "baboons", 'great_apes', 'old_world_monkeys', 'all'],mode=['joint', 'marginal'],n=[8, 13, 20],parametrization=['discrete'],sub_model=['del']),
+            #expand("results/graphs/comp/dfe_vs_Ne/{group}/{mode}/original_ref/S1+S2+S3/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.noeps.png",group=['all'],mode=['marginal'],n=[8],parametrization=['discrete'],sub_model=['del']),
+            #expand("results/tables/population_summary/{group}/population_summary.{n}.csv",group='catarrhini',n=8),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.unfolded.{n}.discrete.full.noeps.png",group='catarrhini',n=8),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.unfolded.{n}.discrete.{full}.noeps.png",group='catarrhini',n=8,full=['del', 'full']),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.unfolded.{n}.gamma.{full}.noeps.png",group='catarrhini',n=8,full=['del', 'full']),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.folded.{n}.discrete.{full}.noeps.png",group='catarrhini',n=8,full=['del', 'full']),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.unfolded.{n}.discrete.{full}.noeps.png",group='catarrhini',n=2,full=['del', 'full']),
+            #expand("results/dfe/{group}/model_comparison/beneficial/aggregate/{folded}.{n}.{parametrization}.{eps}.csv", group='catarrhini', folded='unfolded', n=8, parametrization='discrete', eps='noeps'),
+            expand("results/dfe/catarrhini/dfe.unfolded.8.{model}.recessive.noeps.csv", model=['discrete', 'gamma']),
+            expand("results/dfe/catarrhini/dfe.unfolded.8.discrete.fixed_h={h}.noeps.csv", h=[0.1, 0.3]),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/S1+S2+S3/dfe_vs_Ne.unfolded.{n}.discrete.del.noeps.png",group='catarrhini',n=8),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/S1+S2+S3/dfe_vs_Ne.folded.{n}.discrete.del.noeps.png",group='catarrhini',n=8),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.folded.{n}.discrete.del.noeps.png",group='all',n=[8]),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/S1+S2+S3+S4+S5/dfe_vs_Ne.unfolded.{n}.discrete.full.noeps.png",group='catarrhini',n=8),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/b+S_d/dfe_vs_Ne.unfolded.{n}.gamma.del.noeps.png",group='catarrhini',n=8),
+            #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/b+S_d+p_b+S_b/dfe_vs_Ne.unfolded.{n}.gamma.full.noeps.png",group='catarrhini',n=8),
+            #[f"results/vcf/{get_ref_from_pop(pop)}/{get_species_from_pop(pop)}.degeneracy.vcf.gz" for pop in groups['new_world_monkeys']],
+            #expand("results/graphs/comp/dfe_vs_Ne/Castellano_Kuderna_comparison.png"),
+            #expand("results/graphs/comp/dfe_vs_Ne/Castellano_estimate/same_ne.png"),
+            #expand("results/graphs/comp/dfe_vs_Ne/Castellano_estimate/different_ne.png"),
+            #expand("results/graphs/comp/dfe/{group}/{mode}/original_ref/b/{kind}.unfolded.{n}.{parametrization}.{sub_model}.noeps.png", group=["macaques", "baboons", 'great_apes', 'all'], mode=['joint', 'marginal'], n=8, kind=['discretized', 'sfs_comparison'], parametrization=['gamma'], sub_model=['full', 'del']),
+            #expand("results/graphs/comp/dfe/{group}/{mode}/original_ref/S1+S2+S3+S4+S5/{kind}.unfolded.{n}.{parametrization}.{sub_model}.noeps.png",group=["macaques", "baboons", 'great_apes', 'all'],mode=['joint', 'marginal'],n=8,kind=['discretized', 'sfs_comparison'],parametrization=['discrete'],sub_model=['full']),
+            #expand("results/graphs/comp/dfe/{group}/{mode}/original_ref/S1+S2+S3/{kind}.unfolded.{n}.{parametrization}.{sub_model}.noeps.png",group=["macaques", "baboons", 'great_apes', 'all'],mode=['joint', 'marginal'],n=8,kind=['discretized', 'sfs_comparison'],parametrization=['discrete'],sub_model=['del']),
+            #expand("results/stats/comp/ns/ingroup/ns_ratios.csv")
+            #expand("results/sfs/comp/original_ref/all/sfs.unfolded.8.csv"),
+            #"results/stats/Ne/comp/original_ref/8.csv"
+            #expand("results/graphs/comp/Ne/Homo_sapiens/regression.castellano.8.png"),
+            #expand("results/graphs/comp/Ne/regression.castellano.8.png"
+            #expand("results/stats/Ne/no_lift/{population}/{n}.nolift.csv",population=populations_castellano_latin,n=8),
+            #expand("results/stats/ns/ingroup/{species}.txt",species=['Pan_troglodytes', 'Homo_sapiens', 'Pongo_abelii'])
+            #expand("results/stats/Ne/Homo_sapiens/{ref}/{n}.csv", ref=populations_castellano_latin, n=20),
+            #expand("results/stats/nn_ns/Homo_sapiens/unfolded.20.csv"),
+            #expand("results/graphs/comp/dfe/ref/Homo_sapiens/sfs_comparison.unfolded.20.gamma.full.eps.png"),
+            #expand("results/graphs/comp/dfe/ref/Homo_sapiens/discretized.unfolded.20.gamma.full.eps.png"),
+            #expand("results/graphs/comp/sfs/Castellano/all.png")
+            #expand("results/vcf/ingroup/Pongo_abelii/{species}.liftover.stats.csv", species=['Homo_sapiens', 'Gorilla_gorilla', 'Pongo_abelii'])
+            #expand("results/stats/tstv/ingroup/{species}.txt", species=ingroups),
+            #expand("resources/stats/ns/ingroup/{species}.txt", species=['Homo_sapiens', 'Pan_troglodytes', 'Pongo_abelii']),
+            #expand("results/graphs/comp/sfs/ref/Homo_sapiens/sfs.unpolarized.folded.20.png")
+            #expand("results/graphs/comp/dfe/ref/{ref}/discretized.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png",ref=['Homo_sapiens'],n=20,folded='unfolded',parametrization='gamma_full',eps='eps'),
+            #expand("results/graphs/sfs/{ref}/{ref}/sfs.plain.folded.{n}.png", ref=ingroups, n=20),
+            #expand("results/graphs/comp/sfs/Homo_sapiens/sfs.plain.folded.{n}.png", n=20),
+            #expand("results/graphs/comp/sfs/ref/{ref}/sfs.unfolded.{n}.png",ref=['Pan_troglodytes', 'Pongo_abelii'],n=[20]),
+            #expand("resources/vcf/ingroup/{species}.vcf.gz",species=ingroups),
+            #expand("results/minimap2/{species}/{query}.stats.csv", species='Homo_sapiens', query=ingroups),
+            #expand("results/vcf/ingroup/{ref}/{query}.liftover.stats.csv", ref='Homo_sapiens', query=ingroups),
+            #expand("results/vcf/ingroup/{ref}/{query}.liftover.stats.csv", ref='Homo_sapiens', query=ingroups),
+            #'results/vcf/Homo_sapiens.vcf.gz'
+            #expand("results/minimap2/{species}/concat/{query}.fasta.gz", species='Homo_sapiens', query=['Pongo_abelii'])
+            #expand("results/lastz/{species}/{query}.axt", species='Homo_sapiens', query=['Pongo_abelii'])
+            #expand("results/sfs/{species}/sfs.{n}.csv",species='Homo_sapiens', n=20),
+            #expand('results/stats/coverage/{species}/{outgroup}.csv', species='Homo_sapiens', outgroup=ingroup_outgroups['Homo_sapiens'])
+            #expand("results/graphs/sfs/{ref}/{species}/sfs.{n}.png",species=ingroups,ref=['Homo_sapiens'],n=10),
+            #expand("results/graphs/sfs/{species}/{species}/sfs.{n}.png",species=ingroups,n=10),
+            #expand("results/graphs/dfe/{ref}/{species}/sfs.{n}.discretized.png",species=ingroups,ref=[
+            #    'Homo_sapiens'],n=10),
+            #expand("results/graphs/dfe/{species}/{species}/sfs.{n}.discretized.png",species=ingroups,n=10),
+            #expand("results/minimap2/{ref}/{species}.stats.csv",species=['Pan_troglodytes', 'Gorilla_gorilla',
+            #                                                             'Pongo_abelii'],ref=['Homo_sapiens']),
+            #expand("results/annotation/{species}/exons.renamed.bed",species=['Pan_troglodytes'])
+            #expand("results/graphs/comp/dfe/ref/{ref}/{kind}.unfolded.{n}.{parametrization}.{sub_model}.eps.png",ref=populations,n=[7, 8], parametrization=['gamma'], sub_model=['full', 'del'], kind=['discretized', 'sfs_comparison']),
+            #expand("results/dfe/ref/{ref}/unfolded.{n}.{parametrization}.{sub_model}.eps.csv",ref=populations,n=[7, 8], parametrization=['gamma'], sub_model=['full', 'del']),
+            #expand("results/graphs/comp/dfe/population/{population}/{kind}.unfolded.{n}.{parametrization}.{sub_model}.eps.png",population=populations,n=[7, 8], parametrization=['gamma'], sub_model=['full', 'del'], kind=['discretized', 'sfs_comparison']),
+            #expand("results/graphs/comp/dfe/population/{population}/{kind}.{folded}.{n}.{parametrization}.{sub_model}.eps.png",population=['Gorilla_gorilla_samn', 'Gorilla_gorilla_pd', 'Homo_sapiens', 'Pan_troglodytes_samn'],folded=['folded', 'unfolded'],n=[10, 15, 20], parametrization=['gamma'], sub_model=['full', 'del'], kind=['discretized', 'sfs_comparison']),
+            #expand("results/dfe/population/{population}/unfolded.{n}.{parametrization}.{sub_model}.eps.csv",population=populations,n=[7, 8], parametrization=['gamma'], sub_model=['full', 'del']),
+            #expand("results/dfe/population/{population}/unfolded.{n}.{parametrization}.{sub_model}.eps.csv",population=populations,n=[7, 8], parametrization=['gamma'], sub_model=['full', 'del']),
+            #expand("results/dfe/population/{population}/unfolded.{n}.{parametrization}.{sub_model}.eps.csv",population=['Gorilla_gorilla_samn', 'Gorilla_gorilla_pd'],n=[10, 15, 20], parametrization=['gamma'], sub_model=['full', 'del']),
+            #expand("results/stats/Ne/comp/population/{population}/{n}.csv",population=['Gorilla_gorilla_samn', 'Gorilla_gorilla_pd', 'Homo_sapiens', 'Pan_troglodytes_samn'],n=[10, 20]),
+            #expand("results/stats/Ne/comp/ref/{ref}/{n}.csv",ref=populations,n=[7]),
+            #expand("results/vcf/{ref}/{species}.degeneracy.existing_outgroups.stats.txt", ref=populations, species="Homo_sapiens")
+            #[f"results/stats/coverage/Homo_sapiens/{s}/{o}.csv" for s in ingroups for o in ingroup_outgroups[s]]
+        )
+
+# link the input VCF files
+rule link_ingroup_vcf:
+    input:
+        '../primatediversity/data/gVCFs_recalling_10_12_2024/{species}_ssp/filteredVCF/bcf_step1/{species}_ssp_all_chr.sorted.bcf'
+    output:
+        'resources/vcf/ingroup/{species}.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools view {input} | bgzip -c > {output}
+        """
+
+# link the input VCF files for baboon
+'''rule link_ingroup_vcf_baboon:
+    input:
+        '../primatediversity/people/bjarkemp/diversitynrecombination/data/Baboons/Papio_anubis/Papio_anubisConcatGtVar.g.vcf.gz'
+    output:
+        'resources/vcf/ingroup/Papio_anubis.vcf.gz'
+    conda:
+        'envs/coreutils.yaml'
+    shell:
+        """
+        ln -sr {input} {output}
+        """'''
+
+# link reference fasta for Macaca thibetana
+rule link_fasta_macaca_thibetana:
+    input:
+        "../primatediversity/data/gVCFs_recalling_10_12_2024/Macaca_thibetana_thibetana/ref/GCF_024542745.1_ASM2454274v1_genomic.fna"
+    output:
+        "resources/ref/Macaca_thibetana.fasta"
+    conda:
+        "envs/coreutils.yaml"
+    shell:
+        """
+        ln -sr {input} {output}
+        """
+
+# link reference fasta for Saimiri boliviensis
+rule link_fasta_saimiri_boliviensis:
+    input:
+        "../primatediversity/data/gVCFs_recalling_10_12_2024/Saimiri_boliviensis_boliviensis/ref/GCF_016699345.2_BCM_Sbol_2.1_genomic.fna"
+    output:
+        "resources/ref/Saimiri_boliviensis.fasta"
+    conda:
+        "envs/coreutils.yaml"
+    shell:
+        """
+        ln -sr {input} {output}
+        """
+
+# link reference fasta for species
+rule link_fasta:
+    input:
+        lambda w: get_fasta_path(w.species)
+    output:
+        "resources/ref/{species}.fasta"
+    conda:
+        "envs/coreutils.yaml"
+    shell:
+        """
+        ln -sr {input} {output}
+        """
+
+# download human reference genome
+rule download_hg38:
+    output:
+        "resources/ref/Homo_sapiens.fasta"
+    params:
+        url="ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa"
+    conda:
+        "envs/wget.yaml"
+    shell:
+        "wget '{params.url}' -O {output}"
+
+# index a fasta file using samtools
+checkpoint create_fai:
+    input:
+        "{path}.fasta"
+    output:
+        "{path}.fasta.fai"
+    conda:
+        "envs/samtools.yaml"
+    shell:
+        "samtools faidx {input}"
+
+# index VCF or GFF file using tabix
+rule create_tbi:
+    input:
+        '{path}.{ext}.gz'
+    output:
+        '{path}.{ext,vcf|gff}.gz.tbi'
+    conda:
+        'envs/tabix.yaml'
+    shell:
+        """
+        tabix -p {wildcards.ext} {input}
+        """
+
+# download the hgdp VCF files
+rule get_hgdp:
+    output:
+        'resources/hgdp/chr/{chr}.vcf.gz'
+    params:
+        url='https://ngs.sanger.ac.uk/production/hgdp/hgdp_wgs.20190516/hgdp_wgs.20190516.full.{chr}.vcf.gz'
+    conda:
+        "envs/wget.yaml"
+    shell:
+        "wget '{params.url}' -O {output}"
+
+# only retain French samples
+rule filter_hgdp_french:
+    input:
+        'resources/hgdp/chr/{chr}.vcf.gz'
+    output:
+        "resources/hgdp/chr/{chr}.french.vcf.gz"
+    params:
+        samples='resources/PDGP_french.txt'
+    conda:
+        "envs/bcftools.yaml"
+    shell:
+        """
+        bcftools view --samples-file {params.samples} --output-type z --output-file {output} {input}
+        """
+
+# filter out everything that is not a bi-allelic SNP
+rule filter_biallelic_snps:
+    input:
+        '{path}.vcf.gz'
+    output:
+        '{path}.biallelic.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools view {input} -m2 -M2 -v snps -i 'TYPE="snp"' -O z -o {output}
+        """
+
+rule create_sample_name_file_population:
+    input:
+        lambda w: f'results/vcf/ingroup/{get_ref_from_pop(w.population)}/{get_species_from_pop(w.population)}.vcf.gz'
+    output:
+        'results/stats/sample_names/{population}.csv'
+    params:
+        individuals=lambda w: ','.join(get_individuals_from_pop(w.population))
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools view -s {params.individuals} --force-samples {input} 2>/dev/null \
+        | bcftools query -l > {output} || true
+
+        # Ensure output file exists even if empty
+        touch {output}
+        """
+
+# concatenate sample name files into a single file
+rule concatenate_sample_name_files:
+    input:
+        expand('results/stats/sample_names/{population}.csv', population=populations)
+    output:
+        'results/stats/sample_names/all_samples.csv'
+    run:
+        import pandas as pd
+        from pathlib import Path
+
+        dfs = []
+        for f in input:
+            pop = Path(f).stem  # {population}
+            df = pd.read_csv(f, header=None, names=["sample"])
+            df["population"] = pop
+            dfs.append(df)
+
+        out = pd.concat(dfs, ignore_index=True)
+        out.to_csv(output[0], index=False)
+
+
+# determine number of individuals per population
+checkpoint determine_individuals_per_population:
+    input:
+        expand("results/stats/sample_names/{population}.csv",population=populations)
+    output:
+        "results/stats/sample_names/counts/population_counts.csv"
+    conda:
+        "envs/base.yaml"
+    shell:
+        """
+        echo "population,n_individuals" > {output}
+        for f in {input}; do
+            pop=$(basename $f .csv)
+            n=$(wc -l < $f)
+            echo "$pop,$n" >> {output}
+        done
+        """
+
+
+def get_pops(n: int, group: str = None) -> list:
+    """
+    Get populations with at least n haplotypes.
+    """
+    # path = checkpoints.determine_individuals_per_population.get().output[0]
+    path = "results/stats/sample_names/counts/population_counts.csv"
+
+    return Populations.get_pops(n,group,path)
+
+
+# calculate Ts/Tv ratio with bcftools
+rule calculate_ts_tv_ratio:
+    input:
+        "resources/vcf/ingroup/{species}.vcf.gz"
+    output:
+        "results/stats/tstv/ingroup/{species}.txt"
+    conda:
+        "envs/bcftools.yaml"
+    shell:
+        """
+        bcftools stats {input} | grep '^TSTV' > {output}
+        """
+
+# link GFF file for NCBI species
+rule link_gff_ncbi:
+    input:
+        "resources/gff/{species}.gff.gz"
+    output:
+        "resources/gff/ncbi/{species}.gff.gz"
+    conda:
+        "envs/coreutils.yaml"
+    shell:
+        """
+        ln -sr {input} {output}
+        """
+
+# download GFF file
+rule download_gff_ncbi:
+    output:
+        "resources/gff/ncbi/Homo_sapiens.raw.gff.gz"
+    params:
+        url='https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_genomic.gff.gz'
+    shell:
+        """
+        curl -o {output} {params.url}
+        """
+
+# replace RefSeq IDs with names used in VCF
+rule rename_accessions_ncbi:
+    input:
+        gff="resources/gff/ncbi/Homo_sapiens.raw.gff.gz",
+        report='resources/assembly_reports/ncbi/Homo_sapiens.tsv'
+    output:
+        "resources/gff/ncbi/Homo_sapiens.gff.gz"
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/rename_accession_ids.py"
+
+# filter VCF by individuals in population
+rule filter_vcf_population:
+    input:
+        lambda w: f"resources/vcf/ingroup/{get_species_from_pop(w.population)}.vcf.gz"
+    output:
+        "resources/vcf/ingroup/population/{population}.vcf.gz"
+    conda:
+        "envs/bcftools.yaml"
+    shell:
+        """
+        bcftools view \
+            --samples-file results/stats/sample_names/{wildcards.population}.csv \
+            --output-type z \
+            --output-file {output} \
+            {input}
+        """
+
+# annotate VCF with consequence types using bcftools
+rule annotate_csq:
+    input:
+        vcf="resources/vcf/ingroup/population/{population}.biallelic.vcf.gz",
+        ref=lambda w: f"resources/ref/{get_ref_from_pop(w.population)}.fasta",
+        gff=lambda w: f"resources/gff/ncbi/{get_ref_from_pop(w.population)}.gff.gz"
+    output:
+        "results/vcf/ingroup/population/{population}.csq.vcf.gz"
+    conda:
+        "envs/bcftools.yaml"
+    shell:
+        """
+        bcftools csq -f {input.ref} -g {input.gff} {input.vcf} --phase a -Oz -o {output}
+        """
+
+# generate consequence statistics using bcftools
+rule calculate_csq_stats_vcf:
+    input:
+        "results/vcf/ingroup/population/{population}.csq.vcf.gz"
+    output:
+        "results/vcf/ingroup/population/{population}.csq_stats.txt"
+    conda:
+        "envs/bcftools.yaml"
+    shell:
+        """
+        bcftools csq stats {input} > {output}
+        """
+
+# count synonymous and nonsynonymous mutations in the annotated VCF
+rule count_syn_nonsyn:
+    input:
+        "results/vcf/ingroup/population/{population}.csq.vcf.gz"
+    output:
+        "results/stats/ns/ingroup/population/{population}.txt"
+    conda:
+        "envs/bcftools.yaml"
+    shell:
+        """
+        bcftools query -f '%INFO/BCSQ\n' {input} \
+        | tr ',' '\n' \
+        | awk '
+          /synonymous/ {{syn++}}
+          /(missense|nonsense)/ {{nonsyn++}}
+          END{{
+            print "Synonymous:", syn;
+            print "Nonsynonymous:", nonsyn;
+            if (syn>0) printf "N/S: %.6f ", nonsyn/syn; else print "N/S: NA"
+          }}' \
+        > {output}
+        """
+
+# gather N/S ratios for all populations into a CSV file
+rule gather_NS_ratio:
+    input:
+        txt=expand("results/stats/ns/ingroup/population/{population}.txt",population=populations)
+    output:
+        "results/stats/comp/ns/ingroup/population/NS.csv"
+    conda:
+        "envs/base.yaml"
+    shell:
+        """
+        echo "population,ns" > {output}
+        for f in {input.txt}; do
+            species=$(basename $f .txt)
+            ratio=$(grep "N/S" $f | awk '{{print $2}}')
+            echo "$species,$ratio" >> {output}
+        done
+        """
+
+# gather ancestral stats for all populations into a CSV file
+rule gather_ancestral_stats:
+    input:
+        lambda w: [f"results/vcf/{get_ref_from_pop(p)}/{get_species_from_pop(p)}.degeneracy.polarized.stats.csv" for p
+                   in get_pops(8,w.group)]
+    output:
+        "results/stats/comp/{group}/ancestral_stats.csv"
+    params:
+        populations=lambda w: get_pops(8,w.group)
+    conda:
+        "envs/base.yaml"
+    shell:
+        """
+        echo "population,"$(head -n1 {input[0]}) > {output}
+        i=0
+        read -r -a pops <<< "{params.populations}"
+        for f in {input}; do
+            pop="${{pops[$i]}}"   # <-- escape braces for Snakemake
+            tail -n +2 "$f" | awk -v p="$pop" 'BEGIN{{OFS=","}}{{print p,$0}}' >> {output}
+            i=$((i+1))
+        done
+        """
+
+# normalize VCF
+rule normalize_vcf_hgdp:
+    input:
+        vcf='resources/hgdp/chr/{chr}.{path}.vcf.gz',
+        fasta='resources/ref/Homo_sapiens.fasta'
+    output:
+        'resources/hgdp/chr/{chr}.{path}.norm.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools norm --check-ref s -f {input.fasta} -o {output} -O z {input.vcf}
+        """
+
+# trim alternate alleles
+rule trim_alt_alleles_hgdp:
+    input:
+        vcf='resources/hgdp/chr/{chr}.{path}.vcf.gz',
+        fasta='resources/ref/Homo_sapiens.fasta'
+    output:
+        'resources/hgdp/chr/{chr}.{path}.trim.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools view --trim-alt-alleles -o {output} -O z {input.vcf}
+        """
+
+# filter out everything that did not pass the filter
+rule filter_pass:
+    input:
+        '{path}.vcf.gz'
+    output:
+        '{path}.pass.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools view {input} -f PASS -O z -o {output}
+        """
+
+# merge the hgdp chromosome VCF files
+rule merge_hgdp_vcfs:
+    input:
+        expand("resources/hgdp/chr/{chr}.french.norm.biallelic.trim.biallelic.pass.vcf.gz",chr=human_chrs)
+    output:
+        "resources/hgdp/french.vcf.gz"
+    conda:
+        "envs/bcftools.yaml"
+    shell:
+        """
+        bcftools concat --output-type z --output {output} {input}
+        """
+
+# link the hgdp VCF files
+rule link_hgdp_vcf:
+    input:
+        'resources/hgdp/french.vcf.gz'
+    output:
+        'resources/vcf/ingroup/Homo_sapiens.vcf.gz'
+    conda:
+        "envs/coreutils.yaml"
+    shell:
+        """
+        ln -sr {input} {output}
+        """
+
+# bgzip fasta file
+rule bgzip_fasta:
+    input:
+        'resources/ref/{species}.fasta'
+    output:
+        'resources/ref/{species}.fasta.gz'
+    conda:
+        'envs/samtools.yaml'
+    shell:
+        """
+        bgzip -c {input} > {output}
+        """
+
+# align outgroup ref to ingroup ref using minimap
+rule align_minimap:
+    input:
+        ref="resources/ref/{ref}.fasta",
+        query="resources/ref/{query}.fasta"
+    output:
+        "results/minimap2/{ref}/{query}.paf"
+    conda:
+        "envs/minimap.yaml"
+    threads: 8
+    resources:
+        mem_mb=50000,
+        runtime=1200
+    shell:
+        """
+        minimap2 -x asm5 -c --secondary=no -t {threads} {input.ref} {input.query} > {output}
+        """
+
+# get alignment stats of PAF
+rule get_stats_paf:
+    input:
+        "results/minimap2/{ref}/{query}.paf"
+    output:
+        "results/minimap2/{ref}/{query}.stats.csv"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/get_stats_paf.py"
+
+# convert PAF to FASTA
+rule paf_to_fasta:
+    input:
+        paf="results/minimap2/{ref}/{query}.paf",
+        ref="resources/ref/{ref}.fasta",
+        query="resources/ref/{query}.fasta"
+    output:
+        fasta="results/minimap2/{ref}/chunks/{query}.{chunk}.fasta"
+    params:
+        i_chunk=lambda w: int(w.chunk),
+        n_chunks=100
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/paf_to_fasta.py"
+
+# merge fasta chunks
+rule merge_fasta_chunks:
+    input:
+        expand("results/minimap2/{ref}/chunks/{query}.{chunk}.fasta",chunk=range(100),allow_missing=True)
+    output:
+        "results/minimap2/{ref}/{query}.fasta"
+    conda:
+        "envs/coreutils.yaml"
+    shell:
+        "cat {input} > {output}"
+
+# download GFF file
+rule download_gff:
+    output:
+        "resources/gff/{ref}.gff.gz"
+    params:
+        url=lambda wildcards: get_gff_path(wildcards.ref)
+    shell:
+        """
+        curl -o {output} {params.url}
+        """
+
+# create a BED file from a GFF file
+rule create_exon_bed_from_gff:
+    input:
+        "resources/gff/{ref}.gff.gz"
+    output:
+        'results/annotation/{ref}/exons.bed'
+    conda:
+        'envs/samtools.yaml'
+    shell:
+        """
+        bgzip -cd {input} | awk '$3 == "CDS"' | awk '{{OFS="\t"; print $1, $4-1, $5}}' > {output}
+        """
+
+# calculate total length of exons in a BED file
+rule bed_total_length:
+    input:
+        "results/annotation/{ref}/exons.bed"
+    output:
+        "results/annotation/{ref}/exons.total_length.txt"
+    conda:
+        "envs/bedtools.yaml"
+    shell:
+        """
+        bedtools sort -i {input} | bedtools merge -i - | awk '{{sum += $3 - $2}} END {{print sum}}' > {output}
+        """
+
+# create a csi index for a VCF file
+rule create_csi:
+    input:
+        "{path}.vcf.gz"
+    output:
+        "{path}.vcf.gz.csi"
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools index -f {input}
+        """
+
+# link outgroup VCF files
+rule link_ingroup_vcf_standard_reference:
+    input:
+        lambda w: f'resources/vcf/ingroup/{w.ref_species.split("/")[1]}.vcf.gz'
+    output:
+        'results/vcf/ingroup/{ref_species}.vcf.gz'
+    conda:
+        'envs/coreutils.yaml'
+    shell:
+        """
+        ln -sr {input} {output}
+        """
+
+# skip exon filtering for species without GFF annotation
+'''rule skip_exon_filtering_unavailable_gff:
+    input:
+        'results/vcf/ingroup/{ref_gff_unavailable}/{species}.sorted.vcf.gz'
+    output:
+        'results/vcf/ingroup/{ref_gff_unavailable}/{species}.exons.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        ln -sr {input} {output}
+        """'''
+
+# filter VCF file for exons
+rule filter_exons:
+    input:
+        vcf='results/vcf/ingroup/{ref}/{species}.sorted.vcf.gz',
+        csi='results/vcf/ingroup/{ref}/{species}.sorted.vcf.gz.csi',
+        bed='results/annotation/{ref}/exons.bed'
+    output:
+        vcf='results/vcf/ingroup/{ref}/{species}.exons.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools view -T {input.bed} {input.vcf} -Oz -o {output.vcf}
+        """
+
+# normalize VCF
+rule normalize_vcf_ingroup:
+    input:
+        vcf='results/vcf/ingroup/{species}/{species}.{opts}vcf.gz',
+        fasta=lambda w: f'resources/ref/{get_ref_from_species(w.species)}.fasta'
+    output:
+        'results/vcf/ingroup/{species}/{species}.{opts}norm.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools norm --check-ref s -f {input.fasta} -o {output} -O z {input.vcf}
+        """
+
+# scatter VCF file into chunks
+rule scatter_vcf_for_lifting:
+    input:
+        'results/vcf/ingroup/{query}/{query}.exons.norm.vcf.gz'
+    output:
+        expand('results/vcf/ingroup/{query}/{query}.exons.norm.chunk{chunk}.vcf.gz',chunk=range(
+            scatter_count),allow_missing=True)
+    params:
+        n_chunks=scatter_count
+    conda:
+        'envs/base.yaml'
+    script:
+        'scripts/scatter_vcf.py'
+
+# liftover VCF file using PAF alignments
+rule liftover_vcf:
+    input:
+        ref='resources/ref/{ref}.fasta',
+        query=lambda w: f'resources/ref/{get_ref_from_species(w.query)}.fasta',
+        paf=lambda w: f'results/minimap2/{{ref}}/{get_ref_from_species(w.query)}.paf',
+        vcf='results/vcf/ingroup/{query}/{query}.exons.norm.chunk{chunk}.vcf.gz'
+    output:
+        vcf='results/vcf/ingroup/{ref}/{query}.chunk{chunk}.vcf.gz',
+        stats='results/vcf/ingroup/{ref}/{query}.chunk{chunk}.liftover.stats.csv'
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/liftover_vcf.py"
+
+# create mock alignment where target and query are the same
+rule create_mock_alignment:
+    input:
+        lambda w: f"resources/ref/{w.ref_species.split('/')[0]}.fasta"
+    output:
+        "results/minimap2/{ref_species}.fasta"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/create_mock_alignment.py"
+
+# mock liftover stats
+rule mock_liftover_stats:
+    output:
+        touch('results/vcf/ingroup/{ref}/{ref}.liftover.stats.csv')
+
+# gather lifted VCF files into a single file
+rule gather_lifted_vcf:
+    input:
+        vcf=expand('results/vcf/ingroup/{ref}/{query}.chunk{chunk}.sorted.vcf.gz',chunk=range(
+            scatter_count),allow_missing=True),
+        csi=expand('results/vcf/ingroup/{ref}/{query}.chunk{chunk}.sorted.vcf.gz.csi',chunk=range(
+            scatter_count),allow_missing=True)
+    output:
+        vcf='results/vcf/ingroup/{ref}/{query}.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools concat -a -Oz -o {output.vcf} {input.vcf}
+        """
+
+# gather liftover stats into a single file
+rule gather_liftover_stats:
+    input:
+        expand('results/vcf/ingroup/{ref}/{query}.chunk{chunk}.liftover.stats.csv',chunk=range(
+            scatter_count),allow_missing=True)
+    output:
+        'results/vcf/ingroup/{ref}/{query}.liftover.stats.csv'
+    conda:
+        'envs/base.yaml'
+    script:
+        'scripts/gather_liftover_stats.py'
+
+# sort VCF file
+rule sort_vcf:
+    input:
+        '{path}.vcf.gz'
+    output:
+        '{path}.sorted.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools sort -o {output} {input}
+        """
+
+# add outgroups to the VCF file
+rule add_outgroups_vcf:
+    input:
+        ref='resources/ref/{ref}.fasta',
+        ingroup='results/vcf/ingroup/{ref}/{species}.exons.biallelic.vcf.gz',
+        tbi='results/vcf/ingroup/{ref}/{species}.exons.biallelic.vcf.gz.tbi',
+        outgroups=lambda w: expand('results/minimap2/{ref}/{query}.fasta',ref=w.ref,query=ingroup_outgroups[w.species]),
+    output:
+        vcf='results/vcf/{ref}/{species}.vcf.gz',
+        stats='results/vcf/{ref}/{species}.outgroup.stats.csv'
+    params:
+        sample_names=lambda w: ingroup_outgroups[w.species]
+    conda:
+        "envs/base.yaml"
+    resources:
+        mem_mb=100000
+    script:
+        "scripts/add_outgroups_vcf.py"
+
+# combine outgroup alignment stats for all populations into a CSV file
+rule combine_outgroup_stats:
+    input:
+        lambda w: [f'results/vcf/{get_ref_from_pop(p)}/{get_species_from_pop(p)}.outgroup.stats.csv' for p in
+                   get_pops(w.n,w.group)]
+    output:
+        'results/stats/comp/{group}/outgroup_stats.{n}.csv'
+    params:
+        populations=lambda w: get_pops(w.n,w.group)
+    conda:
+        'envs/base.yaml'
+    script:
+        'scripts/combine_outgroup_stats.py'
+
+# determine coverage of outgroup samples wrt ingroup samples
+rule determine_outgroup_coverage:
+    input:
+        vcf='results/vcf/{ref}/{species}.vcf.gz',
+        samples='resources/samples.csv'
+    output:
+        'results/stats/coverage/{ref}/{species}/{outgroup}.csv'
+    params:
+        ingroups=lambda w: get_individuals_from_pop(w.species),
+        outgroups=["{outgroup}"]
+    conda:
+        'envs/base.yaml'
+    script:
+        'scripts/determine_outgroup_coverage.py'
+
+# subset sites of VCF file
+rule subset_vcf:
+    input:
+        "{path}.vcf.gz"
+    output:
+        "{path}.subset.{n}.vcf.gz"
+    params:
+        n=lambda w: int(w.n)
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/subset_vcf.py"
+
+# subset sites of VCF file
+rule subset_vcf_interval:
+    input:
+        "{path}.vcf.gz"
+    output:
+        r"{path}.interval.{start,\d+}-{end,\d+}.vcf.gz"
+    params:
+        start=lambda w: int(w.start),
+        end=lambda w: int(w.end)
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/subset_vcf_interval.py"
+
+# subset sites of VCF file
+rule subset_fasta:
+    input:
+        "{path}.fasta"
+    output:
+        "{path}.subset.{n}.fasta"
+    params:
+        n=lambda w: int(w.n)
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/subset_fasta.py"
+
+# normalize VCF file
+rule normalize_vcf_lifted:
+    input:
+        vcf='results/vcf/{ref}/{species}.vcf.gz',
+        fasta='resources/ref/{ref}.fasta'
+    output:
+        'results/vcf/{ref}/{species}.norm.vcf.gz'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools norm --check-ref s -f {input.fasta} -o {output} -O z {input.vcf}
+        """
+
+# annotate degeneracy of sites
+rule annotate_degeneracy:
+    input:
+        vcf="results/vcf/{ref}/{species}.norm.vcf.gz",
+        gff="resources/gff/{ref}.gff.gz",
+        fasta="resources/ref/{ref}.fasta"
+    output:
+        "results/vcf/{ref}/{species}.degeneracy.vcf.gz"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/annotate_degeneracy.py"
+
+# only retain 0 and 4-fold degenerate sites
+rule filter_degeneracy:
+    input:
+        vcf="results/vcf/{ref}/{species}.degeneracy.vcf.gz",
+    output:
+        vcf="results/vcf/{ref}/{species}.degeneracy.deg_only.vcf.gz"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/filter_degeneracy.py"
+
+# counts sites of VCF file
+rule count_sites_vcf:
+    input:
+        vcf='{path}.vcf.gz',
+        csi='{path}.vcf.gz.csi'
+    output:
+        '{path}.sitecount.txt'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools index -n {input.vcf} > {output}
+        """
+
+# filter for existing outgroups and polymorphic ingroup sites
+rule filter_existing_outgroups:
+    input:
+        "results/vcf/{ref}/{species}.degeneracy.vcf.gz"
+    output:
+        "results/vcf/{ref}/{species}.degeneracy.existing_outgroups.vcf.gz"
+    params:
+        outgroups=lambda w: ingroup_outgroups[w.species]
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/filter_existing_outgroups.py"
+
+# annotate ancestral allele
+rule annotate_ancestral_allele:
+    input:
+        vcf="results/vcf/{ref}/{species}.degeneracy.existing_outgroups.vcf.gz",
+        fasta="resources/ref/{ref}.fasta",
+        counts="results/stats/sample_names/{species}.csv"
+    output:
+        vcf="results/vcf/{ref}/{species}.degeneracy.polarized.vcf.gz",
+        ann="results/vcf/{ref}/{species}.degeneracy.polarized.ann.json",
+        stats="results/vcf/{ref}/{species}.degeneracy.polarized.stats.csv",
+        probs="results/graphs/vcf/{ref}/{species}.degeneracy.polarized.probs.png",
+    params:
+        ingroups=lambda w: get_individuals_from_pop(w.species),
+        outgroups=lambda w: ingroup_outgroups[w.species],
+        n_target_sites=lambda w: get_species_metadata(w.ref).REFERENCE_LENGTH / 50 * (2 / 3),
+        n_ingroups=lambda w: min(len(pd.read_csv(f"results/stats/sample_names/{w.species}.csv",header=None) * 2),9),
+        max_sites=10000
+    resources:
+        mem_mb=20000
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/annotate_ancestral_allele.py"
+
+# compute site frequency spectrum
+rule compute_sfs:
+    input:
+        vcf=lambda w: f"results/vcf/{w.ref}/{get_species_from_pop(w.population)}.degeneracy.polarized.vcf.gz",
+        gff="resources/gff/{ref}.gff.gz",
+        fasta="resources/ref/{ref}.fasta"
+    output:
+        "results/sfs/{ref}/{population}/sfs.unfolded{opts}{n}.csv"
+    params:
+        n=lambda w: int(w.n),
+        ingroups=lambda w: get_individuals_from_pop(w.population),
+        n_target_sites=lambda w: get_species_metadata(w.ref).REFERENCE_LENGTH / 50 * (2 / 3),
+        filter_bgc=lambda w: 'filter_bgc' in w.opts,
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/compute_sfs.py"
+
+# compute folded site frequency spectrum
+rule compute_sfs_folded:
+    input:
+        vcf=lambda w: f"results/vcf/{w.ref}/{get_species_from_pop(w.population)}.degeneracy.vcf.gz",
+        gff="resources/gff/{ref}.gff.gz",
+        fasta="resources/ref/{ref}.fasta"
+    output:
+        "results/sfs/{ref}/{population}/sfs.unpolarized.folded.{n}.csv"
+    params:
+        n=lambda w: int(w.n),
+        ingroups=lambda w: get_individuals_from_pop(w.population),
+        n_target_sites=lambda w: get_species_metadata(w.ref).REFERENCE_LENGTH / 50 * (2 / 3),
+        skip_non_polarized=False,
+        fold=True
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/compute_sfs.py"
+
+# compute folded unstratified site frequency spectrum
+rule compute_sfs_plain_folded:
+    input:
+        vcf=lambda w: f"results/vcf/ingroup/{w.ref}/{get_species_from_pop(w.population)}.vcf.gz"
+    output:
+        "results/sfs/{ref}/{population}/sfs.plain.folded.{n}.csv"
+    params:
+        n=lambda w: int(w.n),
+        ingroups=lambda w: get_individuals_from_pop(w.population),
+        max_sites=10 ** 6,
+        skip_non_polarized=False,
+        fold=True
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/compute_sfs_plain.py"
+
+# compute folded unstratified site frequency spectrum
+rule compute_sfs_plain_folded_before_lifting:
+    input:
+        vcf=lambda w: f"results/vcf/ingroup/{get_ref_from_pop(w.population)}/{get_species_from_pop(w.population)}.biallelic.vcf.gz"
+    output:
+        "results/sfs/no_lift/{population}/sfs.nolift.folded.{n}.csv"
+    params:
+        n=lambda w: int(w.n),
+        ingroups=lambda w: get_individuals_from_pop(w.population),
+        skip_non_polarized=False,
+        n_target_sites=lambda w: get_species_metadata(get_ref_from_pop(w.population)).REFERENCE_LENGTH,
+        key='all',
+        fold=True
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/compute_sfs_plain.py"
+
+# compute unfolded unstratified site frequency spectrum
+rule compute_sfs_plain_unfolded:
+    input:
+        vcf=lambda w: f"results/vcf/{w.ref}/{get_species_from_pop(w.population)}.degeneracy.polarized.vcf.gz"
+    output:
+        "results/sfs/{ref}/{population}/sfs.plain.unfolded.{n}.csv"
+    params:
+        n=lambda w: int(w.n),
+        ingroups=lambda w: get_individuals_from_pop(w.population),
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/compute_sfs_plain.py"
+
+# combine plots for plain SFS for original reference
+rule combine_plots_sfs_plain_same_ref:
+    input:
+        expand("results/graphs/sfs/{ref}/{ref}/sfs.plain.{folded}.{n}.png",ref=populations,allow_missing=True)
+    output:
+        "results/graphs/comp/sfs/same_ref/sfs.plain.{folded}.{n}.png"
+    params:
+        titles=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# compute unfolded unstratified site frequency spectrum using dadi
+rule compute_sfs_plain_dadi_unfolded:
+    input:
+        vcf=lambda w: f"results/vcf/{w.ref}/{get_species_from_pop(w.population)}.degeneracy.polarized.vcf.gz"
+    output:
+        "results/sfs/{ref}/{population}/sfs.plain.dadi.unfolded.{n}.csv"
+    params:
+        n=lambda w: int(w.n),
+        ingroups=lambda w: get_individuals_from_pop(w.population)
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/compute_sfs_plain_dadi.py"
+
+# fold SFS
+rule fold_sfs:
+    input:
+        "results/sfs/{ref}/{population}/sfs.unfolded.{n}.csv"
+    output:
+        "results/sfs/{ref}/{population}/sfs.folded.{n}.csv"
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/fold_sfs.py"
+
+# plot spectra
+rule plot_spectra:
+    input:
+        "results/sfs/{ref}/{population}/sfs{opts}{n}.csv"
+    output:
+        "results/graphs/sfs/{ref}/{population}/sfs{opts}{n}.png"
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/plot_spectra.py"
+
+# combine SFS plot for same reference
+rule combine_plots_sfs_same_ref:
+    input:
+        lambda w: expand("results/graphs/sfs/{ref}/{population}/sfs{opts}{n}.png",population=get_pops(w.n),allow_missing=True)
+    output:
+        "results/graphs/comp/sfs/ref/{ref}/sfs{opts}{n}.png"
+    params:
+        titles=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine plain SFS plot for same reference for Castellano et al. comparison
+rule combine_plots_sfs_plain_same_ref_castellano_comparison:
+    input:
+        expand("results/graphs/sfs/{ref}/{population}/sfs{opts}{n}.png",population=populations_castellano,allow_missing=True)
+    output:
+        "results/graphs/comp/sfs/ref/{ref}/sfs{opts}{n}.castellano_comparison.png"
+    params:
+        titles=populations_castellano
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine SFS plot for same population
+rule combine_plots_sfs_same_population:
+    input:
+        expand("results/graphs/sfs/{ref}/{population}/sfs.{folded}.{n}.png",ref=populations,allow_missing=True)
+    output:
+        "results/graphs/comp/sfs/population/{population}/sfs.{folded}.{n}.png"
+    params:
+        titles=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# infer unfolded DFE
+rule infer_dfe_unfolded:
+    input:
+        "results/sfs/{ref}/{population}/sfs.unfolded{opts}{n}.csv"
+    output:
+        discretized="results/graphs/dfe/{ref}/{population}/discretized.unfolded{opts}{n}.{parametrization}.{sub_model}.{eps}.png",
+        sfs_comparison="results/graphs/dfe/{ref}/{population}/sfs_comparison.unfolded{opts}{n}.{parametrization}.{sub_model}.{eps}.png",
+        json="results/dfe/{ref}/{population}/result.unfolded{opts}{n}.{parametrization}.{sub_model}.{eps}.json",
+        dfe="results/dfe/{ref}/{population}/dfe.unfolded{opts}{n}.{parametrization}.{sub_model}.{eps}.dfe.json"
+    params:
+        parametrization="{parametrization}",
+        sub_model="{sub_model}",
+        use_eps=lambda w: w.eps == 'eps',
+        recessive=lambda w: 'recessive' in w.sub_model
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/infer_dfe.py"
+
+# infer folded DFE
+rule infer_dfe_folded:
+    input:
+        "results/sfs/{ref}/{population}/sfs.unpolarized.folded.{n}.csv"
+    output:
+        discretized="results/graphs/dfe/{ref}/{population}/discretized.folded.{n}.{parametrization}.{sub_model}.{eps}.png",
+        sfs_comparison="results/graphs/dfe/{ref}/{population}/sfs_comparison.folded.{n}.{parametrization}.{sub_model}.{eps}.png",
+        json="results/dfe/{ref}/{population}/result.folded.{n}.{parametrization}.{sub_model}.{eps}.json",
+        dfe="results/dfe/{ref}/{population}/dfe.folded.{n}.{parametrization}.{sub_model}.{eps}.dfe.json"
+    params:
+        parametrization="{parametrization}",
+        sub_model="{sub_model}",
+        use_eps=lambda w: w.eps == 'eps'
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/infer_dfe.py"
+
+# combine DFE inferred for all populations in a group
+rule combine_dfes_for_group:
+    input:
+        lambda w: [f"results/dfe/{get_ref_from_pop(p)}/{p}/dfe.{{folded}}{{opts}}{{n}}.{{parametrization}}.{{sub_model}}.{{eps}}.dfe.json" for p in get_pops(max(int(w.n),8),w.group)]
+    output:
+        "results/dfe/{group}/dfe.{folded}{opts}{n}.{parametrization}.{sub_model}.{eps}.csv"
+    params:
+        populations=lambda w: get_pops(max(int(w.n),8),w.group)
+    run:
+        import pandas as pd
+
+        rows = []
+
+        for pop, file in zip(params.populations,input):
+            with open(file) as f:
+                content = f.read()
+
+            rows.append({
+                "population": pop,
+                "json": content,
+            })
+
+        df = pd.DataFrame(rows)
+        df.to_csv(output[0],index=False)
+
+# combine discretized DFE for same reference
+rule combine_discretized_dfe_same_ref:
+    input:
+        expand("results/graphs/dfe/{ref}/{population}/discretized.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png",population=populations,allow_missing=True)
+    output:
+        "results/graphs/comp/dfe/ref/{ref}/discretized.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        titles=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine discretized DFE for same population
+rule combine_discretized_dfe_same_population:
+    input:
+        expand("results/graphs/dfe/{ref}/{population}/discretized.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png",ref=populations,allow_missing=True)
+    output:
+        "results/graphs/comp/dfe/population/{population}/discretized.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        titles=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine DFE comparison plots for same reference
+rule combine_dfe_comparison_same_ref:
+    input:
+        expand("results/graphs/dfe/{ref}/{population}/sfs_comparison.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png",population=populations,allow_missing=True)
+    output:
+        "results/graphs/comp/dfe/ref/{ref}/sfs_comparison.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        titles=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine DFE comparison plots for same population
+rule combine_dfe_comparison_same_population:
+    input:
+        expand("results/graphs/dfe/{ref}/{population}/sfs_comparison.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png",ref=populations,allow_missing=True)
+    output:
+        "results/graphs/comp/dfe/population/{population}/sfs_comparison.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        titles=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine DFE inferred params for same reference
+rule combine_dfe_params_same_ref:
+    input:
+        expand("results/dfe/{ref}/{population}/result.{folded}.{n}.{parametrization}.{sub_model}.{eps}.json",population=populations,allow_missing=True)
+    output:
+        "results/dfe/ref/{ref}/{folded}.{n}.{parametrization}.{sub_model}.{eps}.csv"
+    params:
+        labels=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_dfe_params.py"
+
+# combine DFE inferred params for same population
+rule combine_dfe_params_same_population:
+    input:
+        expand("results/dfe/{ref}/{population}/result.{folded}.{n}.{parametrization}.{sub_model}.{eps}.json",ref=populations,allow_missing=True)
+    output:
+        "results/dfe/population/{population}/{folded}.{n}.{parametrization}.{sub_model}.{eps}.csv"
+    params:
+        labels=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_dfe_params.py"
+
+# calculate stats
+rule calculate_stats_vcf:
+    input:
+        '{path}.vcf.gz'
+    output:
+        '{path}.stats.txt'
+    conda:
+        'envs/bcftools.yaml'
+    shell:
+        """
+        bcftools stats {input} > {output}
+        """
+
+# estimate effective population size from SFS
+rule estimate_Ne:
+    input:
+        sfs="results/sfs/{ref}/{population}/sfs.unpolarized.folded.{n}.csv",
+        liftover=lambda w: f"results/vcf/ingroup/{w.ref}/{get_ref_from_pop(w.population)}.liftover.stats.csv"
+    output:
+        "results/stats/Ne/{ref}/{population}/{n}.csv"
+    params:
+        no_lift=lambda w: w.ref == get_ref_from_pop(w.population),
+        mu=lambda w: get_species_metadata(w.ref).MU_PER_GENERATION
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/estimate_Ne.py"
+
+# estimate pN/pS from SFS
+rule estimate_pNpS:
+    input:
+        "results/sfs/{ref}/{population}/sfs.unpolarized.folded.{n}.csv",
+    output:
+        "results/stats/pNpS/{ref}/{population}/{n}.csv"
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/estimate_pNpS.py"
+
+# estimate effective population size from SFS
+rule estimate_Ne_before_lifting:
+    input:
+        sfs="results/sfs/no_lift/{population}/sfs.nolift.folded.{n}.csv"
+    output:
+        "results/stats/Ne/no_lift/{population}/{n}.nolift.csv"
+    params:
+        no_lift=True
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/estimate_Ne.py"
+
+# combine Ne estimates for same reference
+rule combine_Ne_same_ref:
+    input:
+        expand("results/stats/Ne/{ref}/{population}/{n}.csv",population=populations_castellano,allow_missing=True)
+    output:
+        "results/stats/Ne/comp/ref/{ref}/{n}.csv"
+    params:
+        labels=populations_castellano
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_scalars.py"
+
+# combine Ne estimates for same population
+rule combine_Ne_same_population:
+    input:
+        expand("results/stats/Ne/{ref}/{population}/{n}.csv",ref=populations,allow_missing=True)
+    output:
+        "results/stats/Ne/comp/population/{population}/{n}.csv"
+    params:
+        labels=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_scalars.py"
+
+# combine Ne estimates for original reference
+rule combine_Ne_original_ref_for_group:
+    input:
+        lambda w: [f"results/stats/Ne/{get_ref_from_pop(p)}/{p}/{{n}}.csv" for p in get_pops(w.n,w.group)],
+        pops="results/stats/sample_names/counts/population_counts.csv"
+    output:
+        "results/stats/Ne/comp/original_ref/{group}/{n}.csv"
+    params:
+        labels=lambda w: get_pops(w.n,w.group)
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_scalars.py"
+
+# combine pN/pS estimates for original reference
+rule combine_pNpS_original_ref_for_group:
+    input:
+        lambda w: [f"results/stats/pNpS/{get_ref_from_pop(p)}/{p}/{{n}}.csv" for p in get_pops(max(int(w.n),8),w.group)],
+        pops="results/stats/sample_names/counts/population_counts.csv"
+    output:
+        "results/stats/pNpS/comp/original_ref/{group}/{n}.csv"
+    params:
+        labels=lambda w: get_pops(max(int(w.n),8),w.group)
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_scalars.py"
+
+# compute number of nonsynonymous and synonymous sites
+rule compute_nn_ns:
+    input:
+        "results/sfs/{ref}/{population}/sfs.{folded}.{n}.csv"
+    output:
+        "results/stats/nn_ns/{ref}/{population}/{folded}.{n}.csv"
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/compute_nn_ns.py"
+
+# combine number of nonsynonymous and synonymous sites
+rule combine_nn_ns_same_ref:
+    input:
+        expand("results/stats/nn_ns/{ref}/{population}/{folded}.{n}.csv",population=populations,allow_missing=True)
+    output:
+        "results/stats/nn_ns/{ref}/{folded}.{n}.csv"
+    params:
+        labels=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_scalars.py"
+
+# plot SFS from Castellano et al.
+rule plot_sfs_castellano:
+    input:
+        neutral="resources/Castellano/sfs/{species}_4fold_all_sfs.txt",
+        selected="resources/Castellano/sfs/{species}_0fold_all_sfs.txt"
+    output:
+        "results/graphs/sfs/Castellano/{species}.png"
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/plot_sfs_castellano.py"
+
+# plot SFS from Castellano et al.
+rule plot_sfs_castellano_gc:
+    input:
+        neutral="resources/Castellano/sfs/{species}_4fold_GC_cons_sfs.txt",
+        selected="resources/Castellano/sfs/{species}_0fold_GC_cons_sfs.txt"
+    output:
+        "results/graphs/sfs/Castellano/{species}_gc.png"
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/plot_sfs_castellano.py"
+
+# combine SFS plots from Castellano et al.
+rule combine_sfs_castellano:
+    input:
+        expand("results/graphs/sfs/Castellano/{species}{opts}png",species=populations_castellano_english,allow_missing=True)
+    output:
+        "results/graphs/comp/sfs/Castellano/all{opts}png"
+    params:
+        titles=populations_castellano
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine SFS plots from Castellano et al. with new dataset for comparison
+rule combine_castellano_sfs_plots_with_new_data:
+    input:
+        "results/graphs/comp/sfs/Castellano/all.png",
+        "results/graphs/comp/sfs/ref/Homo_sapiens/sfs.unfolded.8.castellano_comparison.png"
+    output:
+        "results/graphs/comp/sfs/Castellano_comp.png"
+    params:
+        titles=['Castellano et al.', 'New dataset']
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# merge Castellano neutral (4-fold) and selected (0-fold) SFS into one file
+rule combine_spectra_castellano_data:
+    input:
+        neutral=lambda w: f"resources/Castellano/sfs/{populations_castellano_mapping[w.species]}_4fold_all_sfs.txt",
+        selected=lambda w: f"resources/Castellano/sfs/{populations_castellano_mapping[w.species]}_0fold_all_sfs.txt"
+    output:
+        "results/sfs/Homo_sapiens/Castellano_data/{species}/sfs.unfolded.8.csv"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/merge_castellano_sfs.py"
+
+# infer DFE for Castellano et al. data
+rule infer_castellano_dfe:
+    input:
+        "results/sfs/Homo_sapiens/Castellano_data/{species}/sfs.unfolded.8.csv"
+    output:
+        discretized="results/graphs/dfe/Homo_sapiens/Castellano/{species}/discretized.unfolded.8.{parametrization}.{sub_model}.{eps}.png",
+        sfs_comparison="results/graphs/dfe/Homo_sapiens/Castellano/{species}/sfs_comparison.unfolded.8.{parametrization}.{sub_model}.{eps}.png",
+        json="results/dfe/Castellano/{species}/result.unfolded.8.{parametrization}.{sub_model}.{eps}.json",
+        dfe="results/dfe/Castellano/{species}/dfe.unfolded.8.{parametrization}.{sub_model}.{eps}.dfe.json"
+    params:
+        parametrization="{parametrization}",
+        use_eps=lambda w: w.eps == "eps"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/infer_dfe.py"
+
+# combine DFE plots for Castellano dataset
+rule combine_dfe_plots_castellano_data:
+    input:
+        expand("results/graphs/dfe/Homo_sapiens/Castellano/{population}/{plot_type}.unfolded.8.{parametrization}.{sub_model}.{eps}.png",
+            population=populations_castellano_english,allow_missing=True)
+    output:
+        "results/graphs/comp/dfe/Castellano/{plot_type}.unfolded.8.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        titles=populations_castellano
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/combine_plots.py"
+
+# combine plots for Castellano populations with new dataset for comparison
+rule combine_dfe_plots_castellano_pops:
+    input:
+        expand("results/graphs/dfe/{ref}/{population}/{plot_type}.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png",
+            population=populations_castellano,allow_missing=True),
+    output:
+        "results/graphs/comp/dfe/{ref}/{plot_type}.castellano_comparison.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        titles=populations_castellano
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/combine_plots.py"
+
+# combine SFS plots from Castellano et al. with new dataset for comparison
+rule combine_castellano_dfe_plots_with_new_data:
+    input:
+        "results/graphs/comp/dfe/Castellano/{plot_type}.unfolded.8.{parametrization}.{sub_model}.{eps}.png",
+        "results/graphs/comp/dfe/{ref}/{plot_type}.castellano_comparison.unfolded.{n}.{parametrization}.{sub_model}.{eps}.png"
+    output:
+        "results/graphs/comp/dfe/Castellano_comp/{ref}/{plot_type}.unfolded.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        titles=['Castellano et al.', 'New dataset']
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine SFS for Castellano populations across different references
+rule combine_sfs_plot_castellano_ref_comparison:
+    input:
+        expand("results/graphs/comp/sfs/ref/{ref}/sfs.unfolded.8.castellano_comparison.png",ref=populations,allow_missing=True)
+    output:
+        "results/graphs/comp/sfs/ref_comparison/sfs.unfolded.{n}.castellano_comparison.png"
+    params:
+        titles=populations
+    resources:
+        mem_mb=20000
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine SFS for all populations in a group across different references
+rule combine_sfs_plot_for_group_original_ref:
+    input:
+        lambda w: [f"results/graphs/sfs/{get_ref_from_pop(p)}/{p}/sfs.{{opts}}.{{n}}.png" for p in
+                   get_pops(max(int(w.n),8),w.group)]
+    output:
+        "results/graphs/comp/sfs/original_ref/{group}/sfs.{opts}.{n}.png"
+    params:
+        titles=lambda w: get_pops(max(int(w.n),8),w.group),
+        title_size_rel=40
+    resources:
+        mem_mb=20000
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine DFE for Castellano populations across different references
+rule combine_dfe_plot_castellano_ref_comparison:
+    input:
+        expand("results/graphs/comp/dfe/{ref}/{plot_type}.castellano_comparison.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png",ref=populations,allow_missing=True)
+    output:
+        "results/graphs/comp/dfe/ref_comparison/{plot_type}.castellano_comparison.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        titles=populations
+    resources:
+        mem_mb=20000
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# plot Ne regression with Castellano et al. data
+rule plot_Ne_regression_castellano:
+    input:
+        x="resources/Castellano/Ne/all.csv",
+        y="results/stats/Ne/comp/original_ref/8.csv"
+    output:
+        "results/graphs/comp/Ne/{ref}/Castellano/Kuderna/regression.{n}.png"
+    params:
+        x_col="Ne",
+        y_col="x",
+        x_label="Castellano",
+        y_label="New",
+        x_join_key="label",
+        y_join_key="label",
+        title="Population",
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_regression.py"
+
+# combine Ne regression plots for different references
+rule combine_Ne_regression_plot_castellano:
+    input:
+        expand("results/graphs/comp/Ne/{ref}/regression.castellano.{n}.png",ref=populations,allow_missing=True)
+    output:
+        "results/graphs/comp/Ne/regression.castellano.{n}.png"
+    params:
+        titles=populations
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine spectra for castellano data
+rule combine_spectra_castellano_data_pops:
+    input:
+        expand("results/sfs/Homo_sapiens/Castellano_data/{population}/sfs.unfolded.8.csv",population=populations_castellano,allow_missing=True)
+    output:
+        "results/sfs/comp/Homo_sapiens/Castellano_data/sfs.unfolded.8.csv"
+    params:
+        labels=populations_castellano
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_spectra.py"
+
+# combine spectra for castellano populations
+rule combine_spectra_castellano_pops_fixed_ref:
+    input:
+        expand("results/sfs/{ref}/{population}/sfs.{folded}.{n}.csv",population=populations_castellano,allow_missing=True)
+    output:
+        "results/sfs/comp/{ref}/Castellano/sfs.{folded}.{n}.csv"
+    params:
+        labels=populations_castellano
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_spectra.py"
+
+# combine spectra for castellano populations using original reference
+rule combine_spectra_castellano_pops_original_ref:
+    input:
+        lambda w: [f"results/sfs/{get_ref_from_pop(p)}/{p}/sfs.{{folded}}.{{n}}.csv" for p in populations_castellano]
+    output:
+        "results/sfs/comp/original_ref/Castellano/sfs.{folded}.{n}.csv"
+    params:
+        labels=populations_castellano
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_spectra.py"
+
+# combine spectra for all populations in a group
+rule combine_spectra_for_group:
+    input:
+        lambda w: [f"results/sfs/{get_ref_from_pop(p)}/{p}/sfs.{{opts}}.{{n}}.csv" for p in get_pops(w.n,w.group)],
+        pops="results/stats/sample_names/counts/population_counts.csv"
+    output:
+        "results/sfs/comp/original_ref/{group}/sfs.{opts}.{n}.csv"
+    params:
+        labels=lambda w: get_pops(w.n,w.group)
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_spectra.py"
+
+# infer joint DFE for Castellano populations
+rule infer_joint_dfe_unfolded:
+    input:
+        sfs="results/sfs/comp/{ref}/{group}/sfs.unfolded.{n}.csv"
+    output:
+        json="results/dfe/{group}/joint/{ref}/{shared}/unfolded.{n}.{parametrization}.{sub_model}.{eps}.json",
+        discretized="results/graphs/dfe/{group}/joint/{ref}/{shared}/discretized.unfolded.{n}.{parametrization}.{sub_model}.{eps}.png",
+        sfs_comparison="results/graphs/dfe/{group}/joint/{ref}/{shared}/sfs_comparison.unfolded.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        shared_params=lambda w: w.shared.split('+'),
+        parametrization="{parametrization}",
+        sub_model="{sub_model}",
+        use_eps=lambda w: w.eps == 'eps'
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/infer_joint_dfe.py"
+
+# infer joint DFE for Castellano populations
+rule infer_joint_dfe_folded:
+    input:
+        sfs="results/sfs/comp/{ref}/{group}/sfs.unpolarized.folded.{n}.csv"
+    output:
+        json="results/dfe/{group}/joint/{ref}/{shared}/folded.{n}.{parametrization}.{sub_model}.{eps}.json",
+        discretized="results/graphs/dfe/{group}/joint/{ref}/{shared}/discretized.folded.{n}.{parametrization}.{sub_model}.{eps}.png",
+        sfs_comparison="results/graphs/dfe/{group}/joint/{ref}/{shared}/sfs_comparison.folded.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        shared_params=lambda w: w.shared.split('+'),
+        parametrization="{parametrization}",
+        sub_model="{sub_model}",
+        use_eps=lambda w: w.eps == 'eps'
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/infer_joint_dfe.py"
+
+# plot joint DFE stat against Ne
+rule plot_joint_DFE_against_Ne:
+    input:
+        json="results/dfe/{group}/joint/{ref}/{shared}/{folded}.{n}.{parametrization}.{sub_model}.{eps}.json",
+        ne="results/stats/Ne/comp/original_ref/{group}/{n}.csv",
+        pops="results/stats/sample_names/counts/population_counts.csv"
+    output:
+        "results/graphs/dfe_vs_Ne/{group}/joint/{ref}/{shared}/dfe_vs_Ne.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        populations=lambda w: get_pops(w.n,w.group),
+        mode="joint",
+        labels=lambda w: (
+            get_pops(w.n,w.group)
+            if w.group == 'Castellano'
+            else [get_group_from_pop(p) for p in get_pops(w.n,w.group)]
+        ),
+        legend=True
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/plot_joint_dfe_against_Ne.py"
+
+# plot marginal DFE stat against Ne
+rule plot_marginal_DFE_against_Ne:
+    input:
+        dfe="results/dfe/{group}/dfe.{folded}.{n}.{parametrization}.{sub_model}.{eps}.csv",
+        ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
+        pops="results/stats/sample_names/counts/population_counts.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
+    output:
+        "results/graphs/dfe_vs_Ne/{group}/marginal/{ref}/dfe_vs_Ne.{folded}.{n}.{parametrization}.{sub_model}.{eps}.{scaled}.png"
+    params:
+        populations=lambda w: get_pops(max(int(w.n),8),w.group),
+        labels=lambda w: (
+            get_pops(max(int(w.n),8),w.group)
+            if w.group == 'Castellano'
+            else [get_group_from_pop(p) for p in get_pops(max(int(w.n),8),w.group)]
+        ),
+        legend=True,
+        scaled=lambda w: w.scaled == 'scaled'
+    conda:
+        'envs/regression.yaml'
+    script:
+        "scripts/plot_marginal_dfe_against_Ne.py"
+
+# plot jointDFE stat against Castellano Ne for Castellano et al. populations
+rule plot_joint_DFE_against_castellano_Ne_castellano_pops:
+    input:
+        json="results/dfe/Castellano/joint/{ref}/{shared}/{folded}.{n}.{parametrization}.{sub_model}.{eps}.json",
+        ne="resources/Castellano/Ne/all.csv"
+    output:
+        "results/graphs/dfe_vs_Ne/Castellano_Ne/{mode}/{ref}/{shared}/dfe_vs_Ne.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        populations=populations_castellano,
+        mode="{mode}",
+        labels=populations_castellano,
+        legend=True
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/plot_joint_dfe_against_Ne.py"
+
+# plot joint DFE stat against Ne for Castellano et al. populations
+rule plot_joint_DFE_against_Ne_Castellano_pops:
+    input:
+        json="results/dfe/Castellano/joint/{ref}/{shared}/{folded}.{n}.{parametrization}.{sub_model}.{eps}.json",
+        ne="results/stats/Ne/comp/original_ref/Castellano/{n}.csv",
+        pops="results/stats/sample_names/counts/population_counts.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
+    output:
+        "results/graphs/dfe_vs_Ne/Castellano/{mode}/{ref}/{shared}/dfe_vs_Ne.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        populations=populations_castellano,
+        mode="{mode}",
+        labels=lambda w: populations_castellano,
+        legend=True
+    conda:
+        'envs/regression.yaml'
+    script:
+        "scripts/plot_joint_dfe_against_Ne.py"
+
+# plot DFE stat against Ne using original Castellano et al. estimate
+rule plot_joint_DFE_castellano_estimate:
+    input:
+        dfe="resources/Castellano/dfe/3s{opts}csv",
+        ne="resources/Castellano/Ne/all.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
+    output:
+        "results/graphs/dfe_vs_Ne/Castellano_estimate/dfe_vs_Ne{opts}png"
+    params:
+        populations=populations_castellano,
+        labels=populations_castellano
+    conda:
+        'envs/regression.yaml'
+    script:
+        "scripts/plot_ne_dfe_castellano.py"
+
+# combine DFE vs Ne plots for Castellano estimate vs Kuderna estimate
+rule combine_dfe_vs_Ne_plots_castellano_vs_kuderna:
+    input:
+        "results/graphs/dfe_vs_Ne/Castellano_estimate/dfe_vs_Ne.png",
+        "results/graphs/dfe_vs_Ne/Castellano/joint/original_ref/b/dfe_vs_Ne.unfolded.8.gamma.del.noeps.png"
+    output:
+        "results/graphs/comp/dfe_vs_Ne/Castellano_Kuderna_comparison.png"
+    params:
+        titles=['Castellano et al.', 'New dataset']
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine DFE vs Ne plots for Castellano estimate with new estimate retaining Castellano Ne
+rule combine_dfe_vs_Ne_plots_castellano_estimate_same_ne:
+    input:
+        "results/graphs/dfe_vs_Ne/Castellano_estimate/dfe_vs_Ne.png",
+        "results/graphs/dfe_vs_Ne/Castellano_Ne/joint/original_ref/b/dfe_vs_Ne.unfolded.8.gamma.del.noeps.png"
+    output:
+        "results/graphs/comp/dfe_vs_Ne/Castellano_estimate/same_ne.png"
+    params:
+        titles=['Castellano et al.', 'New dataset']
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# combine DFE vs Ne plots Castellano Ne vs new Ne
+rule combine_dfe_vs_Ne_castellano_ne_vs_new_ne:
+    input:
+        "results/graphs/dfe_vs_Ne/Castellano_Ne/joint/original_ref/b/dfe_vs_Ne.unfolded.8.gamma.del.noeps.png",
+        "results/graphs/dfe_vs_Ne/Castellano/joint/original_ref/b/dfe_vs_Ne.unfolded.8.gamma.del.noeps.png"
+    output:
+        "results/graphs/comp/dfe_vs_Ne/Castellano_estimate/different_ne.png"
+    params:
+        titles=['Castellano et al. $N_e$', 'New $N_e$ estimate']
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# plot discretized joint DFE for a single population in a group
+rule plot_DFE_of_pop:
+    input:
+        "results/dfe/{group}/joint/{ref}/{shared}/{folded}.{n}.{parametrization}.{sub_model}.{eps}.json"
+    output:
+        "results/graphs/dfe/{group}/{mode,marginal|joint}/{ref}/{shared}/pop/{population}/{kind,discretized|sfs_comparison}.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        population="{population}",
+        mode="{mode}",
+        kind="{kind}"
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/plot_dfe_pop.py"
+
+# combine discretized joint DFE for a single population across group
+rule combine_plot_dfe_of_pop_ref_comparison_original_ref:
+    input:
+        lambda w: [
+            f"results/graphs/dfe/{w.group}/{{mode}}/original_ref/{{shared}}/pop/{p}/{{kind}}.{{folded}}.{{n}}.{{parametrization}}.{{sub_model}}.{{eps}}.png"
+            for p in get_pops(w.n,w.group)],
+    output:
+        "results/graphs/comp/dfe/{group}/{mode}/original_ref/{shared}/{kind}.{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        titles=lambda w: get_pops(w.n,w.group),
+        title_size_rel=40,
+    resources:
+        mem_mb=20000
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/combine_plots.py"
+
+# plot Ne against N/S
+rule plot_Ne_against_NS:
+    input:
+        "results/stats/sample_names/counts/population_counts.csv",
+        x="results/stats/Ne/comp/original_ref/{group}/{n}.csv",
+        y="results/stats/comp/ns/ingroup/population/NS.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
+    output:
+        "results/graphs/Ne_pn_pn/{group}/regression.{n}.png"
+    params:
+        labels=lambda w: [get_group_from_pop(p) for p in get_pops(w.n,w.group)],
+        include=lambda w: get_pops(w.n,w.group),
+        title="$N_e$ vs $p_N/p_S$"
+    conda:
+        "envs/regression.yaml"
+    script:
+        "scripts/plot_ne_against_ns.py"
+
+# plot Ne from different sample sizes against each other
+rule plot_Ne_against_Ne_different_sample_sizes:
+    input:
+        x="results/stats/Ne/comp/original_ref/all/{n}.csv",
+        y="results/stats/Ne/comp/original_ref/all/{m}.csv"
+    output:
+        "results/graphs/Ne_vs_Ne/regression.{n}_vs_{m}.png"
+    params:
+        x_col="x",
+        y_col="x",
+        x_label="$N_e$ ({n} samples)",
+        y_label="$N_e$ ({m} samples)",
+        x_join_key="label",
+        y_join_key="label",
+        title="$N_e$ ({n} samples) vs $N_e$ ({m} samples)"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_regression.py"
+
+# plot Ne against Kuderna et al. Ne
+rule plot_Ne_against_Kuderna_Ne:
+    input:
+        'results/stats/sample_names/counts/population_counts.csv',
+        x="results/stats/Ne/comp/original_ref/{group}/{n}.csv",
+        y="resources/Kuderna/species.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
+    output:
+        "results/graphs/Ne_vs_Kuderna/{group}/regression.{n}_vs_Kuderna.png"
+    params:
+        labels=lambda w: {p: get_group_from_pop(p) for p in get_pops(w.n,w.group)}
+    conda:
+        "envs/regression.yaml"
+    script:
+        "scripts/plot_Ne_against_Kuderna_Ne.py"
+
+# convert VCF file to PLINK format
+rule convert_vcf_to_plink:
+    input:
+        "results/vcf/ingroup/{ref}/{species}.exons.biallelic.vcf.gz"
+    output:
+        "results/plink/{ref}/{species}.bed",
+        "results/plink/{ref}/{species}.bim",
+        "results/plink/{ref}/{species}.fam",
+        "results/plink/{ref}/{species}.log"
+    conda:
+        "envs/plink.yaml"
+    script:
+        "scripts/convert_plink.py"
+
+# generate PCA plot
+rule plot_pca:
+    input:
+        lambda w: f"results/plink/{get_ref_from_pop(w.population)}/{get_species_from_pop(w.population)}.bed"
+    output:
+        "results/graphs/pca/{population}/pca.png"
+    params:
+        marker_size=15,
+        name_col='sample',
+        label_col='sample',
+        cbar=False,
+        legend=True,
+        subsample=10000,
+        samples=lambda w: get_individuals_from_pop(w.population),
+        legend_size=4
+    conda:
+        "envs/pca.yaml"
+    script:
+        "scripts/plot_pca.py"
+
+# combine PCA plots for all populations with more than n samples
+rule combine_pca_plots:
+    input:
+        lambda w: expand("results/graphs/pca/{population}/pca.png",population=get_pops(w.n),allow_missing=True)
+    output:
+        "results/graphs/comp/pca/all.{n}.png"
+    params:
+        titles=lambda w: get_pops(w.n),
+        title_size_rel=40
+    conda:
+        'envs/base.yaml'
+    resources:
+        mem_mb=20000
+    script:
+        "scripts/combine_plots.py"
+
+# assemble population summary table
+rule assemble_pop_table:
+    input:
+        species_metadata="resources/Kuderna/species.csv",
+        n_individuals="results/stats/sample_names/counts/population_counts.csv",
+        ne="results/stats/Ne/comp/original_ref/{group}/{n}.csv",
+        ns="results/stats/comp/ns/ingroup/population/NS.csv",
+        spectra="results/sfs/comp/original_ref/{group}/sfs.unfolded.{n}.csv",
+        ancestral_stats="results/stats/comp/{group}/ancestral_stats.csv",
+        outgroup_stats='results/stats/comp/{group}/outgroup_stats.{n}.csv',
+        dfes=[
+            "results/dfe/{group}/joint/original_ref/S1+S2+S3/unfolded.8.discrete.del.noeps.json",
+            "results/dfe/{group}/joint/original_ref/S1+S2+S3/folded.8.discrete.del.noeps.json",
+            "results/dfe/{group}/joint/original_ref/S1+S2+S3+S4+S5/unfolded.8.discrete.full.noeps.json",
+            "results/dfe/{group}/joint/original_ref/b+S_d/unfolded.8.gamma.del.noeps.json",
+            "results/dfe/{group}/joint/original_ref/b+S_d+p_b+S_b/unfolded.8.gamma.full.noeps.json"
+        ]
+    output:
+        "results/tables/population_summary/{group}/population_summary.{n}.csv"
+    params:
+        populations=lambda w: get_pops(w.n,w.group),
+        outgroups=ingroup_outgroups,
+        references=lambda w: {p: get_ref_from_pop(p) for p in get_pops(w.n,w.group)},
+        species=lambda w: {p: get_species_from_pop(p) for p in get_pops(w.n,w.group)},
+        dfe_types=[
+            "discrete_8_deleterious_noeps",
+            "discrete_8_deleterious_noeps_folded",
+            "discrete_8_full_noeps",
+            "dfe_gamma_8_deleterious_noeps",
+            "dfe_gamma_8_full_noeps"
+        ]
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/assemble_pop_table.py"
+
+# compare nested models for beneficial mutations
+rule compare_nested_beneficial:
+    input:
+        sub="results/dfe/{ref}/{population}/result.{folded}.{n}.{parametrization}.del.{eps}.json",
+        sup="results/dfe/{ref}/{population}/result.{folded}.{n}.{parametrization}.full.{eps}.json"
+    output:
+        "results/dfe/{ref}/{population}/model_comparison/beneficial/{folded}.{n}.{parametrization}.{eps}.csv"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/compare_nested.py"
+
+# aggregate beneficial model comparisons across populations in a group
+rule aggregate_beneficial_model_comparisons:
+    input:
+        lambda w: [f"results/dfe/{get_ref_from_pop(p)}/{p}/model_comparison/beneficial/{{folded}}.{{n}}.{{parametrization}}.{{eps}}.csv" for p in get_pops(w.n,w.group)]
+    output:
+        "results/dfe/{group}/model_comparison/beneficial/aggregate/{folded}.{n}.{parametrization}.{eps}.csv"
+    params:
+        populations=lambda w: get_pops(w.n,w.group)
+    run:
+        import pandas as pd
+
+        dfs = []
+        for infile, pop in zip(input,params.populations):
+            df = pd.read_csv(infile)
+            df.insert(0,"population",pop)
+            dfs.append(df)
+
+        pd.concat(dfs,ignore_index=True).to_csv(output[0],index=False)
+
+# plot phylogeny for populations in a group
+rule plot_phylogeny:
+    input:
+        "results/stats/sample_names/counts/population_counts.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
+    output:
+        "results/graphs/phylogeny/{group}/phylogeny.png"
+    params:
+        populations=lambda w: get_pops(8,w.group)
+    conda:
+        "envs/tree.yaml"
+    script:
+        "scripts/plot_phylogeny.py"

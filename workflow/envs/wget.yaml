@@ -1,0 +1,6 @@
+name: wget-primate-dfe
+channels:
+  - defaults
+dependencies:
+  - wget
+  - python

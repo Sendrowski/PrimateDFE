@@ -1,0 +1,6 @@
+name: vep-primate-dfe
+channels:
+  - bioconda
+dependencies:
+  - python
+  - ensembl-vep

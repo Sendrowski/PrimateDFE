@@ -1,0 +1,6 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112482904	PD_0146	PD_0146	ERS14600255	PRJEB59576	Avahi_laniger_ssp	Avahi_laniger_ssp	Propithecus_coquereli_ssp	Avahi	laniger	ssp	Unknown	M	39.319	0.754	24.378	0.755	Unknown	Unknown
+SAMEA116330131	SAMEA116330131	SAMEA116330131	ERS21378977	PRJEB77609	Avahi_laniger_ssp	Avahi_laniger_ssp	Propithecus_coquereli_ssp	Avahi	laniger	ssp	Unknown	F	33.4	0.753	36.331	0.756	Unknown	Unknown
+SAMEA116330132	SAMEA116330132	SAMEA116330132	ERS21378978	PRJEB77609	Avahi_occidentalis_ssp	Avahi_occidentalis_ssp	Propithecus_coquereli_ssp	Avahi	occidentalis	ssp	Unknown	M	32.183	0.754	20.552	0.753	Unknown	Unknown
+SAMEA112482905	PD_0147	PD_0147	ERS14600256	PRJEB59576	Avahi_peyrierasi_ssp	Avahi_peyrierasi_ssp	Propithecus_coquereli_ssp	Avahi	peyrierasi	ssp	Unknown	F	36.027	0.75	38.239	0.753	Unknown	Unknown
+SAMEA116330133	SAMEA116330133	SAMEA116330133	ERS21378979	PRJEB77609	Avahi_peyrierasi_ssp	Avahi_peyrierasi_ssp	Propithecus_coquereli_ssp	Avahi	peyrierasi	ssp	Unknown	M	35.679	0.753	22.897	0.753	Unknown	Unknown

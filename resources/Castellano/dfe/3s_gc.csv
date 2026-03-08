@@ -1,0 +1,10 @@
+species,b,b_low,b_high,S_d,S_d_low,S_d_high
+Homo_sapiens,0.1694,0.1123,0.2176,-408,-2314,-80
+Pan_paniscus,0.1694,0.1123,0.2176,-1163,-5710,-164
+Pan_troglodytes_troglodytes,0.1694,0.1123,0.2176,-3371,-18974,-240
+Pan_troglodytes_schweinfurthii,0.1694,0.1123,0.2176,-1995,-9958,-197
+Pan_troglodytes_verus,0.1694,0.1123,0.2176,-729,-4181,-86
+Pan_troglodytes_ellioti,0.1694,0.1123,0.2176,-878,-5965,-96
+Pongo_pygmaeus,0.1694,0.1123,0.2176,-5837,-36070,-331
+Pongo_abelii,0.1694,0.1123,0.2176,-7964,-71117,-437
+Gorilla_gorilla_gorilla,0.1694,0.1123,0.2176,-4232,-31024,-326

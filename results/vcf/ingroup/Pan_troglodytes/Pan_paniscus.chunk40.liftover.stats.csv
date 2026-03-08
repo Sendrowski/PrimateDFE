@@ -1,0 +1,2 @@
+matches,mismatches,invalid_lift,mismatches_next_base,missing_hit,missing_chrom,fraction_mismatches,fraction_mismatches_next_base,n_sites,fraction_lifted
+90182,21153,675,1049,265,0,0.18999416176404546,0.009422014640499394,112275,0.9916276998441327

@@ -1,0 +1,6 @@
+name: bedtools-primate-dfe
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - bedtools

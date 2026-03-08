@@ -1,0 +1,5 @@
+REFERENCE_FOLDER	REFERENCE_NAME	GENBANK_ID	FTP
+Macaca_fascicularis_ssp	T2T-MFA8v1.1	GCA_037993035.2	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/037/993/035/GCA_037993035.2_T2T-MFA8v1.1/GCA_037993035.2_T2T-MFA8v1.1_genomic.fna.gz
+Macaca_mulatta_ssp	Mmul_10	GCA_003339765.3	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/003/339/765/GCF_003339765.1_Mmul_10/GCF_003339765.1_Mmul_10_genomic.fna.gz
+Macaca_nemestrina_ssp	mMacNem.hap1	GCA_043159975.1	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/043/159/975/GCF_043159975.1_mMacNem.hap1/GCF_043159975.1_mMacNem.hap1_genomic.fna.gz
+Macaca_thibetana_spp	ASM2454274v1	GCA_024542745.1	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/024/542/745/GCF_024542745.1_ASM2454274v1/GCF_024542745.1_ASM2454274v1_genomic.fna.gz

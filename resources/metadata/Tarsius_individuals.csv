@@ -1,0 +1,4 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112483040	PD_0403	PD_0403	ERS14600391	PRJEB59576	Tarsius_dentatus_ssp	Tarsius_dentatus_ssp	Cephalopachus_bancanus_ssp	Tarsius	dentatus	ssp	Unknown	Unknown	160.603	0.953	Unknown	Unknown	Unknown	Unknown
+SAMEA112483041	PD_0404	PD_0404	ERS14600392	PRJEB59576	Tarsius_lariang_ssp	Tarsius_lariang_ssp	Cephalopachus_bancanus_ssp	Tarsius	lariang	ssp	Unknown	Unknown	34.674	0.932	Unknown	Unknown	Unknown	Unknown
+SAMEA112483042	PD_0405	PD_0405	ERS14600393	PRJEB59576	Tarsius_wallacei_ssp	Tarsius_wallacei_ssp	Cephalopachus_bancanus_ssp	Tarsius	wallacei	ssp	Unknown	Unknown	31.627	0.933	Unknown	Unknown	Unknown	Unknown

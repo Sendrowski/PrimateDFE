@@ -1,0 +1,5 @@
+name: ncbi-cli-primate-dfe
+channels:
+  - conda-forge
+dependencies:
+  - ncbi-datasets-cli

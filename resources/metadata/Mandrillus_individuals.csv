@@ -1,0 +1,11 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMN03121813	SAMN03121813	SAMN03121813	SRS778210	PRJNA251423	Mandrillus_leucophaeus_ssp	Mandrillus_leucophaeus_ssp	Mandrillus_sphinx_ssp	Mandrillus	leucophaeus	ssp	F	F	99.832	0.97	98.896	0.946	Unknown	Unknown
+SAMN21971422	SAMN21971422	SAMN21971422	SRS11183151	PRJNA767781	Mandrillus_leucophaeus_ssp	Mandrillus_leucophaeus_ssp	Mandrillus_sphinx_ssp	Mandrillus	leucophaeus	ssp	M	M	80.745	0.968	41.879	0.951	Unknown	Unknown
+SAMN21971423	SAMN21971423	SAMN21971423	SRS11183258	PRJNA767781	Mandrillus_leucophaeus_ssp	Mandrillus_leucophaeus_ssp	Mandrillus_sphinx_ssp	Mandrillus	leucophaeus	ssp	F	F	78.813	0.968	77.029	0.944	Unknown	Unknown
+SAMN21971424	SAMN21971424	SAMN21971424	SRS11183264	PRJNA767781	Mandrillus_leucophaeus_ssp	Mandrillus_leucophaeus_ssp	Mandrillus_sphinx_ssp	Mandrillus	leucophaeus	ssp	F	F	78.932	0.968	76.942	0.944	Unknown	Unknown
+SAMN21971425	SAMN21971425	SAMN21971425	SRS11183265	PRJNA767781	Mandrillus_leucophaeus_ssp	Mandrillus_leucophaeus_ssp	Mandrillus_sphinx_ssp	Mandrillus	leucophaeus	ssp	Unknown	F	81.218	0.968	80.137	0.944	Unknown	Unknown
+SAMN21971426	SAMN21971426	SAMN21971426	SRS11183266	PRJNA767781	Mandrillus_leucophaeus_ssp	Mandrillus_leucophaeus_ssp	Mandrillus_sphinx_ssp	Mandrillus	leucophaeus	ssp	Unknown	M	80.971	0.969	43.068	0.952	Unknown	Unknown
+SAMN23614715	SAMN23614715	SAMN23614715	SRS11219883	PRJNA785018	Mandrillus_leucophaeus_ssp	Mandrillus_leucophaeus_ssp	Mandrillus_sphinx_ssp	Mandrillus	leucophaeus	ssp	M	M	49.97	0.97	27.469	0.952	Unknown	Unknown
+SAMEA112482850	PD_0057	PD_0057	ERS14600201	PRJEB59576	Mandrillus_sphinx_ssp	Mandrillus_sphinx_ssp	Mandrillus_sphinx_ssp	Mandrillus	sphinx	ssp	M	M	42.935	0.97	23.06	0.952	Unknown	Unknown
+SAMN08634632	SAMN08634632	SAMN08634632	SRS3024194	PRJNA436891	Mandrillus_sphinx_ssp	Mandrillus_sphinx_ssp	Mandrillus_sphinx_ssp	Mandrillus	sphinx	ssp	M	M	106.659	0.973	57.619	0.956	Unknown	Unknown
+SAMN23530513	SAMN23530513	SAMN23530513	SRS11219906	PRJNA785018	Mandrillus_sphinx_ssp	Mandrillus_sphinx_ssp	Mandrillus_sphinx_ssp	Mandrillus	sphinx	ssp	Unknown	F	6.348	0.003	4.832	0.003	Unknown	Unknown

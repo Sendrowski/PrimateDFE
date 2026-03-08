@@ -1,0 +1,4 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112482885	PD_0110	PD_0110	ERS14600236	PRJEB59576	Xanthonycticebus_pygmaeus_ssp	Xanthonycticebus_pygmaeus_ssp	Nycticebus_coucang_ssp	Xanthonycticebus	pygmaeus	ssp	Unknown	F	31.83	0.976	31.081	0.945	65.832	0.491
+SAMEA112482886	PD_0111	PD_0111	ERS14600237	PRJEB59576	Xanthonycticebus_pygmaeus_ssp	Xanthonycticebus_pygmaeus_ssp	Nycticebus_coucang_ssp	Xanthonycticebus	pygmaeus	ssp	Unknown	M	36.811	0.977	22.418	0.945	65.124	0.784
+SAMN10578802	SAMN10578802	SAMN10578802	SRS4121326	PRJNA509330	Xanthonycticebus_pygmaeus_ssp	Xanthonycticebus_pygmaeus_ssp	Nycticebus_coucang_ssp	Xanthonycticebus	pygmaeus	ssp	Unknown	F	2.146	0.261	2.195	0.245	3.637	0.163

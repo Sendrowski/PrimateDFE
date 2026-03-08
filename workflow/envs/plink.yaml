@@ -1,0 +1,6 @@
+name: plink-primate-dfe
+channels:
+  - bioconda
+dependencies:
+  - python
+  - plink

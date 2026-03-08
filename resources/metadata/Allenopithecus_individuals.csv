@@ -1,0 +1,4 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112482821	PD_0028	PD_0028	ERS14600172	PRJEB59576	Allenopithecus_nigroviridis_ssp	Allenopithecus_nigroviridis_ssp	Allenopithecus_nigroviridis_ssp	Allenopithecus	nigroviridis	ssp	M	M	35.077	0.992	18.489	0.992	Unknown	Unknown
+SAMEA112482901	PD_0126	PD_0126	ERS14600252	PRJEB59576	Allenopithecus_nigroviridis_ssp	Allenopithecus_nigroviridis_ssp	Allenopithecus_nigroviridis_ssp	Allenopithecus	nigroviridis	ssp	M	M	33.311	0.992	17.892	0.992	Unknown	Unknown
+SAMN15801446	SAMN15801446	SAMN15801446	SRS7189610	PRJNA512907	Allenopithecus_nigroviridis_ssp	Allenopithecus_nigroviridis_ssp	Allenopithecus_nigroviridis_ssp	Allenopithecus	nigroviridis	ssp	F	F	36.71	0.992	37.21	0.992	Unknown	Unknown

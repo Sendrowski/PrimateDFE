@@ -1,0 +1,7 @@
+.idea/
+resources/
+.snakemake/
+.snakemake_old/
+scratch/
+results/*
+nohup.out
