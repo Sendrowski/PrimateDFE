@@ -58,26 +58,26 @@ for node in tree.treenode.traverse("postorder"):
 
 # draw
 canvas, axes, _ = tree.draw(
-    width=800,
-    height=500,
-    tip_labels=True,
+    width=1200,
+    height=600,
+    tip_labels=[l.replace("_", " ") for l in tree.get_tip_labels()],
     tip_labels_align=True,
-    # tree_style='d',
-    node_sizes=10,
+    node_sizes=18,
     node_colors=node_colors,
     node_mask=node_mask,
-    edge_style={
-        "stroke": grey,
-        "stroke-width": 1.5,
+    edge_style={"stroke": 'black', "stroke-width": 2},
+    scale_bar=True,
+    tip_labels_style={
+        "font-size": 20,
+        "fill": "black"
     },
-    scale_bar=True
 )
 
-# add x-axis label to toyplot axes
-axes.x.label.text = "Time (Ma)"
-axes.x.label.style['fill'] = grey
+axes.x.spine.style["stroke-width"] = 3
+axes.x.ticks.style["stroke-width"] = 3
+axes.x.ticks.labels.style["font-size"] = 20
 
-scale = 3
+scale = 2
 toyplot.png.render(
     canvas,
     out,
@@ -112,13 +112,21 @@ handles = [
     for label in labels_present
 ]
 
+# add x axis label as text
+plt.text(
+    0.5, -0.02, "Time (Ma)",
+    ha='center', va='center',
+    transform=plt.gca().transAxes,
+    fontsize=6,
+)
+
 plt.legend(
     handles=handles,
-    loc=(0.07, 0.65),
+    loc=(0.05, 0.65),
     frameon=True,
     framealpha=1.0,
     edgecolor="grey",
-    fontsize=2 * scale,
+    fontsize=5,
     labelspacing=0.2,  # vertical spacing between entries
     handletextpad=0.3,  # space between marker and text
     borderpad=0.5,  # padding inside frame
@@ -126,7 +134,7 @@ plt.legend(
 plt.gca().get_legend().get_frame().set_linewidth(0.2 * scale)
 
 plt.tight_layout()
-plt.subplots_adjust(left=0, right=1.1, top=1.1, bottom=0)
+plt.subplots_adjust(left=0, right=1.1, top=1, bottom=0.05)
 plt.savefig(out, dpi=dpi)
 
 if testing:

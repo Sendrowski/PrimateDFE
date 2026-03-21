@@ -31,7 +31,7 @@ try:
 except NameError:
     testing = True
     tree_file = "resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
-    dfe_file = "results/dfe/catarrhini/dfe.unfolded.8.gamma.full.noeps.csv"
+    dfe_file = "results/dfe/catarrhini/dfe.unfolded.8.gamma.del.noeps.csv"
     pops = Populations.get_pops(8, "catarrhini")
     legend = True
     out_tree = "scratch/tree.png"
@@ -83,7 +83,7 @@ tree = toytree.mod.ladderize(tree, direction=False)
 # ----------------------------
 # Load DFEs, collapse subspecies → species, discretize + average
 # ----------------------------
-intervals = np.array([-np.inf, -10, -1, 0, np.inf])
+intervals = np.array([-np.inf, -10, -1, 0])
 
 # species -> list of discretized results
 species_vals = {}

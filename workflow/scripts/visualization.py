@@ -149,7 +149,7 @@ class DFEvsNePlotter:
             fig = plt.subplots(
                 len(self.stat_list) + 1,
                 1,
-                figsize=(10, 0.8 * len(self.stat_list) + 1),
+                figsize=(10, 1.1 * len(self.stat_list) + 1),
                 sharex=True,
                 dpi=400
             )[0]
@@ -182,6 +182,10 @@ class DFEvsNePlotter:
                     )
 
                 self._add_regression(ax, stat, color=color)
+
+                ymin, ymax = ax.get_ylim()
+                pad = 0.05 * (ymax - ymin)
+                ax.set_ylim(ymin - pad, ymax + pad)
 
             # one proxy handle per dataset
             legend_handles[name] = plt.Line2D(
@@ -417,7 +421,7 @@ class DFEvsNePlotter:
             fig = plt.subplots(
                 len(stat_list) + 1,
                 1,
-                figsize=(10, 0.8 * len(stat_list) + 1),
+                figsize=(10, 1.1 * len(stat_list) + 1),
                 sharex=True,
                 dpi=400
             )[0]
@@ -442,6 +446,10 @@ class DFEvsNePlotter:
             ax.set_ylabel(title, fontsize=15, rotation=0, labelpad=60, va="center", ha="center")
 
             ax.ticklabel_format(style="plain", axis="x")
+
+            ymin, ymax = ax.get_ylim()
+            pad = 0.05 * (ymax - ymin)
+            ax.set_ylim(ymin - pad, ymax + pad)
 
         axes[-2].set_xlabel("$N_e$")
         axes[-1].axis("off")
@@ -477,8 +485,8 @@ class DFEvsNePlotter:
 
         if fig is None:
             fig, axes = plt.subplots(
-                1, n,
-                figsize=(0.2 * n, 4),
+                n, 1,
+                figsize=(6, 0.2 * n),
                 #sharey=True,
                 dpi=400
             )
@@ -491,39 +499,41 @@ class DFEvsNePlotter:
         centers = np.arange(len(stat_list))
 
         for ax, pop in zip(axes, pops_sorted):
-            ax.invert_yaxis()
-
             vals = np.array([
                 np.median(self._boot[stat][pop])
                 for stat in stat_list
             ])
 
-            ax.barh(
+            ax.bar(
                 centers,
                 vals,
                 color="steelblue",
-                height=0.8
             )
 
-            ax.set_title(pop.replace("_", " "), fontsize=7, rotation=90, fontstyle="italic")
-
-            ax.set_xticks([])
-            ax.set_xlim(0, 1)
+            ax.set_yticks([0.5])
+            ax.set_yticklabels([pop.replace("_", " ")], fontsize=8, fontstyle="italic")
+            ax.set_ylim(0, 1)
 
             ax.spines["top"].set_visible(False)
             ax.spines["right"].set_visible(False)
 
-        axes[0].set_yticks(centers)
-        axes[0].set_yticklabels([l.replace('S \\in', '') for l in stat_labels], fontsize=9)
-        axes[0].tick_params(axis="y", left=True, labelleft=True)
+        axes[-1].set_xticks(centers)
+        axes[-1].set_xticklabels([l.replace('S \\in', '') for l in stat_labels], fontsize=9)
+        axes[-1].tick_params(axis="x", left=True, labelleft=True)
+        axes[-1].set_xlabel(r"$S$", rotation=0, fontsize=10, labelpad=5)
 
-        for ax in axes[1:]:
-            ax.set_yticks([])
+        for ax in axes[:-1]:
+            ax.set_xticks([])
 
-        axes[0].set_ylabel(r"$S$", rotation=0, fontsize=12, labelpad=10)
 
-        fig.tight_layout()
-        fig.subplots_adjust(top=0.55, wspace=0)
+        # key adjustments
+        fig.subplots_adjust(
+            left=0.34,
+            right=0.98,
+            top=0.99,
+            bottom=0.07,
+            hspace=0.05  # tighter vertical stacking
+        )
 
         return fig
 

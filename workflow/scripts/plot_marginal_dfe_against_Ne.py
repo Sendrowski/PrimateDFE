@@ -19,7 +19,7 @@ try:
     out = snakemake.output[0]
 except NameError:
     testing = True
-    dfe_file = "results/dfe/catarrhini/dfe.unfolded.8.gamma.del.noeps.csv"
+    dfe_file = "results/dfe/catarrhini/dfe.unfolded.8.gamma.full.noeps.csv"
     # dfe_file = "results/dfe/catarrhini/dfe.unfolded.8.discrete.fixed_h=0.1.noeps.csv"
     # dfe_file = "results/dfe/catarrhini/dfe.unfolded.8.discrete.fixed_h=None.noeps.csv"
     ne_file = "results/stats/Ne/comp/original_ref/catarrhini/8.csv"
@@ -42,11 +42,11 @@ if scaled:
         "range_S_-10_-1",
         "range_S_-1_0",
         #"range_S_0_inf",
-        #"range_S_0_0.1",
-        #"range_S_0.1_inf",
+        "range_S_0_0.1",
+        "range_S_0.1_inf",
         #"alpha",
-        "b",
-        "S_d",
+        #"b",
+        #"S_d",
         # "h"
     ]
 else:
@@ -72,6 +72,6 @@ plotter.plot(
     show=testing,
     show_legend=legend,
     legend_n_cols=6,
-    style='stacked',
+    style='dfe',
     # title=dfe_file if testing else ''
 )

@@ -167,8 +167,9 @@ rule all:
             #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.folded.{n}.discrete.{full}.noeps.png",group='catarrhini',n=8,full=['del', 'full']),
             #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.unfolded.{n}.discrete.{full}.noeps.png",group='catarrhini',n=2,full=['del', 'full']),
             #expand("results/dfe/{group}/model_comparison/beneficial/aggregate/{folded}.{n}.{parametrization}.{eps}.csv", group='catarrhini', folded='unfolded', n=8, parametrization='discrete', eps='noeps'),
-            expand("results/dfe/catarrhini/dfe.unfolded.8.{model}.recessive.noeps.csv", model=['discrete', 'gamma']),
-            expand("results/dfe/catarrhini/dfe.unfolded.8.discrete.fixed_h={h}.noeps.csv", h=[0.1, 0.3]),
+            #expand("results/dfe/catarrhini/dfe.unfolded.8.{model}.recessive.noeps.csv", model=['discrete', 'gamma']),
+            #expand("results/dfe/catarrhini/dfe.unfolded.8.discrete.fixed_h={h}.noeps.csv", h=[0.1, 0.3]),
+            expand("results/tables/dfe/{group}/dfe.{folded}.{n}.{model}.{full}.{eps}.csv", group='catarrhini', folded='unfolded', n=8, model=['discrete', 'gamma'], full=['full', 'del'], eps='noeps'),
             #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/S1+S2+S3/dfe_vs_Ne.unfolded.{n}.discrete.del.noeps.png",group='catarrhini',n=8),
             #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/S1+S2+S3/dfe_vs_Ne.folded.{n}.discrete.del.noeps.png",group='catarrhini',n=8),
             #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.folded.{n}.discrete.del.noeps.png",group='all',n=[8]),
@@ -2192,3 +2193,16 @@ rule plot_phylogeny:
         "envs/tree.yaml"
     script:
         "scripts/plot_phylogeny.py"
+
+# assemble DFE table for a single model across populations in a group
+rule assemble_dfe_table:
+    input:
+        "results/dfe/{group}/dfe.{folded}.{n}.{model}.{full}.{eps}.csv"
+    output:
+        "results/tables/dfe/{group}/dfe.{folded}.{n}.{model}.{full}.{eps}.csv"
+    params:
+        populations=lambda w: get_pops(w.n,w.group)
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/assemble_dfe_table.py"

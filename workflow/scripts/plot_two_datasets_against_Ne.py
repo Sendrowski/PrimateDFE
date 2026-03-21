@@ -20,8 +20,8 @@ try:
     out = snakemake.output[0]
 except NameError:
     testing = True
-    dfe_file_a = "results/dfe/catarrhini/dfe.unfolded.8.discrete.del.noeps.csv"
-    dfe_file_b = "results/dfe/catarrhini/dfe.unfolded.filter_bgc.8.discrete.del.noeps.csv"
+    dfe_file_a = "results/dfe/catarrhini/dfe.unfolded.8.gamma.del.noeps.csv"
+    dfe_file_b = "results/dfe/catarrhini/dfe.unfolded.filter_bgc.8.gamma.del.noeps.csv"
     ne_file = "results/stats/Ne/comp/original_ref/catarrhini/8.csv"
     tree_file = "resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     populations = Populations.get_pops(8, 'catarrhini')
