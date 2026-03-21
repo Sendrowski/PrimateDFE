@@ -17,7 +17,7 @@ The analysis is implemented as a **Snakemake workflow**.
 Structure:
 - [`workflow/`](workflow/)
   - [`Snakefile`](workflow/Snakefile) – main workflow entry point
-  - [`scripts/`](workflow/scripts/) – Python/R helper scripts used by rules
+  - [`scripts/`](workflow/scripts/) – Python scripts used by rules
   - [`envs/`](workflow/envs/) – conda environment definitions
 - [`resources/`](resources/) – reference data
 - [`results/`](results/) – workflow outputs
