@@ -10,6 +10,10 @@ The workflow performs:
 - **DFE inference** – estimation of DFEs with gamma–exponential and discrete models using [`fastDFE`](https://github.com/Sendrowski/fastDFE)  
 - **Comparative analyses** – associations between DFE properties and Nₑ, including phylogenetic regressions  
 
+## Supplementary materials
+DFE estimates are available in
+[`results/tables/dfe/catarrhini/`](results/tables/dfe/catarrhini/) and site-freqency spectra in [`results/sfs/comp/original_ref/catarrhini`](results/sfs/comp/original_ref/catarrhini).
+
 ## Workflow
 
 The analysis is implemented as a **Snakemake workflow**.
