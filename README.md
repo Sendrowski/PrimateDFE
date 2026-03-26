@@ -12,9 +12,7 @@ The workflow performs:
 - **Comparative analyses** – associations between DFE properties and Nₑ, including phylogenetic regressions  
 
 ## Supplementary materials
-DFE estimates are provided in the directory  
-[`results/tables/dfe/catarrhini/`](results/tables/dfe/catarrhini/), and site-frequency spectra in  
-[`results/sfs/comp/original_ref/catarrhini/`](results/sfs/comp/original_ref/catarrhini/).  
+DFE estimates are provided in the directory [`results/tables/dfe/catarrhini/`](results/tables/dfe/catarrhini/), and site-frequency spectra in [`results/sfs/comp/original_ref/catarrhini/`](results/sfs/comp/original_ref/catarrhini/).
 
 Code and results for the phylogenetic regression analyses are available in the GitHub repository  
 [`tbata/PLS_DFE`](https://github.com/tbata/PLS_DFE).
