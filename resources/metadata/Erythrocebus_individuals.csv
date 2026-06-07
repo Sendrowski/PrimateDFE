@@ -1,0 +1,7 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112482827	PD_0034	PD_0034	ERS14600178	PRJEB59576	Erythrocebus_patas_ssp	Erythrocebus_patas_ssp	Chlorocebus_sabaeus_ssp	Erythrocebus	patas	ssp	M	M	31.166	0.975	17.338	0.98	40.096	0.42
+SAMEA112482855	PD_0062	PD_0062	ERS14600206	PRJEB59576	Erythrocebus_patas_ssp	Erythrocebus_patas_ssp	Chlorocebus_sabaeus_ssp	Erythrocebus	patas	ssp	M	M	32.001	0.975	17.49	0.979	46.61	0.43
+SAMN07678082	SAMN07678082	SAMN07678082	SRS6382159	PRJNA399392	Erythrocebus_patas_ssp	Erythrocebus_patas_ssp	Chlorocebus_sabaeus_ssp	Erythrocebus	patas	ssp	Unknown	M	30.775	0.966	16.839	0.974	56.381	0.396
+SAMN21582235	SAMN21582235	SAMN21582235	SRS10344295	PRJNA512907	Erythrocebus_patas_ssp	Erythrocebus_patas_ssp	Chlorocebus_sabaeus_ssp	Erythrocebus	patas	ssp	F	F	42.176	0.98	41.681	0.985	55.761	0.531
+SAMN23530505	SAMN23530505	SAMN23530505	SRS11219893	PRJNA785018	Erythrocebus_patas_ssp	Erythrocebus_patas_ssp	Chlorocebus_sabaeus_ssp	Erythrocebus	patas	ssp	M	M	47.915	0.977	26.839	0.98	69.382	0.464
+SAMN24909949	SAMN24909949	SAMN24909949	SRS11645074	PRJNA790674	Erythrocebus_patas_ssp	Erythrocebus_patas_ssp	Chlorocebus_sabaeus_ssp	Erythrocebus	patas	ssp	F	F	24.822	0.976	24.458	0.982	34.601	0.449

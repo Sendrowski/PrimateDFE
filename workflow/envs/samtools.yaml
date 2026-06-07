@@ -1,0 +1,7 @@
+name: samtools-primate-dfe
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python
+  - samtools

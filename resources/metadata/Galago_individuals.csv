@@ -1,0 +1,6 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112482913	PD_0155	PD_0155	ERS14600264	PRJEB59576	Galago_moholi_ssp	Galago_moholi_ssp	Otolemur_crassicaudatus_ssp	Galago	moholi	ssp	M	M	40.389	0.966	Unknown	Unknown	Unknown	Unknown
+SAMN23530506	SAMN23530506	SAMN23530506	SRS11219901	PRJNA785018	Galago_moholi_ssp	Galago_moholi_ssp	Otolemur_crassicaudatus_ssp	Galago	moholi	ssp	M	M	44.514	0.968	Unknown	Unknown	Unknown	Unknown
+SAMEA112482914	PD_0156	PD_0156	ERS14600265	PRJEB59576	Galago_senegalensis_ssp	Galago_senegalensis_ssp	Otolemur_crassicaudatus_ssp	Galago	senegalensis	ssp	M	M	38.341	0.965	Unknown	Unknown	Unknown	Unknown
+SAMN09702732	SAMN09702732	SAMN09702732	SRS3597041	PRJNA482296	Galago_senegalensis_ssp	Galago_senegalensis_ssp	Otolemur_crassicaudatus_ssp	Galago	senegalensis	ssp	M	M	27.082	0.993	Unknown	Unknown	Unknown	Unknown
+SAMN09702733	SAMN09702733	SAMN09702733	SRS3597043	PRJNA482296	Galago_senegalensis_ssp	Galago_senegalensis_ssp	Otolemur_crassicaudatus_ssp	Galago	senegalensis	ssp	F	F	26.542	0.965	Unknown	Unknown	Unknown	Unknown

@@ -1,0 +1,21 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA14464488	PD_0087	PD_0087	ERS12091961	PRJEB59576	Pithecia_albicans_ssp	Pithecia_albicans_ssp	Pithecia_pithecia_ssp	Pithecia	albicans	ssp	F	F	42.489	0.989	42.999	0.989	Unknown	Unknown
+SAMEA14464489	PD_0084	PD_0084	ERS12091962	PRJEB59576	Pithecia_chrysocephala_ssp	Pithecia_chrysocephala_ssp	Pithecia_pithecia_ssp	Pithecia	chrysocephala	ssp	M	M	43.779	0.992	22.934	0.991	Unknown	Unknown
+SAMEA14464490	PD_0085	PD_0085	ERS12091963	PRJEB59576	Pithecia_hirsuta_ssp	Pithecia_hirsuta_ssp	Pithecia_pithecia_ssp	Pithecia	hirsuta	ssp	M	M	43.034	0.989	22.831	0.989	Unknown	Unknown
+SAMEA14464491	PD_0143	PD_0143	ERS12091964	PRJEB59576	Pithecia_hirsuta_ssp	Pithecia_hirsuta_ssp	Pithecia_pithecia_ssp	Pithecia	hirsuta	ssp	F	F	45.504	0.989	49.75	0.99	Unknown	Unknown
+SAMEA14464492	PD_0086	PD_0086	ERS12091965	PRJEB59576	Pithecia_mittermeieri_ssp	Pithecia_mittermeieri_ssp	Pithecia_pithecia_ssp	Pithecia	mittermeieri	ssp	M	M	36.461	0.989	19.202	0.989	Unknown	Unknown
+SAMEA14464496	PD_0345	PD_0345	ERS12091969	PRJEB59576	Pithecia_mittermeieri_ssp	Pithecia_mittermeieri_ssp	Pithecia_pithecia_ssp	Pithecia	mittermeieri	ssp	Unknown						Unknown	Unknown
+SAMEA14464493	PD_0083	PD_0083	ERS12091966	PRJEB59576	Pithecia_pissinatti_ssp	Pithecia_pissinatti_ssp	Pithecia_pithecia_ssp	Pithecia	pissinatti	ssp	F	F	32.16	0.989	31.709	0.989	Unknown	Unknown
+SAMEA14464494	PD_0144	PD_0144	ERS12091967	PRJEB59576	Pithecia_pissinatti_ssp	Pithecia_pissinatti_ssp	Pithecia_pithecia_ssp	Pithecia	pissinatti	ssp	F	F	51.382	0.989	44.149	0.99	Unknown	Unknown
+SAMEA14464495	PD_0331	PD_0331	ERS12091968	PRJEB59576	Pithecia_pissinatti_ssp	Pithecia_pissinatti_ssp	Pithecia_pithecia_ssp	Pithecia	pissinatti	ssp	F	F	27.636	0.989	28.583	0.989	Unknown	Unknown
+SAMN07678106	SAMN07678106	SAMN07678106	SRS6383727	PRJNA399413	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia	pithecia	ssp	Unknown	M	41.944	0.992	22.632	0.992	Unknown	Unknown
+SAMN21582257	SAMN21582257	SAMN21582257	SRS10344273	PRJNA512907	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia	pithecia	ssp	F	F	76.866	0.992	76.881	0.993	Unknown	Unknown
+SAMN21971464	SAMN21971464	SAMN21971464	SRS11183162	PRJNA767781	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia	pithecia	ssp	M	M	57.903	0.992	30.233	0.992	Unknown	Unknown
+SAMN21971465	SAMN21971465	SAMN21971465	SRS11183174	PRJNA767781	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia	pithecia	ssp	F	F	49.107	0.992	48.704	0.992	Unknown	Unknown
+SAMN21971466	SAMN21971466	SAMN21971466	SRS11183175	PRJNA767781	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia	pithecia	ssp	Unknown	M	58.307	0.992	29.734	0.992	Unknown	Unknown
+SAMN21971467	SAMN21971467	SAMN21971467	SRS11183176	PRJNA767781	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia	pithecia	ssp	Unknown	F	60.129	0.992	60.538	0.992	Unknown	Unknown
+SAMN21971468	SAMN21971468	SAMN21971468	SRS11183177	PRJNA767781	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia	pithecia	ssp	Unknown	F	59.034	0.992	59.236	0.992	Unknown	Unknown
+SAMN21971469	SAMN21971469	SAMN21971469	SRS11183178	PRJNA767781	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia	pithecia	ssp	Unknown	M	47.86	0.992	24.859	0.992	Unknown	Unknown
+SAMN21971470	SAMN21971470	SAMN21971470	SRS11183239	PRJNA767781	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia	pithecia	ssp	Unknown	F	61.128	0.992	61.322	0.992	Unknown	Unknown
+SAMN23530517	SAMN23530517	SAMN23530517	SRS11219898	PRJNA785018	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia_pithecia_ssp	Pithecia	pithecia	ssp	Unknown	F	59.679	0.985	63.217	0.99	Unknown	Unknown
+SAMEA14464497	PD_0015	PD_0015	ERS12091970	PRJEB59576	Pithecia_vanzolinii_ssp	Pithecia_vanzolinii_ssp	Pithecia_pithecia_ssp	Pithecia	vanzolinii	ssp	M	M	37.116	0.989	18.93	0.989	Unknown	Unknown

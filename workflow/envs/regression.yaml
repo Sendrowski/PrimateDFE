@@ -1,0 +1,13 @@
+name: regression-primate-dfe
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - r-base>=4.2
+  - r-nlme
+  - r-ape
+  - toytree
+  - pandas
+  - numpy
+  - matplotlib
+  - fastdfe

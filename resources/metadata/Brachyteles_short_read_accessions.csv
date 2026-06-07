@@ -1,0 +1,5 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	RUN_ACCESSION	R1_OR_R2	FASTQ_FTP	FASTQ_BYTES	FASTQ_MD5
+SAMN45929218	SAMN45929218	SAMN45929218	SRS24540419	PRJNA1201195	Brachyteles_hypoxanthus_ssp	Brachyteles_hypoxanthus_ssp	Ateles_hybridus_ssp	Brachyteles	hypoxanthus	ssp	F	F	SRR32914360	R1	NA/SRR32914360_1.fastq.gz		
+SAMN45929218	SAMN45929218	SAMN45929218	SRS24540419	PRJNA1201195	Brachyteles_hypoxanthus_ssp	Brachyteles_hypoxanthus_ssp	Ateles_hybridus_ssp	Brachyteles	hypoxanthus	ssp	F	F	SRR32914360	R2	NA/SRR32914360_2.fastq.gz		
+SAMN45929218	SAMN45929218	SAMN45929218	SRS24540419	PRJNA1201195	Brachyteles_hypoxanthus_ssp	Brachyteles_hypoxanthus_ssp	Ateles_hybridus_ssp	Brachyteles	hypoxanthus	ssp	F	F	SRR32914361	R1	NA/SRR32914361_1.fastq.gz		
+SAMN45929218	SAMN45929218	SAMN45929218	SRS24540419	PRJNA1201195	Brachyteles_hypoxanthus_ssp	Brachyteles_hypoxanthus_ssp	Ateles_hybridus_ssp	Brachyteles	hypoxanthus	ssp	F	F	SRR32914361	R2	NA/SRR32914361_2.fastq.gz		

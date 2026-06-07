@@ -1,0 +1,5 @@
+name: ucsc-tools-primate-dfe
+channels:
+  - bioconda
+dependencies:
+  - ucsc-axttomaf

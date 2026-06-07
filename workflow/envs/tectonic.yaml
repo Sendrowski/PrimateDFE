@@ -1,0 +1,5 @@
+name: tectonic
+channels:
+  - conda-forge
+dependencies:
+  - tectonic

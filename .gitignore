@@ -1,0 +1,33 @@
+.idea/
+resources/
+.snakemake/
+.snakemake_old/
+scratch/
+results/*
+nohup.out
+Literature/
+__pycache__/
+*.pyc
+.DS_Store
+exportToHTML/
+REVIEW.pdf
+
+# Claude Code project instructions (local only)
+CLAUDE.md
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.toc
+*.lof
+*.lot
+
+# Manuscript & notes (kept local, not published)
+reports/
+TODO.md

@@ -1,0 +1,5 @@
+name: latexdiff
+channels:
+  - conda-forge
+dependencies:
+  - latexdiff

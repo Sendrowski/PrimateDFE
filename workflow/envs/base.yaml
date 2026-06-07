@@ -1,0 +1,19 @@
+name: base-primate-dfe
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10
+  - pysam
+  - pandas
+  - numpy
+  - matplotlib
+  - tqdm
+  - seaborn
+  - jsonpickle
+  - pip
+  - biopython
+  - dadi
+  - pip:
+    - fastdfe>=1.2.1
+    - cyvcf2

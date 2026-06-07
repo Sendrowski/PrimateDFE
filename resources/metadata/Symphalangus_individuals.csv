@@ -1,0 +1,6 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMN02388245	SAMN02388245	SAMN02388245	SRS496877	PRJNA232723	Symphalangus_syndactylus_ssp	Symphalangus_syndactylus_ssp	Symphalangus_syndactylus_ssp	Symphalangus	syndactylus	ssp	F	F	22.405	0.987	21.528	0.994	Unknown	Unknown
+SAMN02850872	SAMN02850872	SAMN02850872	SRS634437	PRJNA232723	Symphalangus_syndactylus_ssp	Symphalangus_syndactylus_ssp	Symphalangus_syndactylus_ssp	Symphalangus	syndactylus	ssp	M	M	15.201	0.99	8.106	0.987	Unknown	Unknown
+SAMN23530523	SAMN23530523	SAMN23530523	SRS11219889	PRJNA785018	Symphalangus_syndactylus_ssp	Symphalangus_syndactylus_ssp	Symphalangus_syndactylus_ssp	Symphalangus	syndactylus	ssp	M	M	61.591	0.993	36.655	0.995	Unknown	Unknown
+SAMN29758779	SAMN29758779	SAMN29758779	SRS13919154	PRJNA512907	Symphalangus_syndactylus_ssp	Symphalangus_syndactylus_ssp	Symphalangus_syndactylus_ssp	Symphalangus	syndactylus	ssp	F	F	40.809	0.992	39.104	0.999	Unknown	Unknown
+SAMN30216103	SAMN30216103	SAMN30216103	SRS18242897	PRJNA976702	Symphalangus_syndactylus_ssp	Symphalangus_syndactylus_ssp	Symphalangus_syndactylus_ssp	Symphalangus	syndactylus	ssp	M	M	158.841	1.0	89.738	1.0	Unknown	Unknown

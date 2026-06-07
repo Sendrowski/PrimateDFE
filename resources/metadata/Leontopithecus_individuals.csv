@@ -1,0 +1,8 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112483308	PD_0840	PD_0840	ERS14600659	PRJEB59576	Leontopithecus_chrysomelas_ssp	Leontopithecus_chrysomelas_ssp	Leontopithecus_rosalia_ssp	Leontopithecus	chrysomelas	ssp	M	M	26.991	0.991	19.071	0.991	Unknown	Unknown
+SAMEA112483309	PD_0841	PD_0841	ERS14600660	PRJEB59576	Leontopithecus_chrysomelas_ssp	Leontopithecus_chrysomelas_ssp	Leontopithecus_rosalia_ssp	Leontopithecus	chrysomelas	ssp	F	F	22.708	0.991	18.257	0.991	Unknown	Unknown
+SAMEA112483312	PD_0844	PD_0844	ERS14600663	PRJEB59576	Leontopithecus_chrysomelas_ssp	Leontopithecus_chrysomelas_ssp	Leontopithecus_rosalia_ssp	Leontopithecus	chrysomelas	ssp	M	M	27.307	0.991	14.917	0.991	Unknown	Unknown
+SAMN31952328	SAMN31952328	SAMN31952328	SRS15953438	PRJNA512907	Leontopithecus_chrysomelas_ssp	Leontopithecus_chrysomelas_ssp	Leontopithecus_rosalia_ssp	Leontopithecus	chrysomelas	ssp	F	M	35.511	0.992	25.738	0.992	Unknown	Unknown
+SAMEA112483026	PD_0293	PD_0293	ERS14600377	PRJEB59576	Leontopithecus_rosalia_ssp	Leontopithecus_rosalia_ssp	Leontopithecus_rosalia_ssp	Leontopithecus	rosalia	ssp	F	F	39.105	0.992	38.555	0.992	Unknown	Unknown
+SAMEA112483047	PD_0411	PD_0411	ERS14600398	PRJEB59576	Leontopithecus_rosalia_ssp	Leontopithecus_rosalia_ssp	Leontopithecus_rosalia_ssp	Leontopithecus	rosalia	ssp	F	F	34.883	0.992	34.351	0.992	Unknown	Unknown
+SAMN21582245	SAMN21582245	SAMN21582245	SRS10344305	PRJNA512907	Leontopithecus_rosalia_ssp	Leontopithecus_rosalia_ssp	Leontopithecus_rosalia_ssp	Leontopithecus	rosalia	ssp	F	F	59.052	0.992	63.164	0.992	Unknown	Unknown

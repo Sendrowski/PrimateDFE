@@ -1,0 +1,15 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMN03275523	SAMN03275523	SAMN03275523	SRS812418	PRJNA271607	Callithrix_geoffroyi_ssp	Callithrix_geoffroyi_ssp	Callithrix_jacchus_ssp	Callithrix	geoffroyi	ssp	M	M	30.544	0.994	16.23	0.979	41.27	0.914
+SAMN02744548	SAMN02744548	SAMN02744548	SRS603590	PRJNA20401	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	F	M	26.194	0.994	17.418	0.982	30.199	0.919
+SAMN02744549	SAMN02744549	SAMN02744549	SRS602594	PRJNA20401	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	F	F	27.602	0.995	25.102	0.982	29.167	0.905
+SAMN02744550	SAMN02744550	SAMN02744550	SRS602854	PRJNA20401	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	M	M	23.776	0.994	14.135	0.981	31.999	0.918
+SAMN02744551	SAMN02744551	SAMN02744551	SRS603863	PRJNA20401	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	M	M	25.282	0.994	13.176	0.981	37.163	0.914
+SAMN02744552	SAMN02744552	SAMN02744552	SRS603862	PRJNA20401	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	M	M	25.924	0.994	13.631	0.981	33.889	0.912
+SAMN02744553	SAMN02744553	SAMN02744553	SRS603901	PRJNA20401	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	F	F	26.144	0.994	24.559	0.982	25.651	0.869
+SAMN02744554	SAMN02744554	SAMN02744554	SRS603924	PRJNA20401	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	F	F	26.914	0.994	27.573	0.981	53.594	0.5
+SAMN02744555	SAMN02744555	SAMN02744555	SRS603947	PRJNA20401	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	F	M	25.021	0.994	17.286	0.982	34.449	0.922
+SAMN02744556	SAMN02744556	SAMN02744556	SRS604114	PRJNA20401	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	F	F	23.084	0.995	18.68	0.982	33.437	0.915
+SAMN03275524	SAMN03275524	SAMN03275524	SRS812417	PRJNA271607	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	M	F	29.265	0.994	28.606	0.982	41.506	0.695
+SAMN03275525	SAMN03275525	SAMN03275525	SRS812416	PRJNA271607	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	M	M	30.83	0.994	16.4	0.98	48.866	0.915
+SAMN03275526	SAMN03275526	SAMN03275526	SRS812415	PRJNA271607	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix_jacchus_ssp	Callithrix	jacchus	ssp	F	F	28.563	0.994	28.941	0.982	52.759	0.536
+SAMN03275522	SAMN03275522	SAMN03275522	SRS812419	PRJNA271607	Callithrix_kuhlii_ssp	Callithrix_kuhlii_ssp	Callithrix_jacchus_ssp	Callithrix	kuhlii	ssp	M	M	29.339	0.994	15.162	0.98	35.21	0.911

@@ -1,0 +1,12 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMN03121814	SAMN03121814	SAMN03121814	SRS776164	PRJNA251421	Colobus_angolensis_palliatus	Colobus_angolensis_ssp	Colobus_guereza_ssp	Colobus	angolensis	palliatus	F	F	119.842	0.989	111.122	0.965	37.862	0.253
+SAMEA5039933	SAMEA5039933	SAMEA5039933	ERS2851676	PRJEB30244	Colobus_guereza_kikuyuensis	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus	guereza	kikuyuensis	Unknown	F	30.009	0.963	28.174	0.912	18.131	0.117
+SAMEA5039935	SAMEA5039935	SAMEA5039935	ERS2851678	PRJEB30244	Colobus_guereza_kikuyuensis	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus	guereza	kikuyuensis	Unknown	F	27.697	0.963	27.951	0.912	17.628	0.116
+SAMEA5039938	SAMEA5039938	SAMEA5039938	ERS2851681	PRJEB30244	Colobus_guereza_kikuyuensis	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus	guereza	kikuyuensis	Unknown	F	32.281	0.964	31.418	0.914	19.573	0.119
+SAMEA5039942	SAMEA5039942	SAMEA5039942	ERS2851685	PRJEB30244	Colobus_guereza_kikuyuensis	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus	guereza	kikuyuensis	Unknown	F	31.346	0.964	30.139	0.914	19.192	0.119
+SAMEA5039946	SAMEA5039946	SAMEA5039946	ERS2851689	PRJEB30244	Colobus_guereza_kikuyuensis	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus	guereza	kikuyuensis	Unknown	F	20.943	0.962	21.956	0.911	14.685	0.115
+SAMEA5209164	SAMEA5209164	SAMEA5209164	ERS3016633	PRJEB30244	Colobus_guereza_kikuyuensis	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus	guereza	kikuyuensis	Unknown	F	31.425	0.963	28.954	0.912	18.566	0.115
+SAMEA112482849	PD_0056	PD_0056	ERS14600200	PRJEB59576	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus	guereza	ssp	M	M	34.576	0.961	17.525	0.903	19.277	0.526
+SAMN23530503	SAMN23530503	SAMN23530503	SRS11219892	PRJNA785018	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus	guereza	ssp	M	M	95.78	0.976	51.975	0.933	52.352	0.608
+SAMN24909948	SAMN24909948	SAMN24909948	SRS11645073	PRJNA790674	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus_guereza_ssp	Colobus	guereza	ssp	F	F	30.187	0.963	28.557	0.91	17.665	0.104
+SAMEA112482848	PD_0055	PD_0055	ERS14600199	PRJEB59576	Colobus_polykomos_ssp	Colobus_polykomos_ssp	Colobus_guereza_ssp	Colobus	polykomos	ssp	F	F	32.161	0.958	30.771	0.898	17.959	0.11

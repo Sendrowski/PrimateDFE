@@ -1,0 +1,16 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA14464557	PD_0011	PD_0011	ERS12092030	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	F	F	36.689	0.989	36.965	0.99	Unknown	Unknown
+SAMEA14464558	PD_0378	PD_0378	ERS12092031	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	M	M	31.145	0.989	15.871	0.99	Unknown	Unknown
+SAMEA14464559	PD_0379	PD_0379	ERS12092032	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	F	F	37.22	0.989	36.924	0.99	Unknown	Unknown
+SAMEA14464560	PD_0381	PD_0381	ERS12092033	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	M	M	30.084	0.988	15.244	0.99	Unknown	Unknown
+SAMEA14464561	PD_0382	PD_0382	ERS12092034	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	F	F	31.348	0.989	28.437	0.99	Unknown	Unknown
+SAMEA14464562	PD_0383	PD_0383	ERS12092035	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	M	M	33.525	0.989	17.107	0.99	Unknown	Unknown
+SAMEA14464563	PD_0384	PD_0384	ERS12092036	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	M	M	33.256	0.989	16.803	0.99	Unknown	Unknown
+SAMEA14464564	PD_0385	PD_0385	ERS12092037	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	M	M	33.907	0.989	17.217	0.99	Unknown	Unknown
+SAMEA14464565	PD_0386	PD_0386	ERS12092038	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	M	M	31.641	0.989	16.097	0.99	Unknown	Unknown
+SAMEA14464566	PD_0387	PD_0387	ERS12092039	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	F	F	31.983	0.988	31.973	0.99	Unknown	Unknown
+SAMEA14464567	PD_0388	PD_0388	ERS12092040	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	M	M	32.355	0.989	16.441	0.99	Unknown	Unknown
+SAMEA14464568	PD_0389	PD_0389	ERS12092041	PRJEB59576	Sapajus_apella_macrocephalus	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	macrocephalus	M	M	34.091	0.989	17.366	0.99	Unknown	Unknown
+SAMEA14464554	PD_0376	PD_0376	ERS12092027	PRJEB59576	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	ssp	M	M	31.55	0.989	16.153	0.99	Unknown	Unknown
+SAMEA14464555	PD_0377	PD_0377	ERS12092028	PRJEB59576	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	ssp	M	M	32.472	0.989	16.464	0.99	Unknown	Unknown
+SAMEA14464556	PD_0380	PD_0380	ERS12092029	PRJEB59576	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus_apella_ssp	Sapajus	apella	ssp	M	M	28.518	0.988	14.484	0.99	Unknown	Unknown

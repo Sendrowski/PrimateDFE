@@ -1,0 +1,10 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112483133	PD_0604	PD_0604	ERS14600484	PRJEB59576	Varecia_rubra_ssp	Varecia_rubra_ssp	Varecia_variegata_ssp	Varecia	rubra	ssp	F	M	54.025	0.989	29.936	0.987	Unknown	Unknown
+SAMEA116330207	SAMEA116330207	SAMEA116330207	ERS21379053	PRJEB77609	Varecia_rubra_ssp	Varecia_rubra_ssp	Varecia_variegata_ssp	Varecia	rubra	ssp	Unknown	F	20.039	0.518	22.168	0.576	Unknown	Unknown
+SAMEA116330208	SAMEA116330208	SAMEA116330208	ERS21379054	PRJEB77609	Varecia_rubra_ssp	Varecia_rubra_ssp	Varecia_variegata_ssp	Varecia	rubra	ssp	Unknown	F	18.435	0.509	20.562	0.568	Unknown	Unknown
+SAMEA116330209	SAMEA116330209	SAMEA116330209	ERS21379055	PRJEB77609	Varecia_rubra_ssp	Varecia_rubra_ssp	Varecia_variegata_ssp	Varecia	rubra	ssp	Unknown	M	42.056	0.949	26.501	0.944	Unknown	Unknown
+SAMEA112483150	PD_0621	PD_0621	ERS14600501	PRJEB59576	Varecia_variegata_ssp	Varecia_variegata_ssp	Varecia_variegata_ssp	Varecia	variegata	ssp	F	M	47.139	0.99	25.889	0.987	Unknown	Unknown
+SAMEA116330210	SAMEA116330210	SAMEA116330210	ERS21379056	PRJEB77609	Varecia_variegata_ssp	Varecia_variegata_ssp	Varecia_variegata_ssp	Varecia	variegata	ssp	Unknown	M	43.909	0.99	24.092	0.989	Unknown	Unknown
+SAMEA116330211	SAMEA116330211	SAMEA116330211	ERS21379057	PRJEB77609	Varecia_variegata_ssp	Varecia_variegata_ssp	Varecia_variegata_ssp	Varecia	variegata	ssp	Unknown	F	42.245	0.949	45.734	0.946	Unknown	Unknown
+SAMEA116330212	SAMEA116330212	SAMEA116330212	ERS21379058	PRJEB77609	Varecia_variegata_ssp	Varecia_variegata_ssp	Varecia_variegata_ssp	Varecia	variegata	ssp	Unknown	F	19.023	0.52	21.226	0.578	Unknown	Unknown
+SAMN29758785	SAMN29758785	SAMN29758785	SRS13919162	PRJNA512907	Varecia_variegata_ssp	Varecia_variegata_ssp	Varecia_variegata_ssp	Varecia	variegata	ssp	F	F	65.663	0.991	62.385	0.99	Unknown	Unknown

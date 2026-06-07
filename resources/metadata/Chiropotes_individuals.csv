@@ -1,0 +1,13 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA14464469	PD_0142	PD_0142	ERS12091942	PRJEB59576	Chiropotes_albinasus_ssp	Chiropotes_albinasus_ssp	Pithecia_pithecia_ssp	Chiropotes	albinasus	ssp	M	M	39.618	0.976	21.557	0.964	Unknown	Unknown
+SAMEA14464470	PD_0323	PD_0323	ERS12091943	PRJEB59576	Chiropotes_albinasus_ssp	Chiropotes_albinasus_ssp	Pithecia_pithecia_ssp	Chiropotes	albinasus	ssp	M	M	31.322	0.975	17.595	0.962	Unknown	Unknown
+SAMEA14464471	PD_0325	PD_0325	ERS12091944	PRJEB59576	Chiropotes_albinasus_ssp	Chiropotes_albinasus_ssp	Pithecia_pithecia_ssp	Chiropotes	albinasus	ssp	M	M	31.326	0.975	17.417	0.962	Unknown	Unknown
+SAMEA14464472	PD_0409	PD_0409	ERS12091945	PRJEB59576	Chiropotes_albinasus_ssp	Chiropotes_albinasus_ssp	Pithecia_pithecia_ssp	Chiropotes	albinasus	ssp	F	F	27.721	0.975	26.978	0.964	Unknown	Unknown
+SAMEA14464473	PD_0006	PD_0006	ERS12091946	PRJEB59576	Chiropotes_israelita_ssp	Chiropotes_israelita_ssp	Pithecia_pithecia_ssp	Chiropotes	israelita	ssp	F	F	36.01	0.976	36.612	0.965	Unknown	Unknown
+SAMEA14464474	PD_0326	PD_0326	ERS12091947	PRJEB59576	Chiropotes_israelita_ssp	Chiropotes_israelita_ssp	Pithecia_pithecia_ssp	Chiropotes	israelita	ssp	F	F	33.06	0.975	34.262	0.965	Unknown	Unknown
+SAMEA14464475	PD_0327	PD_0327	ERS12091948	PRJEB59576	Chiropotes_israelita_ssp	Chiropotes_israelita_ssp	Pithecia_pithecia_ssp	Chiropotes	israelita	ssp	M	M	33.939	0.975	19.16	0.963	Unknown	Unknown
+SAMEA14464476	PD_0328	PD_0328	ERS12091949	PRJEB59576	Chiropotes_israelita_ssp	Chiropotes_israelita_ssp	Pithecia_pithecia_ssp	Chiropotes	israelita	ssp	F	F	36.605	0.975	38.497	0.965	Unknown	Unknown
+SAMEA14464477	PD_0081	PD_0081	ERS12091950	PRJEB59576	Chiropotes_sagulatus_ssp	Chiropotes_sagulatus_ssp	Pithecia_pithecia_ssp	Chiropotes	sagulatus	ssp	M	M	41.198	0.977	22.949	0.965	Unknown	Unknown
+SAMEA14464478	PD_0082	PD_0082	ERS12091951	PRJEB59576	Chiropotes_sagulatus_ssp	Chiropotes_sagulatus_ssp	Pithecia_pithecia_ssp	Chiropotes	sagulatus	ssp	F	F	32.746	0.976	32.576	0.966	Unknown	Unknown
+SAMEA14464479	PD_0329	PD_0329	ERS12091952	PRJEB59576	Chiropotes_sagulatus_ssp	Chiropotes_sagulatus_ssp	Pithecia_pithecia_ssp	Chiropotes	sagulatus	ssp	F	F	31.887	0.975	29.834	0.965	Unknown	Unknown
+SAMEA14464480	PD_0330	PD_0330	ERS12091953	PRJEB59576	Chiropotes_sagulatus_ssp	Chiropotes_sagulatus_ssp	Pithecia_pithecia_ssp	Chiropotes	sagulatus	ssp	F	F	35.081	0.975	36.338	0.965	Unknown	Unknown

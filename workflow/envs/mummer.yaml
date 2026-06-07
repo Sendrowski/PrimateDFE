@@ -1,0 +1,5 @@
+name: mummer-primate-dfe
+channels:
+  - conda-forge
+dependencies:
+  - mummer4

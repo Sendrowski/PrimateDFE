@@ -1,0 +1,6 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112482822	PD_0029	PD_0029	ERS14600173	PRJEB59576	Allochrocebus_lhoesti_ssp	Allochrocebus_lhoesti_ssp	Chlorocebus_sabaeus_ssp	Allochrocebus	lhoesti	ssp	F	F	33.146	0.976	32.916	0.98	30.163	0.509
+SAMEA112482902	PD_0127	PD_0127	ERS14600253	PRJEB59576	Allochrocebus_lhoesti_ssp	Allochrocebus_lhoesti_ssp	Chlorocebus_sabaeus_ssp	Allochrocebus	lhoesti	ssp	M	M	32.14	0.977	17.389	0.979	51.135	0.54
+SAMN37320022	SAMN37320022	SAMN37320022	SRS18883366	PRJNA512907	Allochrocebus_lhoesti_ssp	Allochrocebus_lhoesti_ssp	Chlorocebus_sabaeus_ssp	Allochrocebus	lhoesti	ssp	F	F	56.034	0.985	50.557	0.985	40.586	0.616
+SAMEA112482823	PD_0030	PD_0030	ERS14600174	PRJEB59576	Allochrocebus_preussi_ssp	Allochrocebus_preussi_ssp	Chlorocebus_sabaeus_ssp	Allochrocebus	preussi	ssp	F	F	31.926	0.973	32.082	0.978	18.692	0.402
+SAMEA112482824	PD_0031	PD_0031	ERS14600175	PRJEB59576	Allochrocebus_solatus_ssp	Allochrocebus_solatus_ssp	Chlorocebus_sabaeus_ssp	Allochrocebus	solatus	ssp	M	M	31.665	0.973	16.578	0.977	21.165	0.431

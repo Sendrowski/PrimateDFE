@@ -1,0 +1,5 @@
+name: ghostscript
+channels:
+  - conda-forge
+dependencies:
+  - ghostscript

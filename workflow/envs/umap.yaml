@@ -1,0 +1,11 @@
+name: umap-primate-dfe
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
+  - fastdfe
+  - umap-learn

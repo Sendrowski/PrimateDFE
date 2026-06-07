@@ -1,0 +1,9 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112482922	PD_0164	PD_0164	ERS14600273	PRJEB59576	Nomascus_annamensis_ssp	Nomascus_annamensis_ssp	Nomascus_leucogenys_ssp	Nomascus	annamensis	ssp	M	M	35.073	0.992	17.942	0.985	Unknown	Unknown
+SAMEA112482830	PD_0037	PD_0037	ERS14600181	PRJEB59576	Nomascus_concolor_ssp	Nomascus_concolor_ssp	Nomascus_leucogenys_ssp	Nomascus	concolor	ssp	M	M	33.179	0.992	17.065	0.983	Unknown	Unknown
+SAMEA112482844	PD_0051	PD_0051	ERS14600195	PRJEB59576	Nomascus_gabriellae_ssp	Nomascus_gabriellae_ssp	Nomascus_leucogenys_ssp	Nomascus	gabriellae	ssp	F	F	40.573	0.991	40.325	0.986	Unknown	Unknown
+SAMEA6372653	SAMEA6372653	SAMEA6372653	ERS4138750	PRJEB32387	Nomascus_leucogenys_ssp	Nomascus_leucogenys_ssp	Nomascus_leucogenys_ssp	Nomascus	leucogenys	ssp	Unknown	M	32.768	0.954	16.975	0.928	Unknown	Unknown
+SAMEA80831668	SAMEA80831668	SAMEA80831668	ERS1545890	PRJEB14635	Nomascus_leucogenys_ssp	Nomascus_leucogenys_ssp	Nomascus_leucogenys_ssp	Nomascus	leucogenys	ssp	Unknown	F	19.741	0.299	135.09	0.204	Unknown	Unknown
+SAMN02388244	SAMN02388244	SAMN02388244	SRS496874	PRJNA232723	Nomascus_leucogenys_ssp	Nomascus_leucogenys_ssp	Nomascus_leucogenys_ssp	Nomascus	leucogenys	ssp	M	M	15.991	0.993	8.242	0.985	Unknown	Unknown
+SAMN02850871	SAMN02850871	SAMN02850871	SRS634434	PRJNA232723	Nomascus_leucogenys_ssp	Nomascus_leucogenys_ssp	Nomascus_leucogenys_ssp	Nomascus	leucogenys	ssp	F	F	12.734	0.991	12.36	0.986	Unknown	Unknown
+SAMEA112482874	PD_0099	PD_0099	ERS14600225	PRJEB59576	Nomascus_siki_ssp	Nomascus_siki_ssp	Nomascus_leucogenys_ssp	Nomascus	siki	ssp	F	F	37.543	0.992	37.134	0.987	Unknown	Unknown

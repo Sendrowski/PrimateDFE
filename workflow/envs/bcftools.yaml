@@ -1,0 +1,6 @@
+name: bcftools-primate-dfe
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bcftools

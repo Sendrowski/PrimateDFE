@@ -1,0 +1,5 @@
+name: seqkit-primate-dfe
+channels:
+  - bioconda
+dependencies:
+  - seqkit

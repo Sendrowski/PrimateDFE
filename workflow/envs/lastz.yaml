@@ -1,0 +1,5 @@
+name: lastz-primate-dfe
+channels:
+  - bioconda
+dependencies:
+  - lastz

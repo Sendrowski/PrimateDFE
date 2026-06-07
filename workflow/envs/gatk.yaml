@@ -1,0 +1,7 @@
+name: gatk-primate-dfe
+channels:
+  - bioconda
+dependencies:
+  - python
+  - gatk4
+  - snakemake-wrapper-utils

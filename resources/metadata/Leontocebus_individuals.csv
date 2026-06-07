@@ -1,0 +1,6 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112482893	PD_0118	PD_0118	ERS14600244	PRJEB59576	Leontocebus_fuscicollis_ssp	Leontocebus_fuscicollis_ssp	Saguinus_oedipus_ssp	Leontocebus	fuscicollis	ssp	M	M	29.468	0.928	16.405	0.96	18.342	0.417
+SAMEA112482898	PD_0123	PD_0123	ERS14600249	PRJEB59576	Leontocebus_fuscicollis_ssp	Leontocebus_fuscicollis_ssp	Saguinus_oedipus_ssp	Leontocebus	fuscicollis	ssp	M	M	38.111	0.934	21.666	0.966	31.154	0.481
+SAMEA14464482	PD_0347	PD_0347	ERS12091955	PRJEB59576	Leontocebus_fuscicollis_ssp	Leontocebus_fuscicollis_ssp	Saguinus_oedipus_ssp	Leontocebus	fuscicollis	ssp	M	M	38.2	0.931	20.96	0.964	27.302	0.472
+SAMEA14464483	PD_0352	PD_0352	ERS12091956	PRJEB59576	Leontocebus_fuscicollis_ssp	Leontocebus_fuscicollis_ssp	Saguinus_oedipus_ssp	Leontocebus	fuscicollis	ssp	F	F	29.495	0.929	27.94	0.965	15.922	0.131
+SAMEA14464484	PD_0017	PD_0017	ERS12091957	PRJEB59576	Leontocebus_nigricollis_ssp	Leontocebus_nigricollis_ssp	Saguinus_oedipus_ssp	Leontocebus	nigricollis	ssp	F	F	33.252	0.931	31.196	0.966	14.032	0.138

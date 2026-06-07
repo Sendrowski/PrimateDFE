@@ -1,0 +1,13 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA116330175	SAMEA116330175	SAMEA116330175	ERS21379021	PRJEB77609	Hapalemur_aureus_ssp	Hapalemur_aureus_ssp	Lemur_catta_ssp	Hapalemur	aureus	ssp	Unknown	M	37.245	0.944	23.221	0.895	24.833	0.286
+SAMEA112483148	PD_0619	PD_0619	ERS14600499	PRJEB59576	Hapalemur_griseus_alaotrensis	Hapalemur_griseus_ssp	Lemur_catta_ssp	Hapalemur	griseus	alaotrensis	F	F	44.457	0.948	46.996	0.906	12.5	0.187
+SAMEA116330171	SAMEA116330171	SAMEA116330171	ERS21379017	PRJEB77609	Hapalemur_griseus_alaotrensis	Hapalemur_griseus_ssp	Lemur_catta_ssp	Hapalemur	griseus	alaotrensis	Unknown	F	37.093	0.946	39.032	0.903	11.369	0.169
+SAMEA112482915	PD_0157	PD_0157	ERS14600266	PRJEB59576	Hapalemur_griseus_ssp	Hapalemur_griseus_ssp	Lemur_catta_ssp	Hapalemur	griseus	ssp	F	M	44.604	0.942	27.709	0.899	18.067	0.222
+SAMEA112482916	PD_0158	PD_0158	ERS14600267	PRJEB59576	Hapalemur_griseus_ssp	Hapalemur_griseus_ssp	Lemur_catta_ssp	Hapalemur	griseus	ssp	F	M	48.192	0.947	28.507	0.902	17.481	0.27
+SAMEA116330176	SAMEA116330176	SAMEA116330176	ERS21379022	PRJEB77609	Hapalemur_griseus_ssp	Hapalemur_griseus_ssp	Lemur_catta_ssp	Hapalemur	griseus	ssp	Unknown	M	43.896	0.944	25.5	0.9	16.725	0.218
+SAMEA116330177	SAMEA116330177	SAMEA116330177	ERS21379023	PRJEB77609	Hapalemur_griseus_ssp	Hapalemur_griseus_ssp	Lemur_catta_ssp	Hapalemur	griseus	ssp	Unknown	F	42.403	0.947	44.036	0.901	16.543	0.17
+SAMEA116330178	SAMEA116330178	SAMEA116330178	ERS21379024	PRJEB77609	Hapalemur_griseus_ssp	Hapalemur_griseus_ssp	Lemur_catta_ssp	Hapalemur	griseus	ssp	Unknown	M	37.819	0.944	23.689	0.899	17.21	0.222
+SAMN05853046	SAMN05853046	SAMN05853046	SRS1759344	PRJNA344914	Hapalemur_griseus_ssp	Hapalemur_griseus_ssp	Lemur_catta_ssp	Hapalemur	griseus	ssp	F	F	2.497	0.66	2.689	0.665	1.88	0.02
+SAMEA112482917	PD_0159	PD_0159	ERS14600268	PRJEB59576	Hapalemur_meridionalis_ssp	Hapalemur_meridionalis_ssp	Lemur_catta_ssp	Hapalemur	meridionalis	ssp	F	F	41.007	0.944	42.41	0.905	14.932	0.108
+SAMEA116330179	SAMEA116330179	SAMEA116330179	ERS21379025	PRJEB77609	Hapalemur_meridionalis_ssp	Hapalemur_meridionalis_ssp	Lemur_catta_ssp	Hapalemur	meridionalis	ssp	Unknown	F	17.955	0.472	19.244	0.493	10.691	0.039
+SAMEA112482918	PD_0160	PD_0160	ERS14600269	PRJEB59576	Hapalemur_occidentalis_ssp	Hapalemur_occidentalis_ssp	Lemur_catta_ssp	Hapalemur	occidentalis	ssp	F	F	51.736	0.945	53.219	0.906	19.505	0.125

@@ -1,0 +1,10 @@
+name: tree-primate-dfe
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.12
+  - toytree
+  - dendropy
+  - matplotlib
+  - fastdfe

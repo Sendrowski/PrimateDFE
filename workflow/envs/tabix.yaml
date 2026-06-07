@@ -1,0 +1,6 @@
+name: tabix-primate-dfe
+channels:
+  - bioconda
+dependencies:
+  - python
+  - tabix

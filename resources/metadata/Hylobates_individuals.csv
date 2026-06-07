@@ -1,0 +1,17 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112482829	PD_0036	PD_0036	ERS14600180	PRJEB59576	Hylobates_abbotti_ssp	Hylobates_abbotti_ssp	Hylobates_pileatus_ssp	Hylobates	abbotti	ssp	M	M	38.984	0.983	20.634	0.967	Unknown	Unknown
+SAMEA112482843	PD_0050	PD_0050	ERS14600194	PRJEB59576	Hylobates_agilis_ssp	Hylobates_agilis_ssp	Hylobates_pileatus_ssp	Hylobates	agilis	ssp	F	F	41.726	0.983	40.688	0.934	Unknown	Unknown
+SAMN21582240	SAMN21582240	SAMN21582240	SRS10344301	PRJNA512907	Hylobates_agilis_ssp	Hylobates_agilis_ssp	Hylobates_pileatus_ssp	Hylobates	agilis	ssp	F	F	17.14	0.979	16.657	0.928	Unknown	Unknown
+SAMEA112482828	PD_0035	PD_0035	ERS14600179	PRJEB59576	Hylobates_klossii_ssp	Hylobates_klossii_ssp	Hylobates_pileatus_ssp	Hylobates	klossii	ssp	M	M	38.843	0.983	20.567	0.967	Unknown	Unknown
+SAMEA112482873	PD_0098	PD_0098	ERS14600224	PRJEB59576	Hylobates_lar_ssp	Hylobates_lar_ssp	Hylobates_pileatus_ssp	Hylobates	lar	ssp	M	M	45.188	0.985	24.241	0.971	Unknown	Unknown
+SAMN21971399	SAMN21971399	SAMN21971399	SRS11183128	PRJNA767781	Hylobates_lar_ssp	Hylobates_lar_ssp	Hylobates_pileatus_ssp	Hylobates	lar	ssp	M	M	63.182	0.987	33.432	0.975	Unknown	Unknown
+SAMN21971400	SAMN21971400	SAMN21971400	SRS11183130	PRJNA767781	Hylobates_lar_ssp	Hylobates_lar_ssp	Hylobates_pileatus_ssp	Hylobates	lar	ssp	F	F	62.052	0.987	61.006	0.937	Unknown	Unknown
+SAMN21971401	SAMN21971401	SAMN21971401	SRS11183131	PRJNA767781	Hylobates_lar_ssp	Hylobates_lar_ssp	Hylobates_pileatus_ssp	Hylobates	lar	ssp	M	M	63.921	0.987	33.442	0.974	Unknown	Unknown
+SAMN02388241	SAMN02388241	SAMN02388241	SRS496869	PRJNA232723	Hylobates_moloch_ssp	Hylobates_moloch_ssp	Hylobates_pileatus_ssp	Hylobates	moloch	ssp	M	M	15.038	0.98	8.09	0.957	Unknown	Unknown
+SAMN02850873	SAMN02850873	SAMN02850873	SRS634438	PRJNA232723	Hylobates_moloch_ssp	Hylobates_moloch_ssp	Hylobates_pileatus_ssp	Hylobates	moloch	ssp	M	M	22.684	0.972	12.82	0.948	Unknown	Unknown
+SAMN02850874	SAMN02850874	SAMN02850874	SRS634440	PRJNA232723	Hylobates_moloch_ssp	Hylobates_moloch_ssp	Hylobates_pileatus_ssp	Hylobates	moloch	ssp	F	F	17.0	0.973	17.572	0.922	Unknown	Unknown
+SAMN12851060	SAMN12851060	SAMN12851060	SRS5469876	PRJNA575281	Hylobates_moloch_ssp	Hylobates_moloch_ssp	Hylobates_pileatus_ssp	Hylobates	moloch	ssp	M	M	74.575	0.991	40.242	0.976	Unknown	Unknown
+SAMEA112482842	PD_0049	PD_0049	ERS14600193	PRJEB59576	Hylobates_muelleri_ssp	Hylobates_muelleri_ssp	Hylobates_pileatus_ssp	Hylobates	muelleri	ssp	M	M	41.679	0.984	22.289	0.97	Unknown	Unknown
+SAMN02850875	SAMN02850875	SAMN02850875	SRS634441	PRJNA232723	Hylobates_pileatus_ssp	Hylobates_pileatus_ssp	Hylobates_pileatus_ssp	Hylobates	pileatus	ssp	M	M	16.742	0.981	9.226	0.961	Unknown	Unknown
+SAMN23530508	SAMN23530508	SAMN23530508	SRS11219900	PRJNA785018	Hylobates_pileatus_ssp	Hylobates_pileatus_ssp	Hylobates_pileatus_ssp	Hylobates	pileatus	ssp	M	M	64.534	0.993	35.746	0.987	Unknown	Unknown
+SAMN24909950	SAMN24909950	SAMN24909950	SRS11645075	PRJNA790674	Hylobates_pileatus_ssp	Hylobates_pileatus_ssp	Hylobates_pileatus_ssp	Hylobates	pileatus	ssp	F	F	28.202	0.987	27.596	0.936	Unknown	Unknown

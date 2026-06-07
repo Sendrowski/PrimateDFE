@@ -1,0 +1,14 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112483049	PD_0520	PD_0520	ERS14600400	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	F	F	26.247	0.996	25.754	0.997	Unknown	Unknown
+SAMEA112483050	PD_0521	PD_0521	ERS14600401	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	M	M	42.542	0.997	22.244	0.996	Unknown	Unknown
+SAMEA112483051	PD_0522	PD_0522	ERS14600402	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	F	F	76.961	0.997	77.378	0.998	Unknown	Unknown
+SAMEA112483052	PD_0523	PD_0523	ERS14600403	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	F	F	34.964	0.997	34.544	0.997	Unknown	Unknown
+SAMEA112483053	PD_0524	PD_0524	ERS14600404	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	M	M	29.753	0.997	15.315	0.997	Unknown	Unknown
+SAMEA112483054	PD_0525	PD_0525	ERS14600405	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	F	F	68.2	0.998	68.418	0.998	Unknown	Unknown
+SAMEA112483056	PD_0527	PD_0527	ERS14600407	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	F	F	52.486	0.997	52.252	0.998	Unknown	Unknown
+SAMEA112483057	PD_0528	PD_0528	ERS14600408	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	F	F	25.043	0.996	23.958	0.997	Unknown	Unknown
+SAMEA112483058	PD_0529	PD_0529	ERS14600409	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	M	M	35.776	0.997	18.444	0.997	Unknown	Unknown
+SAMEA112483059	PD_0530	PD_0530	ERS14600410	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	F	F	27.287	0.996	26.497	0.997	Unknown	Unknown
+SAMEA112483066	PD_0537	PD_0537	ERS14600417	PRJEB59576	Hoolock_hoolock_ssp	Hoolock_hoolock_ssp	Hoolock_leuconedys_ssp	Hoolock	hoolock	ssp	M	M	60.959	0.997	31.649	0.998	Unknown	Unknown
+SAMN23530507	SAMN23530507	SAMN23530507	SRS11219894	PRJNA785018	Hoolock_leuconedys_ssp	Hoolock_leuconedys_ssp	Hoolock_leuconedys_ssp	Hoolock	leuconedys	ssp	M	M	47.866	0.998	24.862	0.999	Unknown	Unknown
+SAMN43386187	SAMN43386187	SAMN43386187	SRS22485649	PRJNA1153068	Hoolock_leuconedys_ssp	Hoolock_leuconedys_ssp	Hoolock_leuconedys_ssp	Hoolock	leuconedys	ssp	F	F	76.517	1.0	70.266	1.0	Unknown	Unknown

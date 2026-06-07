@@ -1,0 +1,13 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112483107	PD_0578	PD_0578	ERS14600458	PRJEB59576	Nycticebus_bengalensis_ssp	Nycticebus_bengalensis_ssp	Nycticebus_coucang_ssp	Nycticebus	bengalensis	ssp	M	M	40.999	0.997	24.646	0.987	131.413	0.958
+SAMEA112483108	PD_0579	PD_0579	ERS14600459	PRJEB59576	Nycticebus_bengalensis_ssp	Nycticebus_bengalensis_ssp	Nycticebus_coucang_ssp	Nycticebus	bengalensis	ssp	F	F	30.911	0.996	31.957	0.988	75.239	0.785
+SAMEA112483109	PD_0580	PD_0580	ERS14600460	PRJEB59576	Nycticebus_bengalensis_ssp	Nycticebus_bengalensis_ssp	Nycticebus_coucang_ssp	Nycticebus	bengalensis	ssp	F	F	35.364	0.996	36.998	0.987	95.435	0.758
+SAMEA112483110	PD_0581	PD_0581	ERS14600461	PRJEB59576	Nycticebus_bengalensis_ssp	Nycticebus_bengalensis_ssp	Nycticebus_coucang_ssp	Nycticebus	bengalensis	ssp	M	M	49.123	0.996	29.823	0.987	156.331	0.96
+SAMEA112483307	PD_0839	PD_0839	ERS14600658	PRJEB59576	Nycticebus_bengalensis_ssp	Nycticebus_bengalensis_ssp	Nycticebus_coucang_ssp	Nycticebus	bengalensis	ssp	M	M	24.727	0.997	14.975	0.988	82.838	0.975
+SAMEA112483310	PD_0842	PD_0842	ERS14600661	PRJEB59576	Nycticebus_bengalensis_ssp	Nycticebus_bengalensis_ssp	Nycticebus_coucang_ssp	Nycticebus	bengalensis	ssp	F	F	30.316	0.997	32.822	0.988	76.967	0.803
+SAMEA112483313	PD_0845	PD_0845	ERS14600664	PRJEB59576	Nycticebus_bengalensis_ssp	Nycticebus_bengalensis_ssp	Nycticebus_coucang_ssp	Nycticebus	bengalensis	ssp	F	F	27.355	0.998	27.632	0.989	61.165	0.77
+SAMEA112483314	PD_0846	PD_0846	ERS14600665	PRJEB59576	Nycticebus_bengalensis_ssp	Nycticebus_bengalensis_ssp	Nycticebus_coucang_ssp	Nycticebus	bengalensis	ssp	F	F	26.706	0.997	26.773	0.988	67.027	0.763
+SAMN23530515	SAMN23530515	SAMN23530515	SRS11219907	PRJNA785018	Nycticebus_bengalensis_ssp	Nycticebus_bengalensis_ssp	Nycticebus_coucang_ssp	Nycticebus	bengalensis	ssp	Unknown	F	100.036	0.998	110.174	0.988	262.923	0.81
+SAMN07678100	SAMN07678100	SAMN07678100	SRS6383713	PRJNA399409	Nycticebus_coucang_ssp	Nycticebus_coucang_ssp	Nycticebus_coucang_ssp	Nycticebus	coucang	ssp	Unknown	M	26.288	0.996	16.595	0.987	81.417	0.975
+SAMN09702730	SAMN09702730	SAMN09702730	SRS3597040	PRJNA482296	Nycticebus_coucang_ssp	Nycticebus_coucang_ssp	Nycticebus_coucang_ssp	Nycticebus	coucang	ssp	M	M	25.376	0.997	15.81	0.988	75.233	0.972
+SAMN09702731	SAMN09702731	SAMN09702731	SRS3597042	PRJNA482296	Nycticebus_coucang_ssp	Nycticebus_coucang_ssp	Nycticebus_coucang_ssp	Nycticebus	coucang	ssp	F	F	25.955	0.997	28.197	0.985	64.199	0.806

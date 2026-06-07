@@ -1,0 +1,7 @@
+BIOSAMPLE_ID	PDGP_ID	GVCF_ID	SRA_SAMPLE_ID	BIOPROJECT_ID	BAM_FOLDER	GVCF_FOLDER	REFERENCE_FOLDER	GENUS	SPECIES	SUBSPECIES	REPORTED_SEX	GENETIC_SEX	AVG_COVERAGE_A	PROP_COVERED_A	AVG_COVERAGE_X	PROP_COVERED_X	AVG_COVERAGE_Y	PROP_COVERED_Y
+SAMEA112482892	PD_0117	PD_0117	ERS14600243	PRJEB59576	Mico_argentatus_ssp	Mico_argentatus_ssp	Callithrix_jacchus_ssp	Mico	argentatus	ssp	M	M	31.155	0.98	16.465	0.958	59.336	0.775
+SAMEA112482920	PD_0162	PD_0162	ERS14600271	PRJEB59576	Mico_argentatus_ssp	Mico_argentatus_ssp	Callithrix_jacchus_ssp	Mico	argentatus	ssp	F	F	34.661	0.981	33.348	0.961	80.558	0.557
+SAMEA14464485	PD_0281	PD_0281	ERS12091958	PRJEB59576	Mico_argentatus_ssp	Mico_argentatus_ssp	Callithrix_jacchus_ssp	Mico	argentatus	ssp	M	M	31.684	0.981	16.638	0.959	57.792	0.784
+SAMEA14464487	PD_0283	PD_0283	ERS12091960	PRJEB59576	Mico_argentatus_ssp	Mico_argentatus_ssp	Callithrix_jacchus_ssp	Mico	argentatus	ssp	M	M	34.447	0.98	17.89	0.959	65.945	0.79
+SAMEA14464486	PD_0282	PD_0282	ERS12091959	PRJEB59576	Mico_humeralifer_ssp	Mico_humeralifer_ssp	Callithrix_jacchus_ssp	Mico	humeralifer	ssp	F	F	33.72	0.982	30.964	0.962	89.235	0.475
+SAMEA14464441	PD_0002	PD_0002	ERS12091914	PRJEB59576	Mico_humilis_ssp	Mico_humilis_ssp	Callithrix_jacchus_ssp	Mico	humilis	ssp	Unknown							

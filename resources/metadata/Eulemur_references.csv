@@ -1,0 +1,4 @@
+REFERENCE_FOLDER	REFERENCE_NAME	GENBANK_ID	FTP
+Eulemur_flavifrons_ssp	Eflavifronsk33QCA_HiC	Eflavifronsk33QCA_HiC	https://dnazoo.s3.wasabisys.com/Eulemur_flavifrons/Eflavifronsk33QCA_HiC.fasta.gz
+Eulemur_mongoz_ssp	Eulemur_mongoz_HiC	GCA_028534055.1	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/028/534/055/GCA_028534055.1_Eulemur_mongoz_HiC/GCA_028534055.1_Eulemur_mongoz_HiC_genomic.fna.gz
+Eulemur_rufifrons_ssp	OSU_ERuf_1	GCA_041146395.1	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/041/146/395/GCF_041146395.1_OSU_ERuf_1/GCF_041146395.1_OSU_ERuf_1_genomic.fna.gz
