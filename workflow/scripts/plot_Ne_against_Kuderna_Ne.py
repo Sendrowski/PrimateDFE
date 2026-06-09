@@ -101,7 +101,6 @@ plt.plot(xx, xx, ":", color="black", linewidth=1, label="$y=x$")
 plt.xlabel("$N_e$ (Kuderna et al.)")
 plt.ylabel("$N_e$ (Watterson)")
 plt.title("$N_e$ (Kuderna et al.) vs $N_e$ (Watterson)")
-plt.tight_layout()
 
 ax.set_xlim(1e4, max(x) * 1.1)
 ax.set_ylim(1e4, max(x) * 1.1)
@@ -111,7 +110,10 @@ for ax in [ax.xaxis, ax.yaxis]:
     ax.set_major_locator(LogLocator(base=10, subs=(1.0, 2.0, 5.0)))
     ax.set_major_formatter(FuncFormatter(DFEvsNePlotter.log_label_pow))
 
-plt.savefig(out)
+# Lay out + save after the tick formatters are set, with a tight bbox, so the
+# wide log tick labels don't push the y-axis label off the canvas.
+plt.tight_layout()
+plt.savefig(out, bbox_inches="tight")
 
 if testing:
     plt.show()
