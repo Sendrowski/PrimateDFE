@@ -67,18 +67,23 @@ n_sets = len(dfes_list)
 if color_by == "taxon":
     if n_sets == 4:
         # parametrization -> colour + marker; dominance -> line style
-        line_colors = ["black", "black", "0.45", "0.45"]
+        line_colors = ["black", "black", "0.25", "0.25"]
         point_markers = ["o", "o", "^", "^"]
         line_styles = ["-", "--", "-", "--"]
     else:
         # colour by taxonomic group, distinguish datasets by marker + line style
-        line_colors = ["black", "0.45"]
+        line_colors = ["black", "0.25"]
         point_markers = ["o", "^"]
         line_styles = ["-", "--"]
 else:
     line_colors = ["C0", "C1"]
     point_markers = ["o", "o"]
     line_styles = ["--", "--"]
+
+# draw the GammaExpParametrization regression lines in a softened red so they
+# stand out against the (darker grey) discrete parametrization
+line_colors = ["#ff6b6b" if lab.lower().startswith("gamma") else c
+               for lab, c in zip(dataset_labels, line_colors)]
 
 datasets, markers, linestyles = {}, {}, {}
 for i, (lab, dfes) in enumerate(zip(dataset_labels, dfes_list)):
