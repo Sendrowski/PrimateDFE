@@ -15,5 +15,5 @@ dependencies:
   - biopython
   - dadi
   - pip:
-    - fastdfe>=1.2.1
+    - fastdfe>=1.3.0
     - cyvcf2

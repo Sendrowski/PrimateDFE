@@ -27,7 +27,3 @@ CLAUDE.md
 *.toc
 *.lof
 *.lot
-
-# Manuscript & notes (kept local, not published)
-reports/
-TODO.md

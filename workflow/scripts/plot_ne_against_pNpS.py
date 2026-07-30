@@ -148,7 +148,7 @@ ax.yaxis.set_major_formatter(ScalarFormatter())
 ax.yaxis.get_major_formatter().set_scientific(False)
 ax.yaxis.get_major_formatter().set_useOffset(False)
 
-plt.savefig(out)
+plt.savefig(out, dpi=400)
 
 if testing:
     plt.show()

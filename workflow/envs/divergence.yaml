@@ -1,0 +1,21 @@
+name: divergence-primate-dfe
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - pysam
+  - pandas
+  - numpy
+  - scipy
+  - matplotlib
+  - tqdm
+  - seaborn
+  - jsonpickle
+  - biopython
+  - pip
+  - pip:
+    - fastdfe>=1.3.3
+    - cyvcf2
+    # Ancestree is unpublished; install editable from the local sibling checkout.
+    - "-e /home/sendrowskij/Ancestree"

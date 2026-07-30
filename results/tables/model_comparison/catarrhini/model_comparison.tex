@@ -1,0 +1,56 @@
+\begin{table}[H]
+    \centering
+    \rowcolors{2}{gray!8}{white}
+    \renewcommand{\arraystretch}{1.15}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{l rr rr c rr rr c r}
+        \toprule
+         & \multicolumn{5}{c}{\textbf{GammaExp}} & \multicolumn{5}{c}{\textbf{Discrete}} &  \\
+        \cmidrule(lr){2-6} \cmidrule(lr){7-11}
+        \textbf{Subspecies} & LL$_{\text{del}}$ & LL$_{\text{full}}$ & AIC$_{\text{del}}$ & AIC$_{\text{full}}$ & LRT $p$ & LL$_{\text{del}}$ & LL$_{\text{full}}$ & AIC$_{\text{del}}$ & AIC$_{\text{full}}$ & LRT $p$ & $\Delta$AIC \\
+        \midrule
+        \textit{Homo sapiens} & -32.3 & -31.8 & 68.5 & 71.6 & 0.65 & -32.5 & -31.8 & 71.0 & 73.5 & 0.49 & -1.9 \\
+        \textit{Pan paniscus} & -31.8 & -31.8 & 67.5 & 71.5 & 1.00 & -31.4 & -31.4 & 68.7 & 72.7 & 1.00 & -1.2 \\
+        \textit{Pan troglodytes} ellioti & -37.4 & -37.4 & 78.7 & 82.7 & 1.00 & -33.8 & -33.8 & 73.6 & 77.6 & 0.98 & +5.2 \\
+        \textit{Pan troglodytes} schweinfurthii & -34.4 & -34.2 & 72.8 & 76.4 & 0.81 & -34.9 & -34.0 & 75.8 & 77.9 & 0.38 & -1.5 \\
+        \textit{Pan troglodytes} troglodytes & -34.5 & -34.3 & 73.1 & 76.6 & 0.78 & -35.5 & -34.1 & 77.0 & 78.2 & 0.25 & -1.6 \\
+        \textit{Pan troglodytes} verus & -40.4 & -40.4 & 84.7 & 88.7 & 1.00 & -33.2 & -33.2 & 72.4 & 76.4 & 1.00 & +12.3 \\
+        \textit{Gorilla beringei} beringei & -34.3 & -34.3 & 72.5 & 76.5 & 1.00 & -33.7 & -33.1 & 73.4 & 76.1 & 0.54 & +0.4 \\
+        \textit{Gorilla beringei} graueri & -36.0 & -34.4 & 76.0 & 76.8 & 0.20 & -39.9 & -34.2 & 85.8 & 78.3 & $3.1\!\times\!10^{-3}$ & -1.5 \\
+        \textit{Gorilla gorilla} gorilla & -34.8 & -34.5 & 73.5 & 77.0 & 0.77 & -35.6 & -34.5 & 77.1 & 79.0 & 0.34 & -2.0 \\
+        \textit{Pongo abelii} & -39.2 & -36.4 & 82.4 & 80.8 & 0.06 & -41.7 & -35.0 & 89.3 & 80.1 & $1.3\!\times\!10^{-3}$ & +0.7 \\
+        \textit{Pongo pygmaeus} & -34.9 & -34.4 & 73.9 & 76.8 & 0.59 & -35.4 & -34.2 & 76.8 & 78.5 & 0.32 & -1.7 \\
+        \textit{Macaca cyclopis} & -46.1 & -46.1 & 96.2 & 100.2 & 1.00 & -42.3 & -42.3 & 90.6 & 94.6 & 1.00 & +5.6 \\
+        \textit{Macaca fuscata} & -40.9 & -33.7 & 85.9 & 75.4 & $7.1\!\times\!10^{-4}$ & -37.2 & -33.6 & 80.3 & 77.2 & 0.03 & -1.8 \\
+        \textit{Macaca mulatta} & -36.5 & -35.2 & 77.1 & 78.4 & 0.26 & -39.0 & -35.2 & 84.0 & 80.3 & 0.02 & -1.9 \\
+        \textit{Macaca hecki} & -62.8 & -46.6 & 129.6 & 101.2 & $9.2\!\times\!10^{-8}$ & -57.9 & -48.3 & 121.8 & 106.5 & $6.5\!\times\!10^{-5}$ & -5.3 \\
+        \textit{Macaca leonina} & -90.8 & -65.0 & 185.7 & 138.0 & $6.0\!\times\!10^{-12}$ & -59.3 & -55.7 & 124.6 & 121.5 & 0.03 & +16.5 \\
+        \textit{Macaca maura} & -52.7 & -38.4 & 109.5 & 84.9 & $6.2\!\times\!10^{-7}$ & -45.1 & -38.4 & 96.2 & 86.7 & $1.2\!\times\!10^{-3}$ & -1.8 \\
+        \textit{Macaca nemestrina} & -46.8 & -35.7 & 97.6 & 79.4 & $1.5\!\times\!10^{-5}$ & -45.0 & -35.9 & 96.0 & 81.8 & $1.2\!\times\!10^{-4}$ & -2.5 \\
+        \textit{Macaca nigra} & -37.5 & -37.5 & 79.0 & 83.0 & 1.00 & -38.4 & -37.5 & 82.8 & 85.0 & 0.41 & -2.0 \\
+        \textit{Macaca radiata} & -47.1 & -47.1 & 98.2 & 102.2 & 0.99 & -39.2 & -39.2 & 84.5 & 88.5 & 1.00 & +13.8 \\
+        \textit{Macaca silenus} & -38.7 & -38.0 & 81.5 & 84.0 & 0.47 & -37.8 & -37.1 & 81.6 & 84.3 & 0.53 & -0.3 \\
+        \textit{Macaca tonkeana} & -119.2 & -43.8 & 242.4 & 95.6 & $1.8\!\times\!10^{-33}$ & -78.5 & -45.3 & 162.9 & 100.6 & $4.0\!\times\!10^{-15}$ & -5.0 \\
+        \textit{Macaca arctoides} & -37.8 & -37.8 & 79.5 & 83.5 & 1.00 & -37.0 & -36.7 & 80.0 & 83.5 & 0.79 & +0.0 \\
+        \textit{Macaca assamensis} & -43.3 & -35.7 & 90.6 & 79.3 & $4.8\!\times\!10^{-4}$ & -44.4 & -35.7 & 94.9 & 81.4 & $1.6\!\times\!10^{-4}$ & -2.1 \\
+        \textit{Macaca leucogenys} & -59.0 & -41.6 & 122.0 & 91.2 & $2.7\!\times\!10^{-8}$ & -57.5 & -43.1 & 121.1 & 96.2 & $5.4\!\times\!10^{-7}$ & -5.1 \\
+        \textit{Papio anubis} & -58.2 & -45.2 & 120.4 & 98.3 & $2.2\!\times\!10^{-6}$ & -42.9 & -41.6 & 91.9 & 93.2 & 0.26 & +5.1 \\
+        \textit{Papio cynocephalus} anubishybrid & -73.0 & -71.9 & 150.1 & 151.9 & 0.34 & -63.4 & -63.4 & 132.8 & 136.8 & 1.00 & +15.1 \\
+        \textit{Papio cynocephalus} ssp & -59.7 & -59.6 & 123.3 & 127.3 & 0.98 & -47.0 & -47.0 & 100.0 & 104.0 & 1.00 & +23.3 \\
+        \textit{Papio hamadryas} & -70.7 & -70.7 & 145.4 & 149.4 & 1.00 & -53.3 & -53.3 & 112.5 & 116.5 & 1.00 & +32.9 \\
+        \textit{Papio kindae} & -50.3 & -50.3 & 104.5 & 108.5 & 1.00 & -40.8 & -40.8 & 87.6 & 91.6 & 1.00 & +16.9 \\
+        \textit{Papio ursinus} & -80.7 & -78.7 & 165.4 & 165.5 & 0.14 & -64.6 & -64.6 & 135.2 & 139.2 & 1.00 & +26.3 \\
+        \textit{Theropithecus gelada} & -47.6 & -47.6 & 99.2 & 103.2 & 1.00 & -36.6 & -36.6 & 79.3 & 83.3 & 1.00 & +19.9 \\
+        \textit{Erythrocebus patas} & -61.9 & -55.2 & 127.9 & 118.4 & $1.2\!\times\!10^{-3}$ & -62.1 & -57.1 & 130.1 & 124.2 & $7.1\!\times\!10^{-3}$ & -5.8 \\
+        \textit{Rhinopithecus bieti} & -88.9 & -65.2 & 181.7 & 138.4 & $5.2\!\times\!10^{-11}$ & -76.7 & -66.6 & 159.5 & 143.1 & $3.8\!\times\!10^{-5}$ & -4.8 \\
+        \textit{Rhinopithecus roxellana} & -214.0 & -86.4 & 432.1 & 180.8 & $3.7\!\times\!10^{-56}$ & -152.2 & -86.6 & 310.4 & 183.2 & $3.2\!\times\!10^{-29}$ & -2.4 \\
+        \textit{Semnopithecus hypoleucos} & -62.4 & -62.3 & 128.8 & 132.5 & 0.86 & -60.4 & -60.1 & 126.8 & 130.2 & 0.73 & +2.3 \\
+        \textit{Trachypithecus francoisi} & -42.2 & -42.2 & 88.4 & 92.4 & 1.00 & -38.6 & -38.6 & 83.1 & 87.1 & 1.00 & +5.3 \\
+        \textit{Trachypithecus poliocephalus} & -35.6 & -35.6 & 75.2 & 79.2 & 1.00 & -33.7 & -33.7 & 73.4 & 77.4 & 1.00 & +1.8 \\
+        \midrule
+        \textbf{Mean} & -55.1 & -45.7 & 114.2 & 99.4 & --- & -47.9 & -42.7 & 101.7 & 95.4 & --- & +4.0 \\
+        \bottomrule
+    \end{tabular}}
+    \caption{Per-subspecies model comparison across the four DFE-model variants of Table~\ref{tab:dfe_variants} (\texttt{GammaExpParametrization} and \texttt{DiscreteParametrization}, each deleterious-only (\emph{del}) or full (\emph{full})). $\mathrm{LL}$ is the log-likelihood at the MLE; $\mathrm{AIC} = 2k - 2\,\mathrm{LL}$ with free-parameter counts $k$ as in Table~\ref{tab:dfe_variants}. LRT $p$-values are from a $\chi^2_2$ test of the nested deleterious-only vs.\ full model within each parametrization: small $p$ ($p < 0.05$) indicates that adding the beneficial component significantly improves the fit, while values close to one indicate that the simpler deleterious-only model is preferred. The final column reports $\Delta\mathrm{AIC} = \mathrm{AIC}_{\text{$\gamma$ full}} - \mathrm{AIC}_{\text{discrete full}}$; positive values favor the discrete parametrization. The bottom row reports per-column means across subspecies (means are omitted for the LRT $p$-values, which are not meaningfully averaged). Overall, the deleterious-only model is preferred for 23/38 subspecies (LRT $p \geq 0.05$ in both parametrizations), and the gamma and discrete full-DFE fits are close in AIC (mean $\Delta\mathrm{AIC} = +4.0$ in favor of discrete; $|\Delta\mathrm{AIC}| < 5$ in 21/38 subspecies), consistent with the qualitative agreement between the two parametrizations reported in the main text. Inferences use unfolded SFS at $n=8$ haplotypes with $\varepsilon = 0$.}
+    \label{tab:model_comparison}
+\end{table}

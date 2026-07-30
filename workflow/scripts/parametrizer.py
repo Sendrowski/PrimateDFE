@@ -195,3 +195,13 @@ class Parametrizer:
         Get omega_a (the adaptive component of dN/dS) per bootstrap.
         """
         return cls._omega_components(dfe)[1]
+
+    @classmethod
+    def get_omega_na(cls, dfe: fd.DFE) -> np.ndarray:
+        """
+        Get omega_na (the non-adaptive component of dN/dS) per bootstrap,
+        i.e. omega - omega_a (the contribution of deleterious and neutral
+        substitutions, S <= 0).
+        """
+        omega, omega_a = cls._omega_components(dfe)
+        return omega - omega_a

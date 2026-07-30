@@ -1190,8 +1190,7 @@ rule compute_sfs_gc_conservative:
         "scripts/compute_sfs.py"
 
 # filter VCF to remove sites in CpG dinucleotide context (uses FASTA for ±1 lookup).
-# chainable: any *.vcf.gz becomes *.no_cpg.vcf.gz. Implemented via the project-local
-# CpGFiltration in scripts/utils.py.
+# chainable: any *.vcf.gz becomes *.no_cpg.vcf.gz. Uses fastDFE's CpGFiltration (>=1.3.0).
 rule filter_no_cpg:
     input:
         vcf="results/vcf/{ref}/{prefix}.vcf.gz",
@@ -1964,6 +1963,418 @@ rule combine_spectra_for_group:
     script:
         "scripts/combine_spectra.py"
 
+# =====================================================================
+# Divergence-based DFE / alpha (lineage-specific fixed substitutions)
+# ---------------------------------------------------------------------
+# Substitution model for the phylogenetic ancestral reconstruction
+# (Ancestree). JC69 is the default; "K2" fits a transition/transversion
+# ratio.
+DIV_MODEL = "JC69"
+
+# Explicit, correctly-ordered (nearest-first) divergence outgroups for references
+# whose curated ingroup outgroups are dominated by self-alignments (sister taxa
+# that lack their own genome and were mapped onto this reference). For Papio the
+# only auto-discoverable real outgroup is the very distant Macaca, which badly
+# overcounts the focal lineage; Theropithecus_gelada (own genome, sister to
+# Papio) is the proper near outgroup, so we build that alignment on demand.
+DIV_OUTGROUP_OVERRIDE = {
+    "Papio_anubis": ["Theropithecus_gelada", "Macaca_mulatta"],
+    "Trachypithecus_francoisi": ["Rhinopithecus_roxellana", "Colobus_guereza"],
+}
+
+def _self_alignment(ref, og):
+    """True if ``og`` lacks its own genome and is mapped onto ``ref`` (so the
+    aligned FASTA is ``ref`` against itself and carries no divergence signal)."""
+    try:
+        return get_ref_from_species(og) == ref
+    except Exception:
+        return False
+
+def _real_ogs(ref, ogs, acc):
+    for og in ogs:
+        if og != ref and og not in acc \
+                and not _self_alignment(ref, og) \
+                and os.path.exists(f"results/minimap2/{ref}/{og}.fasta"):
+            acc.append(og)
+    return acc
+
+def get_divergence_ref_outgroups(ref):
+    """Outgroup species aligned onto reference ``ref``, available for the
+    divergence reconstruction. Divergence is keyed by reference genome. Self
+    alignments (sister taxa mapped onto ``ref`` itself, with branch length ~0)
+    carry no divergence signal and are excluded. We prefer the reference
+    species' own outgroup ladder (correct nearest-first order); if fewer than
+    two real outgroups remain we fall back to the union over every ingroup
+    species mapped onto ``ref``. A few references with poor auto-discovered
+    outgroups are overridden explicitly (see ``DIV_OUTGROUP_OVERRIDE``)."""
+    if ref in DIV_OUTGROUP_OVERRIDE:
+        return DIV_OUTGROUP_OVERRIDE[ref]
+    own = _real_ogs(ref, ingroup_outgroups.get(ref, []), [])
+    if len(own) >= 2:
+        return own
+    union = list(own)
+    for sp, ogs in ingroup_outgroups.items():
+        try:
+            if get_ref_from_species(sp) != ref:
+                continue
+        except Exception:
+            continue
+        _real_ogs(ref, ogs, union)
+    return union
+
+# Count lineage-specific fixed (divergent) substitutions per degeneracy
+# class for a focal lineage, represented by its single haploid reference
+# genome, against an Ancestree-reconstructed ancestor over the outgroup
+# ladder. Only coding sites are reconstructed (degeneracy from fastDFE).
+rule count_divergence:
+    input:
+        ref="resources/ref/{ref}.fasta",
+        fai="resources/ref/{ref}.fasta.fai",
+        gff="resources/gff/{ref}.gff",
+        outgroups=lambda w: [f"results/minimap2/{w.ref}/{og}.fasta"
+                             for og in get_divergence_ref_outgroups(w.ref)],
+    output:
+        vcf="results/divergence/{ref}/divergence.{model}.vcf.gz",
+        json="results/divergence/{ref}/divergence.{model}.json",
+        sites="results/divergence/{ref}/divergence.{model}.sites.tsv.gz",
+    params:
+        outgroup_names=lambda w: get_divergence_ref_outgroups(w.ref),
+        focal_name=lambda w: w.ref,
+        model=lambda w: w.model,
+        chrom_filter=None,
+    wildcard_constraints:
+        model="JC69|K2",
+    resources:
+        mem_mb=60000,
+    conda:
+        "envs/divergence.yaml"
+    script:
+        "scripts/count_divergence.py"
+
+# Per-population correction of the reference-level divergence sites: drop sites
+# that are segregating in the focal population (misattributed polymorphism from
+# the single-haplotype reference), yielding a true per-population fixed-
+# substitution count.
+rule correct_divergence:
+    input:
+        sites=lambda w: f"results/divergence/{w.ref}/divergence.{DIV_MODEL}.sites.tsv.gz",
+        vcf=lambda w: f"results/vcf/{w.ref}/{get_species_from_pop(w.population)}.degeneracy.polarized.vcf.gz",
+    output:
+        json="results/divergence/{ref}/{population}/divergence.corrected.json",
+    params:
+        individuals=lambda w: get_individuals_from_pop(w.population),
+    conda:
+        "envs/divergence.yaml"
+    script:
+        "scripts/correct_divergence.py"
+
+# Graft the (population-corrected) divergence counts onto a population's
+# polymorphism SFS, producing a divergence-carrying (polyDFE-format) Spectra.
+# The optional ``{filt}`` token ("" = all substitutions; ".gc" = GC-conservative
+# robustness check). The GC arm pairs the GC-conservative-only divergence counts
+# with the filter_bgc (CpG + GC-conservative) polymorphism SFS for direct
+# comparability (both restricted to A<->T / C<->G).
+rule emit_divergence_sfs:
+    input:
+        sfs=lambda w: (f"results/sfs/{w.ref}/{w.population}/sfs.unfolded.filter_bgc.{w.n}.csv"
+                       if w.filt == ".gc" else
+                       f"results/sfs/{w.ref}/{w.population}/sfs.unfolded.{w.n}.csv"),
+        divergence="results/divergence/{ref}/{population}/divergence.corrected.json",
+    output:
+        "results/divergence/sfs/{ref}/{population}/sfs{filt}.{n}.csv"
+    params:
+        gc_conservative=lambda w: w.filt == ".gc",
+    wildcard_constraints:
+        filt=r"(\.gc)?",
+    conda:
+        "envs/divergence.yaml"
+    script:
+        "scripts/emit_divergence_sfs.py"
+
+# Combine divergence-carrying SFS across a group (e.g. catarrhini).
+rule combine_divergence_sfs:
+    input:
+        lambda w: [f"results/divergence/sfs/{get_ref_from_pop(p)}/{p}/sfs.{w.n}.csv"
+                   for p in get_pops(w.n, w.group)],
+    output:
+        "results/divergence/sfs/comp/{group}/sfs.{n}.csv"
+    params:
+        labels=lambda w: get_pops(w.n, w.group),
+    conda:
+        "envs/divergence.yaml"
+    script:
+        "scripts/combine_spectra.py"
+
+# Marginal DFE per population with divergence ON or OFF (GammaExp, full).
+# ``{filt}`` ("" = all substitutions; ".gc" = GC-conservative robustness check).
+rule infer_dfe_divergence:
+    input:
+        sfs="results/divergence/sfs/{ref}/{population}/sfs{filt}.{n}.csv"
+    output:
+        json="results/dfe/divergence/{ref}/{population}/result.{parametrization}.{div}{filt}.{n}.json",
+        summary="results/dfe/divergence/{ref}/{population}/summary.{parametrization}.{div}{filt}.{n}.json",
+        dfe="results/dfe/divergence/{ref}/{population}/dfe.{parametrization}.full.{div}{filt}.{n}.json",
+    params:
+        use_divergence=lambda w: w.div == "div_on",
+        parametrization=lambda w: w.parametrization,
+        sub_model="full",
+        n_bootstraps=100,
+        n_runs=10,
+        n_bootstrap_retries=3,
+        parallelize=True,
+    wildcard_constraints:
+        div="div_on|div_off",
+        parametrization="gamma|discrete",
+        filt=r"(\.gc)?",
+    resources:
+        mem_mb=16000,
+        cpus=8,
+    conda:
+        "envs/divergence.yaml"
+    script:
+        "scripts/infer_dfe_divergence.py"
+
+# Deleterious-only DFE (dele sub-model: no beneficial component) for the
+# deleterious DFE-vs-Ne comparison. Emits only the marginal DFE (the alpha
+# experiment uses the full sub-model above).
+rule infer_dfe_divergence_del:
+    input:
+        sfs="results/divergence/sfs/{ref}/{population}/sfs{filt}.{n}.csv"
+    output:
+        dfe="results/dfe/divergence/{ref}/{population}/dfe.{parametrization}.del.{div}{filt}.{n}.json",
+    params:
+        use_divergence=lambda w: w.div == "div_on",
+        parametrization=lambda w: w.parametrization,
+        sub_model="del",
+        n_bootstraps=100,
+        n_runs=10,
+        n_bootstrap_retries=3,
+        parallelize=True,
+    wildcard_constraints:
+        div="div_on|div_off",
+        parametrization="gamma|discrete",
+        filt=r"(\.gc)?",
+    resources:
+        mem_mb=16000,
+        cpus=8,
+    conda:
+        "envs/divergence.yaml"
+    script:
+        "scripts/infer_dfe_divergence.py"
+
+# Assemble the experiment: alpha OFF vs ON, alpha-vs-Ne regression, plot.
+# ``{filt}`` ("" = all substitutions; ".gc" = GC-conservative robustness check).
+rule assemble_divergence_experiment:
+    input:
+        off=lambda w: [f"results/dfe/divergence/{get_ref_from_pop(p)}/{p}/"
+                       f"summary.{w.parametrization}.div_off{w.filt}.{w.n}.json"
+                       for p in get_pops(w.n, w.group)],
+        on=lambda w: [f"results/dfe/divergence/{get_ref_from_pop(p)}/{p}/"
+                      f"summary.{w.parametrization}.div_on{w.filt}.{w.n}.json"
+                      for p in get_pops(w.n, w.group)],
+        ne="results/stats/Ne/comp/original_ref/{group}/{n}.csv",
+    output:
+        table="results/divergence/experiment/{group}/{parametrization}/table{filt}.{n}.csv",
+        plot="results/graphs/divergence/{group}/{parametrization}/alpha_vs_Ne{filt}.{n}.png",
+        stats="results/divergence/experiment/{group}/{parametrization}/stats{filt}.{n}.json",
+    wildcard_constraints:
+        parametrization="gamma|discrete",
+        filt=r"(\.gc)?",
+    params:
+        populations=lambda w: get_pops(w.n, w.group),
+    conda:
+        "envs/divergence.yaml"
+    script:
+        "scripts/assemble_divergence_experiment.py"
+
+# Phylogenetically-controlled alpha-vs-Ne regression (OLS vs PGLS Brownian /
+# Grafen) on the divergence experiment table, aggregated to species against the
+# Kuderna tree. Re-tests whether the alpha-Ne signal survives correction for
+# shared ancestry, since the populations collapse onto far fewer references.
+rule fit_divergence_pgls:
+    input:
+        table="results/divergence/experiment/{group}/{parametrization}/table.{n}.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree",
+    output:
+        csv="results/divergence/experiment/{group}/{parametrization}/pgls.{n}.csv",
+        tex="results/tables/divergence/{group}/{parametrization}/pgls.{n}.tex",
+    wildcard_constraints:
+        parametrization="gamma|discrete",
+    conda:
+        "envs/regression.yaml"
+    script:
+        "scripts/fit_divergence_pgls.R"
+
+# Combine per-population divergence DFEs (carrying bootstraps) into one CSV per
+# (parametrization, div) -- same population,json layout as combine_dfes_for_group,
+# consumed by the DFE-vs-Ne plotter.
+rule combine_divergence_dfes:
+    input:
+        lambda w: [f"results/dfe/divergence/{get_ref_from_pop(p)}/{p}/"
+                   f"dfe.{w.parametrization}.{w.sub_model}.{w.div}{w.filt}.{w.n}.json"
+                   for p in get_pops(w.n, w.group)]
+    output:
+        "results/dfe/divergence/{group}/dfe.{parametrization}.{sub_model}.{div}{filt}.{n}.csv"
+    wildcard_constraints:
+        div="div_on|div_off",
+        sub_model="del|full",
+        parametrization="gamma|discrete",
+        filt=r"(\.gc)?",
+    params:
+        populations=lambda w: get_pops(w.n, w.group)
+    run:
+        import pandas as pd
+        rows = [{"population": pop, "json": open(f).read()}
+                for pop, f in zip(params.populations, input)]
+        pd.DataFrame(rows).to_csv(output[0], index=False)
+
+# Replicate manuscript Figure 2 (marginal DFE statistics vs Ne, gamma vs
+# discrete) for the divergence inference, for one divergence mode (div_off =
+# polymorphism only, div_on = +divergence).
+rule plot_divergence_dfe_vs_Ne:
+    input:
+        # {stats} doubles as the sub_model: del uses the deleterious-only fit,
+        # full uses the full (free-beneficial) fit.
+        dfe_a="results/dfe/divergence/{group}/dfe.gamma.{stats}.{div}.{n}.csv",
+        dfe_b="results/dfe/divergence/{group}/dfe.discrete.{stats}.{div}.{n}.csv",
+        ne="results/stats/Ne/comp/original_ref/{group}/{n}.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree",
+    output:
+        "results/graphs/divergence/{group}/dfe_vs_Ne.{stats}.{div}.{n}.png"
+    wildcard_constraints:
+        div="div_on|div_off",
+        stats="del|full",
+    params:
+        populations=lambda w: get_pops(w.n, w.group),
+        labels=lambda w: [get_group_from_pop(p) for p in get_pops(w.n, w.group)],
+        dataset_labels=["gamma", "discrete"],
+        # del = deleterious bins only (manuscript Fig 2); full = whole DFE (adds
+        # the beneficial bin S in (0, inf)) plus the adaptive summaries
+        # alpha, omega, omega_a.
+        stat_list=lambda w: {
+            "del": ["range_S_-inf_-10", "range_S_-10_-1", "range_S_-1_0"],
+            "full": ["range_S_-inf_-10", "range_S_-10_-1", "range_S_-1_0",
+                     "range_S_0_inf", "alpha", "omega", "omega_a"],
+        }[w.stats],
+        scaled=True,
+        legend=True,
+    conda:
+        "envs/regression.yaml"
+    script:
+        "scripts/plot_two_datasets_against_Ne.py"
+
+# Stitch the polymorphism-only and +divergence Figure-2 replicas side by side.
+rule plot_divergence_dfe_vs_Ne_sidebyside:
+    input:
+        off="results/graphs/divergence/{group}/dfe_vs_Ne.{stats}.div_off.{n}.png",
+        on="results/graphs/divergence/{group}/dfe_vs_Ne.{stats}.div_on.{n}.png",
+    output:
+        "results/graphs/divergence/{group}/dfe_vs_Ne.{stats}.sidebyside.{n}.png"
+    wildcard_constraints:
+        stats="del|full",
+    params:
+        n_cols=2,
+        titles=["polymorphism only", "+ divergence"],
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/combine_plots.py"
+
+# Appendix 4-way figure: full DFE (+ alpha, omega_a, omega) vs Ne across
+# {polymorphism, +divergence} x {gamma, discrete}, same colour/style scheme as
+# the dominance 4-way figure (parametrization -> colour+marker, gamma=red/circle,
+# discrete=grey/triangle; data source -> line style, poly=solid, +div=dashed).
+rule plot_dfe_vs_Ne_div_param_comparison:
+    input:
+        dfe_a="results/dfe/divergence/{group}/dfe.gamma.full.div_off.{n}.csv",
+        dfe_b="results/dfe/divergence/{group}/dfe.gamma.full.div_on.{n}.csv",
+        dfe_c="results/dfe/divergence/{group}/dfe.discrete.full.div_off.{n}.csv",
+        dfe_d="results/dfe/divergence/{group}/dfe.discrete.full.div_on.{n}.csv",
+        ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
+    output:
+        "results/graphs/divergence/{group}/dfe_vs_Ne.div_param_4way.{n}.png"
+    params:
+        populations=lambda w: get_pops(w.n, w.group),
+        labels=lambda w: [get_group_from_pop(p) for p in get_pops(w.n, w.group)],
+        dataset_labels=["gamma (poly)", "gamma (+div)", "discrete (poly)", "discrete (+div)"],
+        color_by="taxon",
+        stat_list=["range_S_-inf_-10", "range_S_-10_-1", "range_S_-1_0",
+                   "range_S_0_inf", "alpha", "omega_a", "omega_na", "omega"],
+        scaled=True,
+        legend=True
+    conda:
+        "envs/regression.yaml"
+    script:
+        "scripts/plot_two_datasets_against_Ne.py"
+
+# Appendix 4-way figure: gBGC robustness of the +divergence (div_on) full DFE.
+# Full DFE (+ alpha, omega_a, omega_na, omega) vs Ne across {all substitutions,
+# GC-conservative} x {gamma, discrete}. Same colour/style scheme: parametrization
+# -> colour+marker (gamma=red/circle, discrete=grey/triangle); site set -> line
+# style (all subs = solid, GC-conservative = dashed).
+rule plot_dfe_vs_Ne_div_filt_comparison:
+    input:
+        dfe_a="results/dfe/divergence/{group}/dfe.gamma.full.div_on.{n}.csv",
+        dfe_b="results/dfe/divergence/{group}/dfe.gamma.full.div_on.gc.{n}.csv",
+        dfe_c="results/dfe/divergence/{group}/dfe.discrete.full.div_on.{n}.csv",
+        dfe_d="results/dfe/divergence/{group}/dfe.discrete.full.div_on.gc.{n}.csv",
+        ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
+    output:
+        "results/graphs/divergence/{group}/dfe_vs_Ne.div_filt_4way.{n}.png"
+    params:
+        populations=lambda w: get_pops(w.n, w.group),
+        labels=lambda w: [get_group_from_pop(p) for p in get_pops(w.n, w.group)],
+        dataset_labels=["gamma (all)", "gamma (GC-cons)", "discrete (all)", "discrete (GC-cons)"],
+        color_by="taxon",
+        stat_list=["range_S_-inf_-10", "range_S_-10_-1", "range_S_-1_0",
+                   "range_S_0_inf", "alpha", "omega_a", "omega_na", "omega"],
+        scaled=True,
+        legend=True
+    conda:
+        "envs/regression.yaml"
+    script:
+        "scripts/plot_two_datasets_against_Ne.py"
+
+# Subspecies-level dN/dS and 0-fold:4-fold target-site ratio from the divergence
+# counts (read straight from the per-population summaries).
+rule plot_divergence_dnds:
+    input:
+        summaries=lambda w: [f"results/dfe/divergence/{get_ref_from_pop(p)}/{p}/"
+                             f"summary.gamma.div_on.{w.n}.json"
+                             for p in get_pops(w.n, w.group)],
+    output:
+        "results/graphs/divergence/{group}/dnds_target_ratio.{n}.png"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_divergence_dnds.py"
+
+# Species-wise McDonald-Kreitman test (alpha = 1 - NI) from the divergence SFS,
+# pooling subspecies to species.
+rule plot_mk_test:
+    input:
+        sfs="results/divergence/sfs/comp/{group}/sfs.{n}.csv"
+    output:
+        "results/graphs/divergence/{group}/mk_test.{n}.png"
+    conda:
+        "envs/divergence.yaml"
+    script:
+        "scripts/plot_mk_test.py"
+
+# Species-wise MK alpha against Ne, as a scatter.
+rule plot_mk_vs_Ne:
+    input:
+        sfs="results/divergence/sfs/comp/{group}/sfs.{n}.csv",
+        ne="results/stats/Ne/comp/original_ref/{group}/{n}.csv",
+    output:
+        "results/graphs/divergence/{group}/mk_vs_Ne.{n}.png"
+    conda:
+        "envs/divergence.yaml"
+    script:
+        "scripts/plot_mk_vs_Ne.py"
+
 # infer joint DFE for Castellano populations
 rule infer_joint_dfe_unfolded:
     input:
@@ -2102,7 +2513,7 @@ rule plot_dfe_vs_Ne_bgc_comparison:
     params:
         populations=lambda w: get_pops(max(int(w.n),8), w.group),
         labels=lambda w: [get_group_from_pop(p) for p in get_pops(max(int(w.n),8), w.group)],
-        dataset_labels=["no CpG", "no CpG + GC-conservative"],
+        dataset_labels=["standard", "GC-conservative"],
         color_by="taxon",
         stat_list=lambda w: (
             ["range_S_-inf_-10", "range_S_-10_-1", "range_S_-1_0", "omega"]
@@ -2629,11 +3040,13 @@ MANUSCRIPT_FIGURE_MAP = {
     "sfs_comparison":     "results/graphs/comp/sfs/Castellano_comp.png",
     "castellano_comparison": "results/graphs/comp/dfe_vs_Ne/Castellano_Kuderna_comparison.png",
     "full_dfe":           "results/graphs/comp/dfe_vs_Ne/model_comparison/catarrhini/dfe_vs_Ne.unfolded.8.full.noeps.png",
+    "divergence_dfe":     "results/graphs/divergence/catarrhini/dfe_vs_Ne.div_param_4way.8.png",
     "deleterious_dfe":    "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.folded.8.gamma.del.noeps.scaled.stacked.png",
     "low_sample_size":    "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.folded.2.gamma.del.noeps.scaled.stacked.png",
     "unscaled_dfe":       "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.unfolded.8.gamma.del.noeps.unscaled.stacked.png",
     "discretized_dfes":   "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.unfolded.8.gamma.full.noeps.scaled.dfe.png",
     "bgc_comparison":     "results/graphs/comp/dfe_vs_Ne/bgc_comparison/catarrhini/dfe_vs_Ne.unfolded.8.gamma.del.noeps.png",
+    "divergence_bgc":     "results/graphs/divergence/catarrhini/dfe_vs_Ne.div_filt_4way.8.png",
     "epistasis_quantile": "results/graphs/epistasis/catarrhini/epistasis.unfolded.8.noeps.png",
     "ne_comparison":      "results/graphs/Ne_vs_Kuderna/catarrhini/regression.8_vs_Kuderna.png",
     "pnps":               "results/graphs/Ne_vs_pNpS/catarrhini/regression.8.png",
@@ -2694,11 +3107,12 @@ rule render_model_comparison_table:
 # Per-subspecies mu + Ne summary table (addressing Reviewer 3, point 133).
 rule render_species_summary_table:
     input:
-        "results/tables/population_summary/{group}/population_summary.8.csv"
+        ne="results/stats/Ne/comp/original_ref/{group}/8.csv"
     output:
         "results/tables/population_summary/{group}/species_summary.tex"
     params:
-        populations=lambda w: get_pops(8, w.group)
+        populations=lambda w: get_pops(8, w.group),
+        references=lambda w: {p: get_ref_from_pop(p) for p in get_pops(8, w.group)}
     conda:
         "envs/base.yaml"
     script:
@@ -2746,6 +3160,45 @@ rule compile_manuscript_pdf:
     shell:
         "cd reports/manuscript && tectonic -X compile manuscript.tex"
 
+# Compile the response-to-reviewers letter (REVIEW.tex) to PDF with tectonic.
+# REVIEW.tex is self-contained: the response-box styling and the main font are
+# set in its preamble, and STIXGeneral covers the Greek letters and symbols.
+rule compile_review_pdf:
+    input:
+        "reports/REVIEW.tex",
+    output:
+        "reports/REVIEW.pdf",
+    conda:
+        "envs/tectonic.yaml"
+    shell:
+        "tectonic -X compile {input}"
+
+# latexdiff of the response letter against the c1fea88 checkpoint. The letter
+# was still markdown then (reports/REVIEW.md); reports/REVIEW_submitted.tex is
+# that markdown rendered to LaTeX and run through the same house-style
+# normalisation as the revised letter (sections, no italics, math-mode symbols),
+# so the diff isolates content changes rather than formatting.
+rule create_diff_review:
+    input:
+        old="reports/REVIEW_submitted.tex",
+        new="reports/REVIEW.tex",
+    output:
+        "reports/REVIEW_diff.tex",
+    conda:
+        "envs/latexdiff.yaml"
+    shell:
+        "latexdiff --encoding=utf8 {input.old} {input.new} > {output}"
+
+rule compile_review_diff_pdf:
+    input:
+        "reports/REVIEW_diff.tex",
+    output:
+        "reports/REVIEW_diff.pdf",
+    conda:
+        "envs/tectonic.yaml"
+    shell:
+        "tectonic -X compile {input}"
+
 # Compile the latexdiff PDF. Copies refs.bib and (sym)links the figures dir
 # from reports/manuscript/ into reports/manuscript_diff/ so tectonic can
 # resolve them, then compiles.
@@ -2770,6 +3223,7 @@ rule compile_diff_pdf:
 rule create_diff:
     input:
         "reports/manuscript_diff/manuscript.pdf",
+        "reports/REVIEW_diff.pdf",
 # Compress the compiled PDFs with Ghostscript (downsamples embedded raster
 # figures to ~150 dpi). Produces a *.compressed.pdf alongside the original;
 # the source PDFs are left untouched.

@@ -1,12 +1,10 @@
 """
 Filter VCF to drop sites in CpG dinucleotide context.
 
-Uses a fastDFE :class:`Filterer` together with a project-local
-:class:`CpGFiltration` (see ``utils.py``).
+Uses a fastDFE :class:`Filterer` with fastDFE's :class:`CpGFiltration`
+(available since v1.3.0; it pulls the ``±1`` FASTA context from the Filterer).
 """
 import fastdfe as fd
-
-from utils import CpGFiltration
 
 try:
     vcf_in = snakemake.input.vcf
@@ -21,7 +19,8 @@ except NameError:
 f = fd.Filterer(
     vcf=vcf_in,
     output=vcf_out,
-    filtrations=[CpGFiltration(fasta=fasta_path)],
+    fasta=fasta_path,
+    filtrations=[fd.CpGFiltration()],
 )
 
 f.filter()

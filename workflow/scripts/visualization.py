@@ -5,7 +5,7 @@ from typing import Literal
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
-from matplotlib.ticker import LogLocator, FuncFormatter, ScalarFormatter
+from matplotlib.ticker import LogLocator, FuncFormatter, ScalarFormatter, MaxNLocator
 
 from parametrizer import Parametrizer
 from populations import Populations
@@ -216,6 +216,9 @@ class DFEvsNePlotter:
             ymin, ymax = ax.get_ylim()
             pad = 0.08 * (ymax - ymin)
             ax.set_ylim(ymin - pad, ymax + pad)
+            # prune the extreme y-ticks so labels of vertically stacked panels
+            # (hspace=0) do not overlap
+            ax.yaxis.set_major_locator(MaxNLocator(nbins=4, prune="both"))
 
         # y-axis labels
         for ax, stat in zip(axes[:len(self.stat_list)], self.stat_list):
@@ -433,6 +436,8 @@ class DFEvsNePlotter:
                     self._boot[stat][pop] = Parametrizer.get_omega(dfe)
                 elif stat == "omega_a":
                     self._boot[stat][pop] = Parametrizer.get_omega_a(dfe)
+                elif stat == "omega_na":
+                    self._boot[stat][pop] = Parametrizer.get_omega_na(dfe)
                 elif stat.startswith("range_S_"):
                     lo, hi = self._parse_range(stat)
                     self._boot[stat][pop] = Parametrizer.get_S_range(dfe, lo, hi)
@@ -496,8 +501,12 @@ class DFEvsNePlotter:
             ax.ticklabel_format(style="plain", axis="x")
 
             ymin, ymax = ax.get_ylim()
-            pad = 0.05 * (ymax - ymin)
+            # extra y-margin keeps the major ticks clear of the panel edges so
+            # labels of vertically stacked panels (hspace=0) do not overlap
+            pad = 0.22 * (ymax - ymin)
             ax.set_ylim(ymin - pad, ymax + pad)
+            ax.yaxis.set_major_locator(MaxNLocator(nbins=4))
+            ax.tick_params(axis="y", labelsize=9)
 
         axes[-2].set_xlabel("$N_e$")
         axes[-1].axis("off")
@@ -546,6 +555,10 @@ class DFEvsNePlotter:
 
         centers = np.arange(len(stat_list))
 
+        # colour each species' bars by its taxonomic group, matching the other figures
+        pop_color = {p: self.label_color.get(lab, "steelblue")
+                     for p, lab in zip(self.populations, self.labels)}
+
         for ax, pop in zip(axes, pops_sorted):
             vals = np.array([
                 np.median(self._boot[stat][pop])
@@ -555,7 +568,7 @@ class DFEvsNePlotter:
             ax.bar(
                 centers,
                 vals,
-                color="steelblue",
+                color=pop_color.get(pop, "steelblue"),
             )
 
             ax.set_yticks([0.5])
@@ -579,9 +592,27 @@ class DFEvsNePlotter:
             left=0.34,
             right=0.98,
             top=0.99,
-            bottom=0.07,
+            bottom=0.11,
             hspace=0.05  # tighter vertical stacking
         )
+
+        if show_legend:
+            # taxon-group legend matching Figure 2: circle markers, boxed, below the figure
+            handles = [
+                plt.Line2D([0], [0], marker="o", linestyle="",
+                           color=self.label_color[lab], label=lab.replace("_", " "))
+                for lab in self.label_order
+            ]
+            fig.legend(
+                handles=handles,
+                loc="lower center",
+                ncol=legend_n_cols or len(handles),
+                fontsize=8,
+                mode="expand",
+                borderaxespad=0,
+                frameon=True,
+                bbox_to_anchor=(0.06, 0.005, 0.92, 0.04),
+            )
 
         return fig
 
@@ -698,12 +729,14 @@ class DFEvsNePlotter:
 
     @classmethod
     def make_label(cls, key):
-        if key in ('alpha'):
-            return f"$\{key}$"
+        if key == "alpha":
+            return r"$\alpha$"
         elif key == "omega":
             return r"$\omega$"
         elif key == "omega_a":
             return r"$\omega_a$"
+        elif key == "omega_na":
+            return r"$\omega_{na}$"
         elif key in ("S_d", "s_d", "S_b", "p_b", "h", "b"):
             return f"${key}$"
         elif key == "S_b*p_b":

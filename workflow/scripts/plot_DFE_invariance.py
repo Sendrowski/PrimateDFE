@@ -125,7 +125,7 @@ handles = [
 ax_dfe.legend(handles=handles, fontsize=8)
 
 plt.tight_layout()
-plt.savefig("scratch/dfe_invariance.png", dpi=300)
+plt.savefig("scratch/dfe_invariance.png", dpi=400)
 plt.show()
 
 pass

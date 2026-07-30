@@ -6,8 +6,6 @@ import fastdfe as fd
 import numpy as np
 import pandas as pd
 
-from utils import CpGFiltration
-
 try:
     testing = False
     vcf = snakemake.input.vcf
@@ -59,7 +57,7 @@ p = fd.Parser(
         fd.DegeneracyAnnotation()
     ],
     filtrations=(
-        ([CpGFiltration(fasta=fasta)] if filter_cpg else [])
+        ([fd.CpGFiltration()] if filter_cpg else [])
         + ([fd.BiasedGCConversionFiltration()] if filter_bgc else [])
     ),
     polarize_probabilistically=True,

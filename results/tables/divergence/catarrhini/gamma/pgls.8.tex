@@ -1,0 +1,27 @@
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+Model & AIC & $R^2$ & $\log_{10}N_e$ & p($\log_{10}N_e$) & Grafen $\rho$ \\
+\midrule
+\multicolumn{6}{l}{\emph{Polymorphism only}} \\
+OLS & 29.55 & 0.061 & 0.249 & 0.19 & --
+\\
+PGLS Brownian & 38.42 & 0.061 & 0.733 & 0.00931 & --
+\\
+PGLS Grafen & 31.09 & 0.061 & 0.378 & 0.114 & 0.09
+\\
+\midrule
+\multicolumn{6}{l}{\emph{With divergence}} \\
+OLS & -3.22 & 0.368 & 0.433 & $3.84\times10^{-4}$ & --
+\\
+PGLS Brownian & 4.30 & 0.368 & 0.859 & $3.36\times10^{-6}$ & --
+\\
+PGLS Grafen & -2.41 & 0.368 & 0.537 & $4.59\times10^{-4}$ & 0.10
+\\
+\bottomrule
+\end{tabular}
+\caption{Phylogenetically-controlled regression of $\alpha$ on $\log_{10}N_e$ (gamma parametrization), aggregated to 30 species. OLS treats species as independent; PGLS Brownian and PGLS Grafen account for shared ancestry via the Kuderna tree.}
+\label{tab:divergence_pgls_gamma}
+\end{table}
+
