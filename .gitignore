@@ -3,6 +3,7 @@ resources/
 .snakemake/
 .snakemake_old/
 scratch/
+tmp/
 results/*
 nohup.out
 Literature/

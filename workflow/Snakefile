@@ -2744,6 +2744,25 @@ rule plot_Ne_against_Ne_different_sample_sizes:
     script:
         "scripts/plot_regression.py"
 
+# plot Ne from Watterson's theta against Ne from nucleotide diversity pi
+rule plot_Ne_theta_vs_pi:
+    input:
+        'results/stats/sample_names/counts/population_counts.csv',
+        sfs=lambda w: [
+            f"results/sfs/{get_ref_from_pop(p)}/{p}/sfs.unpolarized.folded.{w.n}.csv"
+            for p in get_pops(w.n,w.group)
+        ],
+        species="resources/Kuderna/species.csv"
+    output:
+        "results/graphs/Ne_vs_pi/{group}/Ne_theta_vs_pi.{n}.png"
+    params:
+        pops=lambda w: get_pops(w.n,w.group),
+        refs=lambda w: [get_ref_from_pop(p) for p in get_pops(w.n,w.group)]
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_Ne_theta_vs_pi.py"
+
 # plot Ne against Kuderna et al. Ne
 rule plot_Ne_against_Kuderna_Ne:
     input:
@@ -3049,6 +3068,7 @@ MANUSCRIPT_FIGURE_MAP = {
     "divergence_bgc":     "results/graphs/divergence/catarrhini/dfe_vs_Ne.div_filt_4way.8.png",
     "epistasis_quantile": "results/graphs/epistasis/catarrhini/epistasis.unfolded.8.noeps.png",
     "ne_comparison":      "results/graphs/Ne_vs_Kuderna/catarrhini/regression.8_vs_Kuderna.png",
+    "ne_theta_vs_pi":     "results/graphs/Ne_vs_pi/catarrhini/Ne_theta_vs_pi.8.png",
     "pnps":               "results/graphs/Ne_vs_pNpS/catarrhini/regression.8.png",
 }
 
