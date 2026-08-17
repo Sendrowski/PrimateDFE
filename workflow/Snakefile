@@ -60,6 +60,15 @@ def get_species_metadata(s: str) -> pd.Series:
     return species[species['SPECIES_BINOMIAL'] == s].iloc[0]
 
 
+def get_cds_fraction(ref: str) -> float:
+    """
+    Per-reference fraction of coding sequence lying inside genes shared across all reference
+    annotations, from rule compute_cds_fraction. Make that file an input of any rule using this.
+    """
+    df = pd.read_csv("results/tables/orthologs/cds_fraction.csv", index_col=0)
+    return float(df.loc[ref].iloc[0])
+
+
 def get_coding_fraction(ref: str) -> float:
     """
     Per-reference fraction of the genome annotated as CDS, derived from the
@@ -2744,6 +2753,153 @@ rule plot_Ne_against_Ne_different_sample_sizes:
     script:
         "scripts/plot_regression.py"
 
+# fraction of coding sequence inside the shared gene set, used to scale the mutational target
+rule compute_cds_fraction:
+    input:
+        'results/stats/sample_names/counts/population_counts.csv',
+        gffs=lambda w: [f"resources/gff/{r}.gff.gz"
+                        for r in sorted({get_ref_from_pop(p) for p in get_pops(8,'catarrhini')})],
+        genes=lambda w: [f"results/tables/orthologs/{r}.genes.tsv"
+                         for r in sorted({get_ref_from_pop(p) for p in get_pops(8,'catarrhini')})],
+        shared="results/tables/orthologs/catarrhini/shared_groups.8.txt"
+    output:
+        "results/tables/orthologs/cds_fraction.csv"
+    params:
+        refs=lambda w: sorted({get_ref_from_pop(p) for p in get_pops(8,'catarrhini')})
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/compute_cds_fraction.py"
+
+# spectra recomputed on the shared orthologous gene set
+rule compute_sfs_orthologous:
+    input:
+        vcf=lambda w: f"results/vcf/{w.ref}/{get_species_from_pop(w.population)}.degeneracy.polarized.orthologous.vcf.gz",
+        gff="resources/gff/{ref}.gff.gz",
+        fasta="resources/ref/{ref}.fasta",
+        coding_fraction="results/annotation/{ref}/coding_fraction.csv",
+        cds_fraction="results/tables/orthologs/cds_fraction.csv"
+    output:
+        "results/sfs/{ref}/{population}/sfs.unfolded.orthologous.{n}.csv"
+    params:
+        n=lambda w: int(w.n),
+        ingroups=lambda w: get_individuals_from_pop(w.population),
+        # the shared gene set covers only part of the coding sequence, so the mutational target
+        # shrinks by the same proportion
+        n_target_sites=lambda w: (get_species_metadata(w.ref).REFERENCE_LENGTH * get_coding_fraction(w.ref)
+                                  * 0.8 * get_cds_fraction(w.ref)),
+        filter_bgc=False,
+        filter_cpg=True
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/compute_sfs.py"
+
+# compare the spectra used throughout with those recomputed on the shared gene set
+rule plot_orthologous_comparison:
+    input:
+        'results/stats/sample_names/counts/population_counts.csv',
+        sfs=lambda w: [f"results/sfs/{get_ref_from_pop(p)}/{p}/sfs.unfolded.{w.n}.csv"
+                       for p in get_pops(w.n,w.group)],
+        orthologous=lambda w: [f"results/sfs/{get_ref_from_pop(p)}/{p}/sfs.unfolded.orthologous.{w.n}.csv"
+                               for p in get_pops(w.n,w.group)]
+    output:
+        "results/graphs/comp/sfs/orthologous/{group}/comparison.{n}.png"
+    params:
+        pops=lambda w: get_pops(w.n,w.group)
+    conda:
+        'envs/base.yaml'
+    script:
+        "scripts/plot_orthologous_comparison.py"
+
+# NCBI orthology tables, used to anchor genes of different annotations to a common identifier
+rule download_ncbi_orthologs:
+    output:
+        "resources/ncbi/{table}.gz"
+    wildcard_constraints:
+        table=r"gene_orthologs|gene2ensembl"
+    shell:
+        """
+        curl -sS -o {output} https://ftp.ncbi.nlm.nih.gov/gene/DATA/{wildcards.table}.gz
+        """
+
+# assign each gene of a reference annotation to its human one-to-one ortholog
+rule map_orthologs:
+    input:
+        gff="resources/gff/{ref}.gff.gz",
+        orthologs="resources/ncbi/gene_orthologs.gz",
+        gene2ensembl="resources/ncbi/gene2ensembl.gz"
+    output:
+        "results/tables/orthologs/{ref}.genes.tsv"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/map_orthologs.py"
+
+# ortholog groups annotated in every reference, plus the pairwise overlap between references
+rule compute_ortholog_overlap:
+    input:
+        'results/stats/sample_names/counts/population_counts.csv',
+        genes=lambda w: [f"results/tables/orthologs/{r}.genes.tsv"
+                         for r in sorted({get_ref_from_pop(p) for p in get_pops(w.n,w.group)})]
+    output:
+        overlap="results/tables/orthologs/{group}/overlap.{n}.csv",
+        shared="results/tables/orthologs/{group}/shared_groups.{n}.txt"
+    params:
+        refs=lambda w: sorted({get_ref_from_pop(p) for p in get_pops(w.n,w.group)})
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/compute_ortholog_overlap.py"
+
+# restrict a VCF to sites inside genes shared across all reference annotations
+rule filter_orthologous:
+    input:
+        vcf="results/vcf/{ref}/{prefix}.vcf.gz",
+        genes="results/tables/orthologs/{ref}.genes.tsv",
+        shared="results/tables/orthologs/catarrhini/shared_groups.8.txt"
+    output:
+        "results/vcf/{ref}/{prefix}.orthologous.vcf.gz"
+    wildcard_constraints:
+        prefix=r"[^/]+?(?<!\.orthologous)"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/filter_orthologous.py"
+
+# write the species order used by the phylogeny figure, so other figures can match its layout
+# without depending on the tree environment
+rule extract_species_order:
+    input:
+        'results/stats/sample_names/counts/population_counts.csv',
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
+    output:
+        "results/tables/phylogeny/{group}/species_order.{n}.csv"
+    params:
+        pops=lambda w: get_pops(w.n,w.group)
+    conda:
+        "envs/tree.yaml"
+    script:
+        "scripts/extract_species_order.py"
+
+# plot the observed neutral and selected SFS for every population
+rule plot_observed_spectra:
+    input:
+        'results/stats/sample_names/counts/population_counts.csv',
+        sfs=lambda w: [
+            f"results/sfs/{get_ref_from_pop(p)}/{p}/sfs.unfolded.{w.n}.csv"
+            for p in get_pops(w.n,w.group)
+        ],
+        order="results/tables/phylogeny/{group}/species_order.{n}.csv"
+    output:
+        "results/graphs/comp/sfs/observed/{group}/spectra.{n}.png"
+    params:
+        pops=lambda w: get_pops(w.n,w.group)
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_observed_spectra.py"
+
 # plot Ne from Watterson's theta against Ne from nucleotide diversity pi
 rule plot_Ne_theta_vs_pi:
     input:
@@ -3069,6 +3225,8 @@ MANUSCRIPT_FIGURE_MAP = {
     "epistasis_quantile": "results/graphs/epistasis/catarrhini/epistasis.unfolded.8.noeps.png",
     "ne_comparison":      "results/graphs/Ne_vs_Kuderna/catarrhini/regression.8_vs_Kuderna.png",
     "ne_theta_vs_pi":     "results/graphs/Ne_vs_pi/catarrhini/Ne_theta_vs_pi.8.png",
+    "observed_spectra":   "results/graphs/comp/sfs/observed/catarrhini/spectra.8.png",
+    "orthologous_comparison": "results/graphs/comp/sfs/orthologous/catarrhini/comparison.8.png",
     "pnps":               "results/graphs/Ne_vs_pNpS/catarrhini/regression.8.png",
 }
 
