@@ -13,8 +13,8 @@ H0: slope = 1, obtained by regressing the unscaled quantile log|s_q|
 The quantile is robust to the parametrization because it fixes a cumulative-
 probability level (a self-normalising, observable position for every species),
 unlike an iso-threshold whose scaled evaluation point drifts into the poorly-
-constrained strong tail at large N_e. All variants and quantile levels are
-overlaid in a single panel (colour = variant, line style = quantile level f).
+constrained strong tail at large N_e. Each DFE-model variant occupies its own
+panel, with colour encoding the quantile level f.
 """
 import fastdfe as fd
 import matplotlib.pyplot as plt
@@ -139,54 +139,73 @@ for f in quantiles:
         _, _, _, p_null, r_dev = fit_line(stat, lambda m, n: np.log(m) - np.log(4 * n))
         fits[(key, f)] = dict(xmin=x.min(), xmax=x.max(), b0=b0, b1=b1, p=p_null, r=r_dev)
 
-fig, ax = plt.subplots(figsize=(7, 5.5), dpi=300)
+# one panel per DFE-model variant, so colour is free to encode the quantile level f
+QCOLORS = ["#4C72B0", "#55A868", "#C44E52", "#8172B2"]
+qcolor = {f: QCOLORS[i % len(QCOLORS)] for i, f in enumerate(quantiles)}
+
+fig, axes = plt.subplots(2, 2, figsize=(7.5, 6.3), dpi=300, sharex=True, sharey=True)
+
+# log scales are set before any data is drawn, so the shared autoscale sees
+# every panel on the final scale
+for ax in axes.flat:
+    ax.set_xscale("log")
+    ax.set_yscale("log")
 
 xref = np.array([np.log(min(ne[p] for p in ne)), np.log(max(ne[p] for p in ne))])
 
-for f in quantiles:
-    for key, (label, color) in VARIANTS.items():
+for ax, (key, (label, _)) in zip(axes.flat, VARIANTS.items()):
+    for f in quantiles:
         if (key, f) not in fits:
             continue
         stat, fit = stats[(key, f)], fits[(key, f)]
         for p in stat:
             m, lo, hi = stat[p]
             ax.errorbar(ne[p], m, yerr=[[max(lo, 0)], [max(hi, 0)]], fmt="o",
-                        ms=3, color=color, alpha=0.22, capsize=0, lw=0,
+                        ms=3, color=qcolor[f], alpha=0.25, capsize=0, lw=0,
                         markeredgewidth=0)
         xx = np.linspace(fit["xmin"], fit["xmax"], 200)
-        ax.plot(np.exp(xx), np.exp(fit["b0"] + fit["b1"] * xx), fstyle[f],
-                color=color, lw=2.0, solid_capstyle="round")
+        ax.plot(np.exp(xx), np.exp(fit["b0"] + fit["b1"] * xx), "-",
+                color=qcolor[f], lw=2.0, solid_capstyle="round")
+    ax.set_title(label, fontsize=14)
+    ax.xaxis.set_major_locator(LogLocator(base=10, subs=(1.0, 2.0, 5.0)))
+    ax.xaxis.set_major_formatter(FuncFormatter(log_label_pow))
+    ax.grid(True, which="major", ls=":", lw=0.5, color="0.8", alpha=0.7)
+    ax.set_axisbelow(True)
 
-ax.set_xscale("log")
-ax.set_yscale("log")
+    # r and p test H0: slope = 1, i.e. no epistasis
+    panel_handles = [
+        Line2D([], [], color=qcolor[f], lw=1.8,
+               label=fr"$f={f:g}$: r={fits[(key, f)]['r']:.2f}, p={fits[(key, f)]['p']:.2g}")
+        for f in quantiles if (key, f) in fits
+    ]
+    ax.legend(handles=panel_handles, fontsize=8, loc="lower right",
+              frameon=True, framealpha=0.85, borderpad=0.4)
 
-# single slope-1 (no-epistasis) reference spanning the data: bold and wide so
-# the null is clearly readable against the overlaid fits. Anchored at the
-# geometric centre of the (log-scaled) y-range, so it sits amid the fits.
-ymin, ymax = ax.get_ylim()
+# bound both axes by the plotted values, error bars included
+vals = [(ne[pop], m, max(m - lo, 0), m + hi)
+        for key_f in fits for pop, (m, lo, hi) in stats[key_f].items()]
+xs = [v[0] for v in vals]
+ys = [y for v in vals for y in (v[1], v[2], v[3]) if y > 0]
+axes[0, 0].set_xlim(min(xs) * 0.85, max(xs) * 1.18)
+axes[0, 0].set_ylim(min(ys) * 0.5, max(ys) * 2.0)
+
+# slope-1 (no-epistasis) reference in every panel, anchored at the geometric
+# centre of the shared y-range so it sits amid the fits
+ymin, ymax = axes[0, 0].get_ylim()
 anchor = np.log(np.sqrt(ymin * ymax)) - np.mean(xref)
-ax.plot(np.exp(xref), np.exp(anchor + 1.0 * xref), color="0.25",
-        lw=4.0, ls=(0, (7, 4)), solid_capstyle="round", zorder=1.5, alpha=0.9)
+for ax in axes.flat:
+    ax.plot(np.exp(xref), np.exp(anchor + 1.0 * xref), color="0.25",
+            lw=3.0, ls=(0, (7, 4)), solid_capstyle="round", zorder=1.5, alpha=0.9)
 
-ax.set_xlabel(r"$N_e$")
-ax.set_ylabel(r"$|S_q|$ (deleterious quantile)")
-ax.xaxis.set_major_locator(LogLocator(base=10, subs=(1.0, 2.0, 5.0)))
-ax.xaxis.set_major_formatter(FuncFormatter(log_label_pow))
-ax.grid(True, which="major", ls=":", lw=0.5, color="0.8", alpha=0.7)
-ax.set_axisbelow(True)
-for spine in ("top", "right"):
-    ax.spines[spine].set_visible(False)
+fig.supxlabel(r"$N_e$", fontsize=13)
+fig.supylabel(r"$|S_q|$ (deleterious quantile)", fontsize=12)
 
-# two legends: colour -> variant, line style -> quantile level
-variant_handles = [Line2D([], [], color=c, lw=1.8, label=lab)
-                   for lab, c in VARIANTS.values()]
-f_handles = [Line2D([], [], color="0.3", lw=1.6, ls=fstyle[f], label=fr"$f={f:g}$")
-             for f in quantiles]
-f_handles.append(Line2D([], [], color="0.25", lw=3.0, ls=(0, (7, 4)),
-                         label="no epistasis (slope $=1$)"))
-leg1 = ax.legend(handles=variant_handles, fontsize=8, loc="upper left", title="variant")
-ax.add_artist(leg1)
-ax.legend(handles=f_handles, fontsize=8, loc="lower right", title="quantile level")
+handles = [Line2D([], [], color="0.25", lw=3.0, ls=(0, (7, 4)),
+                  label="no epistasis (slope $=1$)")]
+
+fig.tight_layout()
+fig.legend(handles=handles, fontsize=9, ncol=len(handles), loc="lower center",
+           frameon=True, bbox_to_anchor=(0.5, -0.045))
 
 fig.savefig(out, bbox_inches="tight")
 

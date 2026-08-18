@@ -110,7 +110,7 @@ class DFEvsNePlotter:
         #plt.title(title, y=-0.25)
 
         if file is not None:
-            fig.savefig(file)
+            fig.savefig(file, bbox_inches="tight")
 
         if show:
             plt.show()
@@ -608,10 +608,10 @@ class DFEvsNePlotter:
                 loc="lower center",
                 ncol=legend_n_cols or len(handles),
                 fontsize=8,
-                mode="expand",
-                borderaxespad=0,
                 frameon=True,
-                bbox_to_anchor=(0.06, 0.005, 0.92, 0.04),
+                columnspacing=1.4,
+                handletextpad=0.5,
+                bbox_to_anchor=(0.5, 0.005),
             )
 
         return fig
