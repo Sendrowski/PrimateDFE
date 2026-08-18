@@ -28,3 +28,6 @@ CLAUDE.md
 *.toc
 *.lof
 *.lot
+
+# Manuscript, kept in its own repository
+reports/
