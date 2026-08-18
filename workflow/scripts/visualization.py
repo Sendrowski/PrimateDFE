@@ -5,7 +5,7 @@ from typing import Literal
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
-from matplotlib.ticker import LogLocator, FuncFormatter, ScalarFormatter, MaxNLocator
+from matplotlib.ticker import LogLocator, FuncFormatter, ScalarFormatter, MaxNLocator, NullFormatter, NullLocator
 
 from parametrizer import Parametrizer
 from populations import Populations
@@ -130,7 +130,8 @@ class DFEvsNePlotter:
         n = x / 10 ** k
         if np.isclose(n, 1.0):
             return rf"$10^{{{k}}}$"
-        return rf"${int(round(n))}\times10^{{{k}}}$"
+        # %g keeps a non-integer mantissa distinct, so 1.5e4 and 2.5e4 do not both read 2e4
+        return rf"${n:g}\times10^{{{k}}}$"
 
     def plot_two_datasets_stacked(
             self,
@@ -143,6 +144,9 @@ class DFEvsNePlotter:
             color_by: Literal["dataset", "taxon"] = "dataset",
             markers: dict = None,
             linestyles: dict = None,
+            legend_n_cols: int = None,
+            panel_legend_loc: str = None,
+            legend_anchors: tuple = (0.45, 0.18),
     ) -> plt.Figure:
         """
         Plot two datasets in stacked style, with a shared legend.
@@ -207,7 +211,7 @@ class DFEvsNePlotter:
 
         # per-panel legend with the "{dataset}: r=..., p=..." lines from each
         # _add_regression call.
-        panel_loc = "center right" if color_by == "taxon" else "best"
+        panel_loc = panel_legend_loc or ("center right" if color_by == "taxon" else "best")
         for ax in axes[:len(self.stat_list)]:
             ax.legend(loc=panel_loc, fontsize=7, framealpha=0.9)
 
@@ -250,15 +254,17 @@ class DFEvsNePlotter:
                            color=taxon_color[lab], label=lab.replace("_", " "))
                 for lab in self.label_order
             ]
+            n_cols = legend_n_cols or len(tax_handles)
             leg_tax = axes[-1].legend(
                 handles=tax_handles, loc="upper center",
-                bbox_to_anchor=(0, 0.45, 1, 0), mode="expand", borderaxespad=0,
-                fontsize=8, ncol=len(tax_handles),
+                bbox_to_anchor=(0, legend_anchors[0], 1, 0),
+                **(dict(mode="expand", borderaxespad=0) if legend_n_cols is None else {}),
+                fontsize=8, ncol=n_cols,
             )
             axes[-1].add_artist(leg_tax)
             axes[-1].legend(
                 handles=list(legend_handles.values()),
-                loc="upper center", bbox_to_anchor=(0, 0.18, 1, 0),
+                loc="upper center", bbox_to_anchor=(0, legend_anchors[1], 1, 0),
                 fontsize=9, ncol=len(legend_handles),
             )
         else:
@@ -281,6 +287,139 @@ class DFEvsNePlotter:
 
         if file is not None:
             fig.savefig(file)
+
+        if show:
+            plt.show()
+        else:
+            plt.close(fig)
+
+        return fig
+
+    def plot_two_datasets_columns(
+            self,
+            datasets: dict,
+            file=None,
+            fig=None,
+            show=True,
+            qlo=5,
+            qhi=95,
+            legend_n_cols: int = 3,
+    ) -> plt.Figure:
+        """
+        Plot each dataset in its own column, one row per statistic, with a shared legend.
+
+        Every panel keeps its own y-axis, so the columns are read through the trend against
+        the effective population size rather than through absolute values.
+
+        :param datasets: Mapping from column title to (dfes, ne_dict, labels)
+        :param file: If given, save figure to this path
+        :param fig: If given, plot on this figure
+        :param show: Whether to display the figure
+        :param qlo: Lower percentile for uncertainty
+        :param qhi: Upper percentile for uncertainty
+        :param legend_n_cols: Number of columns of the shared legend
+        :return: Figure
+        """
+        n_rows, n_cols = len(self.stat_list), len(datasets)
+
+        if fig is None:
+            fig = plt.subplots(
+                n_rows + 1,
+                n_cols,
+                figsize=(4.8 * n_cols, 1.125 * n_rows + 1.1),
+                gridspec_kw=dict(height_ratios=[1] * n_rows + [0.35]),
+                dpi=400
+            )[0]
+
+        axes = np.array(fig.axes).reshape(n_rows + 1, n_cols)
+
+        legend_handles = {}
+
+        for col, (name, (dfes, ne_dict, labels)) in enumerate(datasets.items()):
+            self.dfes = dfes
+            self.ne = ne_dict
+            self.labels = labels
+
+            self._boot.clear()
+            self._stats.clear()
+            self._compute_bootstrap(self.stat_list)
+            self._summarize(qlo, qhi)
+
+            for row, stat in enumerate(self.stat_list):
+                ax = axes[row, col]
+
+                for pop, lab in zip(self.populations, self.labels):
+                    m, lo, hi = self._stats[stat][pop]
+                    x = self.ne[pop]
+                    color = self.label_color[lab]
+
+                    h = ax.scatter(x, m, color=color, s=45, alpha=0.8)
+                    if lab not in legend_handles:
+                        legend_handles[lab] = h
+
+                    ax.errorbar(x, m, yerr=[[max(lo, 0)], [max(hi, 0)]], fmt="none",
+                                ecolor=color, capsize=3, alpha=0.8)
+
+                self._add_regression(ax, stat)
+
+                if stat == "S_d":
+                    ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+                    ax.yaxis.get_major_formatter().set_useMathText(True)
+
+                ax.legend(fontsize=7, framealpha=0.9)
+                ax.tick_params(labelsize=9)
+
+                # prune the extreme y-ticks so labels of adjacent rows do not collide
+                ax.yaxis.set_major_locator(MaxNLocator(nbins=3, prune="both"))
+
+                if col == 0:
+                    ax.set_ylabel(self.make_label(stat), fontsize=12, rotation=0,
+                                  labelpad=52, va="center", ha="center")
+
+                # y-axis of the rightmost column on the outside, so the columns are
+                # separated by their plotting areas rather than by tick labels
+                if col == n_cols - 1 and n_cols > 1:
+                    ax.yaxis.tick_right()
+
+                ax.set_xscale("log")
+                # 1.5 is included so that a column spanning well under a decade still
+                # carries three ticks
+                ax.xaxis.set_major_locator(
+                    LogLocator(base=10, subs=(1.0, 1.5, 2.0, 3.0, 4.0, 5.0))
+                )
+                ax.xaxis.set_major_formatter(FuncFormatter(self.log_label_pow))
+                ax.xaxis.set_minor_locator(NullLocator())
+
+                if row < n_rows - 1:
+                    ax.tick_params(axis="x", which="both", bottom=False, labelbottom=False)
+
+            axes[0, col].set_title(name, fontsize=13.5, pad=10)
+            axes[n_rows - 1, col].set_xlabel("$N_e$", fontsize=11)
+
+        for ax in axes[-1]:
+            ax.axis("off")
+
+        fig.tight_layout()
+        fig.subplots_adjust(hspace=0.0, wspace=0.0, bottom=0.135)
+
+        # span the legend across the plotting area rather than the full canvas
+        boxes = [axes[row, col].get_position() for row in range(n_rows) for col in range(n_cols)]
+        left, right = min(b.x0 for b in boxes), max(b.x1 for b in boxes)
+        bottom = min(b.y0 for b in boxes)
+
+        fig.legend(
+            [legend_handles[lab] for lab in self.label_order],
+            [lab.replace("_", " ") for lab in self.label_order],
+            loc="upper center",
+            bbox_to_anchor=(left, bottom - 0.09, right - left, 0),
+            mode="expand",
+            borderaxespad=0,
+            fontsize=9,
+            ncol=legend_n_cols,
+        )
+
+        if file is not None:
+            fig.savefig(file, bbox_inches="tight")
 
         if show:
             plt.show()
@@ -678,10 +817,11 @@ class DFEvsNePlotter:
         for ax in fig.axes:
             ax.set_xscale("log")
 
-            ax.xaxis.set_major_locator(LogLocator(base=10, subs=(1.0, 2.0, 5.0)))
-            ax.xaxis.set_major_formatter(ScalarFormatter())
-            ax.xaxis.get_major_formatter().set_scientific(False)
-            ax.xaxis.get_major_formatter().set_useMathText(False)
+            # 3 and 4 are included so that an axis spanning under a decade still gets
+            # a few well-spaced ticks rather than matplotlib promoting every minor one
+            ax.xaxis.set_major_locator(LogLocator(base=10, subs=(1.0, 2.0, 3.0, 4.0, 5.0)))
+            ax.xaxis.set_major_formatter(FuncFormatter(self.log_label_pow))
+            ax.xaxis.set_minor_locator(NullLocator())
 
         fig.tight_layout()
 

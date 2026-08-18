@@ -2668,19 +2668,23 @@ rule plot_joint_DFE_castellano_estimate:
     script:
         "scripts/plot_ne_dfe_castellano.py"
 
-# combine DFE vs Ne plots for Castellano estimate vs Kuderna estimate
-rule combine_dfe_vs_Ne_plots_castellano_vs_kuderna:
+# compare DFE vs Ne for the Castellano et al. estimates and the new dataset,
+# one column per dataset
+rule plot_dfe_vs_Ne_castellano_comparison:
     input:
-        "results/graphs/dfe_vs_Ne/Castellano_estimate/dfe_vs_Ne.png",
-        "results/graphs/dfe_vs_Ne/Castellano/joint/original_ref/b/dfe_vs_Ne.unfolded.8.gamma.del.noeps.png"
+        dfe="resources/Castellano/dfe/3s.csv",
+        ne_castellano="resources/Castellano/Ne/all.csv",
+        json="results/dfe/Castellano/joint/original_ref/b/unfolded.8.gamma.del.noeps.json",
+        ne_new="results/stats/Ne/comp/original_ref/Castellano/8.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
         "results/graphs/comp/dfe_vs_Ne/Castellano_Kuderna_comparison.png"
     params:
-        titles=['Castellano et al.', 'New dataset']
+        populations=populations_castellano
     conda:
-        'envs/base.yaml'
+        'envs/regression.yaml'
     script:
-        "scripts/combine_plots.py"
+        "scripts/plot_castellano_comparison.py"
 
 # combine DFE vs Ne plots for Castellano estimate with new estimate retaining Castellano Ne
 rule combine_dfe_vs_Ne_plots_castellano_estimate_same_ne:
@@ -3240,7 +3244,7 @@ MANUSCRIPT_FIGURE_MAP = {
     "dfe_vs_ne":          "results/graphs/comp/dfe_vs_Ne/model_comparison/catarrhini/dfe_vs_Ne.unfolded.8.del.noeps.png",
     "dominance":          "results/graphs/comp/dfe_vs_Ne/dominance_comparison/catarrhini/dfe_vs_Ne.unfolded.8.noeps.png",
     # appendix A
-    "sfs_comparison":     "results/graphs/comp/sfs/Castellano_comp.png",
+    "sfs_comparison":     "results/graphs/comp/sfs/Castellano_residuals.png",
     "castellano_comparison": "results/graphs/comp/dfe_vs_Ne/Castellano_Kuderna_comparison.png",
     "full_dfe":           "results/graphs/comp/dfe_vs_Ne/model_comparison/catarrhini/dfe_vs_Ne.unfolded.8.full.noeps.png",
     "divergence_dfe":     "results/graphs/divergence/catarrhini/dfe_vs_Ne.div_param_4way.8.png",
@@ -3256,7 +3260,82 @@ MANUSCRIPT_FIGURE_MAP = {
     "observed_spectra":   "results/graphs/comp/sfs/observed/catarrhini/spectra.8.png",
     "orthologous_comparison": "results/graphs/comp/dfe_vs_Ne/orthologous_comparison/catarrhini/dfe_vs_Ne.unfolded.8.discrete.del.noeps.png",
     "pnps":               "results/graphs/Ne_vs_pNpS/catarrhini/regression.8.png",
+    "sample_size_accuracy": "results/graphs/slim/sample_size_accuracy.png",
+    "drift_replicates":   "results/graphs/slim/drift_replicates.png",
+    "demographic_sfs":    "results/graphs/slim/spectra_demographies.png",
 }
+
+# Inferred and ground-truth DFEs across SFS sample sizes, from the SLiM runs used to
+# validate fastDFE. The simulated DFE is recovered from the parameters encoded in each
+# result path, scaled by the Ne estimated from that run's neutral spectrum.
+rule plot_sample_size_accuracy:
+    input:
+        inferences=[
+            f"resources/slim/n_replicate=1/n_chunks=100/g=1e4/L=1e7/mu=1e-8/r=1e-7/N=1e3/"
+            f"s_b={s_b}/b={b}/s_d={s_d}/p_b={p_b}/n={n}/constant/unfolded/inference.json"
+            for s_b, b, s_d, p_b in [("1e-3", "0.3", "3e-1", "0.00"), ("1e-3", "0.1", "3e-2", "0.00"),
+                                     ("1e-2", "0.1", "3e-1", "0.01"), ("1e-3", "0.3", "3e-2", "0.05")]
+            for n in [8, 20, 100]
+        ]
+    output:
+        "results/graphs/slim/sample_size_accuracy.png"
+    params:
+        sample_sizes=[8, 20, 100]
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_sample_size_accuracy.py"
+
+# Per-bin difference between our spectra and those of Castellano et al., each normalized
+# over the polymorphic bins so the two datasets are comparable despite differing SNP counts.
+rule plot_sfs_residuals_castellano:
+    input:
+        ours=[f"results/sfs/{get_ref_from_pop(p)}/{p}/sfs.unfolded.8.csv" for p in populations_castellano],
+        theirs_neutral=[f"resources/Castellano/sfs/{populations_castellano_mapping[p]}_4fold_all_sfs.txt"
+                        for p in populations_castellano],
+        theirs_selected=[f"resources/Castellano/sfs/{populations_castellano_mapping[p]}_0fold_all_sfs.txt"
+                         for p in populations_castellano]
+    output:
+        "results/graphs/comp/sfs/Castellano_residuals.png"
+    params:
+        labels=populations_castellano
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_sfs_residuals_castellano.py"
+
+# Simulated spectra per replicate together with their departure from the fastDFE expectation.
+rule plot_slim_replicates:
+    input:
+        slim=[f"resources/slim_replicates/slim/n_replicate={r}/sfs.csv" for r in (1, 2, 3)],
+        fastdfe=[f"resources/slim_replicates/sfs_slim/n_replicate={r}/sfs.csv" for r in (1, 2, 3)]
+    output:
+        "results/graphs/slim/drift_replicates.png"
+    params:
+        labels=[f"replicate {r}" for r in (1, 2, 3)]
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_slim_replicates.py"
+
+# Simulated selected spectra under each demographic scenario, with the constant-size spectrum
+# repeated as a reference so the demographic distortion is directly visible.
+rule plot_spectra_demographies:
+    input:
+        slim=[f"resources/slim_demographies/{d}/sfs.csv" for d in
+              ("constant", "expansion_4", "reduction_4", "bottleneck_20",
+               "substructure_0.0001", "dominance_0.2")],
+        fastdfe=[f"resources/slim_demographies/{d}/sfs.fastdfe.csv" for d in
+                 ("constant", "expansion_4", "reduction_4", "bottleneck_20",
+                  "substructure_0.0001", "dominance_0.2")]
+    output:
+        "results/graphs/slim/spectra_demographies.png"
+    params:
+        labels=["constant", "expansion", "reduction", "bottleneck", "substructure", "recessiveness"]
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_spectra_demographies.py"
 
 # Copy a single pipeline figure to its manuscript filename. The wildcard is
 # constrained to the keys of MANUSCRIPT_FIGURE_MAP so the rule won't match
