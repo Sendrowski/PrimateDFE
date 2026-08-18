@@ -2536,6 +2536,34 @@ rule plot_dfe_vs_Ne_bgc_comparison:
     script:
         "scripts/plot_two_datasets_against_Ne.py"
 
+# Compare the DFE inferred from all genes with the DFE inferred after restricting to the
+# ortholog groups annotated in every reference, which controls for gene-set differences
+# between annotations.
+rule plot_dfe_vs_Ne_orthologous_comparison:
+    input:
+        dfe_a="results/dfe/{group}/dfe.unfolded.{n}.{parametrization}.{sub_model}.{eps}.csv",
+        dfe_b="results/dfe/{group}/dfe.unfolded.orthologous.{n}.{parametrization}.{sub_model}.{eps}.csv",
+        ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
+        tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
+    output:
+        "results/graphs/comp/dfe_vs_Ne/orthologous_comparison/{group}/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.{eps}.png"
+    params:
+        populations=lambda w: get_pops(max(int(w.n),8), w.group),
+        labels=lambda w: [get_group_from_pop(p) for p in get_pops(max(int(w.n),8), w.group)],
+        dataset_labels=["all genes", "shared orthologs"],
+        color_by="taxon",
+        stat_list=lambda w: (
+            ["range_S_-inf_-10", "range_S_-10_-1", "range_S_-1_0", "omega"]
+            if 'full' not in w.sub_model
+            else ["range_S_-inf_-10", "range_S_-10_-1", "range_S_-1_0", "range_S_0_inf", "alpha"]
+        ),
+        scaled=True,
+        legend=True
+    conda:
+        "envs/regression.yaml"
+    script:
+        "scripts/plot_two_datasets_against_Ne.py"
+
 # Overlay the gamma and discrete parametrizations of the same sub-model
 # (del or full) on shared DFE-vs-Ne panels, so one figure carries the
 # parametrization-robustness comparison instead of separate per-model figures.
@@ -3226,7 +3254,7 @@ MANUSCRIPT_FIGURE_MAP = {
     "ne_comparison":      "results/graphs/Ne_vs_Kuderna/catarrhini/regression.8_vs_Kuderna.png",
     "ne_theta_vs_pi":     "results/graphs/Ne_vs_pi/catarrhini/Ne_theta_vs_pi.8.png",
     "observed_spectra":   "results/graphs/comp/sfs/observed/catarrhini/spectra.8.png",
-    "orthologous_comparison": "results/graphs/comp/sfs/orthologous/catarrhini/comparison.8.png",
+    "orthologous_comparison": "results/graphs/comp/dfe_vs_Ne/orthologous_comparison/catarrhini/dfe_vs_Ne.unfolded.8.discrete.del.noeps.png",
     "pnps":               "results/graphs/Ne_vs_pNpS/catarrhini/regression.8.png",
 }
 

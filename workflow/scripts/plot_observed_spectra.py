@@ -83,7 +83,7 @@ for col in range(N_COLS):
     if visible:
         visible[-1].tick_params(labelbottom=True)
 
-fig.supxlabel("derived allele count", fontsize=11)
+fig.supxlabel("derived allele count", fontsize=11, y=0.03)
 fig.legend(handles, labels, loc="lower center", ncol=2, frameon=True, fontsize=11,
            bbox_to_anchor=(0.5, -0.015))
 fig.tight_layout(rect=(0, 0.012, 1, 1))
