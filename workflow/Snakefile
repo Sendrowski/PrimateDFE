@@ -60,6 +60,20 @@ def get_species_metadata(s: str) -> pd.Series:
     return species[species['SPECIES_BINOMIAL'] == s].iloc[0]
 
 
+def get_mu(pop: str) -> float:
+    """
+    Per-generation mutation rate for a population's own species. Species absent from the
+    Kuderna metadata fall back to the rate of the species whose reference they map to.
+    """
+    s = get_species_from_pop(pop)
+    rows = species[species['SPECIES_BINOMIAL'] == s]
+
+    if rows.empty:
+        return get_species_metadata(get_ref_from_species(s)).MU_PER_GENERATION
+
+    return rows.iloc[0].MU_PER_GENERATION
+
+
 def get_cds_fraction(ref: str) -> float:
     """
     Per-reference fraction of coding sequence lying inside genes shared across all reference
@@ -148,6 +162,9 @@ ruleorder:
 
 ruleorder:
     compute_sfs_gc_conservative > compute_sfs
+
+ruleorder:
+    compute_sfs_orthologous > compute_sfs
 
 
 rule all:
@@ -1608,7 +1625,7 @@ rule estimate_Ne:
         "results/stats/Ne/{ref}/{population}/{n}.csv"
     params:
         no_lift=lambda w: w.ref == get_ref_from_pop(w.population),
-        mu=lambda w: get_species_metadata(w.ref).MU_PER_GENERATION
+        mu=lambda w: get_mu(w.population)
     conda:
         'envs/base.yaml'
     script:
@@ -2945,7 +2962,7 @@ rule plot_Ne_theta_vs_pi:
         "results/graphs/Ne_vs_pi/{group}/Ne_theta_vs_pi.{n}.png"
     params:
         pops=lambda w: get_pops(w.n,w.group),
-        refs=lambda w: [get_ref_from_pop(p) for p in get_pops(w.n,w.group)]
+        mus=lambda w: [get_mu(p) for p in get_pops(w.n,w.group)]
     conda:
         "envs/base.yaml"
     script:
@@ -3171,21 +3188,36 @@ rule extract_regression_vars:
 # Captions/labels for each (parametrization, sub_model) combination, used by
 # the appendix regression tables. Kept here so they live next to the rule that
 # emits the LaTeX fragments.
+# The first table carries the full description; the other three refer back to it.
+_REGRESSION_LEAD = (
+    r"Regression of the fraction of the DFE with $S \in (-\infty, -10]$ on $\log_{10} N_e$ "
+    r"and generation time, under the discrete DFE allowing for beneficial mutations. "
+    r"Coefficients and their associated $p$-values are reported for ordinary least squares "
+    r"(OLS) and phylogenetic generalized least squares (PGLS) regressions. "
+    r"For the Grafen PGLS model, $\rho$ is the branch-length scaling parameter inferred from "
+    r"the data. "
+    r"Tables~\ref{tab:regression_discrete_del}--\ref{tab:regression_gamma_del} report the same "
+    r"quantities for the remaining three DFE-model variants."
+)
+
 APPENDIX_REGRESSION_META = {
     ("discrete", "full"): (
-        "DFE model: discrete bins allowing for a proportion of beneficial mutations.",
+        _REGRESSION_LEAD,
         "tab:regression_discrete_full",
     ),
     ("discrete", "del"): (
-        "DFE model: discrete bins with deleterious mutations only.",
+        r"As Table~\ref{tab:regression_discrete_full}, but under the discrete DFE with "
+        r"deleterious mutations only.",
         "tab:regression_discrete_del",
     ),
     ("gamma", "full"): (
-        "DFE model: gamma + exponential allowing for a proportion of beneficial mutations.",
+        r"As Table~\ref{tab:regression_discrete_full}, but under the gamma--exponential DFE "
+        r"allowing for beneficial mutations.",
         "tab:regression_gamma_full",
     ),
     ("gamma", "del"): (
-        "DFE model: gamma with deleterious mutations only.",
+        r"As Table~\ref{tab:regression_discrete_full}, but under the gamma DFE with "
+        r"deleterious mutations only.",
         "tab:regression_gamma_del",
     ),
 }
@@ -3402,6 +3434,20 @@ rule render_species_summary_table:
         "envs/base.yaml"
     script:
         "scripts/render_species_summary_table.py"
+
+# Per-subspecies outgroup table, rendered from the same mapping the alignment
+# and ancestral-annotation rules consume.
+rule render_outgroup_table:
+    input:
+        "results/stats/sample_names/counts/population_counts.csv"
+    output:
+        "results/tables/outgroups/{group}/outgroups.tex"
+    params:
+        populations=lambda w: get_pops(8, w.group)
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/render_outgroup_table.py"
 
 # latexdiff between the originally submitted manuscript (reports/manuscript_submitted/)
 # and the current revised version (reports/manuscript/). Output goes to

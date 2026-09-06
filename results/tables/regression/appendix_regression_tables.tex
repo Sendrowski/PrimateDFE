@@ -1,0 +1,64 @@
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Model & AIC & $R^2$ & Intercept & p(Int) & $\log_{10}N_e$ & p($\log_{10}N_e$) & gen\_time & p(gen\_time) \\
+\midrule
+OLS & -108.50 & 0.735 & 0.022 & 0.881 & 0.126 & $8.18\times10^{-5}$ & -0.003 & 0.084 \\
+PGLS Brownian & -108.58 & 0.724 & -0.129 & 0.28 & 0.153 & $4.31\times10^{-8}$ & -0.001 & 0.63 \\
+PGLS Grafen ($\rho=0.21$) & -107.09 & 0.727 & -0.128 & 0.378 & 0.154 & $3.37\times10^{-6}$ & -0.002 & 0.457 \\
+\bottomrule
+\end{tabular}}
+\caption{Regression of the fraction of the DFE with $S \in (-\infty, -10]$ on $\log_{10} N_e$ and generation time, under the discrete DFE allowing for beneficial mutations. Coefficients and their associated $p$-values are reported for ordinary least squares (OLS) and phylogenetic generalized least squares (PGLS) regressions. For the Grafen PGLS model, $\rho$ is the branch-length scaling parameter inferred from the data. Tables~\ref{tab:regression_discrete_del}--\ref{tab:regression_gamma_del} report the same quantities for the remaining three DFE-model variants.}
+\label{tab:regression_discrete_full}
+\end{table}
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Model & AIC & $R^2$ & Intercept & p(Int) & $\log_{10}N_e$ & p($\log_{10}N_e$) & gen\_time & p(gen\_time) \\
+\midrule
+OLS & -116.02 & 0.677 & -0.118 & 0.376 & 0.141 & $2.88\times10^{-6}$ & 0.001 & 0.312 \\
+PGLS Brownian & -116.49 & 0.673 & -0.214 & 0.046 & 0.159 & $1.49\times10^{-9}$ & 0.002 & 0.305 \\
+PGLS Grafen ($\rho=0.25$) & -115.34 & 0.673 & -0.237 & 0.0638 & 0.163 & $9.85\times10^{-8}$ & 0.003 & 0.195 \\
+\bottomrule
+\end{tabular}}
+\caption{As Table~\ref{tab:regression_discrete_full}, but under the discrete DFE with deleterious mutations only.}
+\label{tab:regression_discrete_del}
+\end{table}
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Model & AIC & $R^2$ & Intercept & p(Int) & $\log_{10}N_e$ & p($\log_{10}N_e$) & gen\_time & p(gen\_time) \\
+\midrule
+OLS & -117.44 & 0.715 & 0.060 & 0.643 & 0.117 & $3.09\times10^{-5}$ & -0.001 & 0.33 \\
+PGLS Brownian & -115.02 & 0.707 & -0.077 & 0.469 & 0.142 & $2.17\times10^{-8}$ & -0.000 & 0.955 \\
+PGLS Grafen ($\rho=0.18$) & -115.97 & 0.709 & -0.049 & 0.698 & 0.137 & $2.38\times10^{-6}$ & -0.000 & 0.838 \\
+\bottomrule
+\end{tabular}}
+\caption{As Table~\ref{tab:regression_discrete_full}, but under the gamma--exponential DFE allowing for beneficial mutations.}
+\label{tab:regression_gamma_full}
+\end{table}
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Model & AIC & $R^2$ & Intercept & p(Int) & $\log_{10}N_e$ & p($\log_{10}N_e$) & gen\_time & p(gen\_time) \\
+\midrule
+OLS & -125.42 & 0.747 & 0.004 & 0.973 & 0.123 & $2.12\times10^{-6}$ & -0.000 & 0.795 \\
+PGLS Brownian & -117.03 & 0.738 & -0.071 & 0.491 & 0.134 & $3.27\times10^{-8}$ & 0.001 & 0.712 \\
+PGLS Grafen ($\rho=0.12$) & -124.01 & 0.744 & -0.047 & 0.674 & 0.131 & $6.30\times10^{-7}$ & 0.000 & 0.862 \\
+\bottomrule
+\end{tabular}}
+\caption{As Table~\ref{tab:regression_discrete_full}, but under the gamma DFE with deleterious mutations only.}
+\label{tab:regression_gamma_del}
+\end{table}
+

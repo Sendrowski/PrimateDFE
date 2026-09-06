@@ -15,7 +15,7 @@ try:
     sfs_files = snakemake.input.sfs
     species_file = snakemake.input.species
     pops = snakemake.params.pops
-    refs = snakemake.params.refs
+    mus = snakemake.params.mus
     out = snakemake.output[0]
 except NameError:
     testing = True
@@ -31,6 +31,8 @@ except NameError:
     refs = [get_ref_from_pop(p) for p in pops]
     sfs_files = [f"results/sfs/{r}/{p}/sfs.unpolarized.folded.8.csv" for r, p in zip(refs, pops)]
     species_file = "resources/Kuderna/species.csv"
+    _k = pd.read_csv(species_file).set_index("SPECIES_BINOMIAL").MU_PER_GENERATION
+    mus = [_k.get("_".join(p.split("_")[:2]), _k[r]) for p, r in zip(pops, refs)]
     out = "scratch/Ne_theta_vs_pi.png"
 
 
@@ -52,13 +54,10 @@ def pi(counts: np.ndarray, n: int) -> float:
 
 # -------------------- load --------------------
 
-species = pd.read_csv(species_file)
-
 rows = []
-for pop, ref, sfs_file in zip(pops, refs, sfs_files):
+for pop, mu, sfs_file in zip(pops, mus, sfs_files):
     counts = pd.read_csv(sfs_file)["neutral"].to_numpy()
     n = len(counts) - 1
-    mu = species[species.SPECIES_BINOMIAL == ref].iloc[0].MU_PER_GENERATION
 
     rows.append(dict(
         population=pop,

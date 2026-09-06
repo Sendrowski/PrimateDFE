@@ -47,26 +47,39 @@ df = pd.DataFrame({'population': pops})
 df['reference'] = df['population'].map(references)
 df['ne_estimate'] = df['population'].map(ne_map)
 df = df[df['ne_estimate'].notna()].copy()
-# A handful of subspecies are missing from Kuderna; estimate_Ne falls back to
-# the reference species's mu (see rule estimate_Ne in workflow/Snakefile),
-# so we tabulate that mu here too.
+# mu is the Kuderna value for the population's own species, matching the rate rule
+# estimate_Ne divides theta by. Species absent from Kuderna take the reference species's mu.
 kuderna = pd.read_csv('resources/Kuderna/species.csv')[['SPECIES_BINOMIAL', 'MU_PER_GENERATION']]
-df = df.merge(
-    kuderna.rename(columns={'SPECIES_BINOMIAL': 'reference', 'MU_PER_GENERATION': 'mu_ref'}),
-    on='reference', how='left',
-)
-df['mu_e8'] = df['mu_ref'] * 1e8
+mu_by_species = dict(zip(kuderna.SPECIES_BINOMIAL, kuderna.MU_PER_GENERATION))
+df['species'] = df['population'].map(lambda p: '_'.join(p.split('_')[:2]))
+df['mu'] = [
+    mu_by_species.get(sp, mu_by_species.get(ref))
+    for sp, ref in zip(df['species'], df['reference'])
+]
+df['mu_e8'] = df['mu'] * 1e8
 df['ne_e4'] = df['ne_estimate'] / 1e4
 df = df.sort_values('ne_estimate').reset_index(drop=True)
 
+# Compute the fallback list from the data so the caption never drifts.
+absent = [p for p in df['population'] if p.split('_')[0] + '_' + p.split('_')[1] not in mu_by_species]
+num_words = {1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
+             6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten'}
+n_absent = num_words.get(len(absent), str(len(absent)))
+absent_labels = ', '.join(
+    r"\textit{" + p.split('_')[0][0] + r".\ " + p.split('_')[1] + "}" for p in absent
+)
 caption = (
     r"        \rowcolor{white}\caption{Per-subspecies mutation rate and inferred effective "
-    r"population size. Mutation rates $\mu$ (per site per generation) are the values "
-    r"\citet{kuderna2023} report for the species of each reference genome, applied to all "
-    r"subspecies mapped to that reference. "
-    r"Effective population sizes $N_e$ are estimated as $\hat\theta / (4\mu)$ using "
-    r"Watterson's estimator on neutral (4-fold) sites (see Methods). Subspecies are ordered by "
-    r"$N_e$.}\label{tab:species_summary}"
+    r"population size. Mutation rates $\mu$ (per site per generation) are taken from "
+    r"\citet{kuderna2023} at the species level and applied to all subspecies of that species; "
+    r"for the "
+    + n_absent
+    + r" subspecies absent from \citet{kuderna2023} ("
+    + absent_labels
+    + r"), $\mu$ is the value reported for the reference species onto which they were mapped. "
+    + r"Effective population sizes $N_e$ are estimated as $\hat\theta / (4\mu)$ using "
+    + r"Watterson's estimator on neutral (4-fold) sites (see Methods). Subspecies are ordered by "
+    + r"$N_e$.}\label{tab:species_summary}"
 )
 
 header = (
