@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: If you use this workflow, please cite the article below.
+title: Comparison of the Distribution of Fitness Effects Across Primates
+authors:
+  - family-names: Sendrowski
+    given-names: Janek
+  - family-names: Pedersen
+    given-names: Bjarke M.
+  - family-names: Bergman
+    given-names: Juraj
+  - family-names: Pankratov
+    given-names: Vasili
+  - family-names: Bataillon
+    given-names: Thomas
+repository-code: https://github.com/Sendrowski/PrimateDFE
+preferred-citation:
+  type: article
+  title: Comparison of the Distribution of Fitness Effects Across Primates
+  authors:
+    - family-names: Sendrowski
+      given-names: Janek
+    - family-names: Pedersen
+      given-names: Bjarke M.
+    - family-names: Bergman
+      given-names: Juraj
+    - family-names: Pankratov
+      given-names: Vasili
+    - family-names: Bataillon
+      given-names: Thomas
+  journal: Genetics
+  publisher:
+    name: Oxford University Press
+  year: 2026
+  doi: 10.64898/2026.03.25.714151
+  notes: In press
