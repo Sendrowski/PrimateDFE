@@ -3292,6 +3292,7 @@ MANUSCRIPT_FIGURE_MAP = {
     "sample_size_accuracy": "results/graphs/slim/sample_size_accuracy.pdf",
     "drift_replicates":   "results/graphs/slim/drift_replicates.pdf",
     "demographic_sfs":    "results/graphs/slim/spectra_demographies.pdf",
+    "recombination":      "results/graphs/slim/spectra_recombination.pdf",
     "dfe_invariance":     "results/graphs/simulations/dfe_invariance.pdf",
     "simulated_unscaled_dfe": "results/graphs/simulations/unscaled_dfe_vs_Ne.pdf",
 }
@@ -3389,6 +3390,25 @@ rule plot_spectra_demographies:
         "envs/base.yaml"
     script:
         "scripts/plot_spectra_demographies.py"
+
+# Simulated selected spectra under the default settings, two lower recombination rates and
+# strong purifying selection, each against the fastDFE expectation.
+rule plot_spectra_recombination:
+    input:
+        slim=[f"resources/slim_recombination/{d}/sfs.csv" for d in
+              ("default", "r_1e-8", "r_1e-9", "s_d_100")],
+        fastdfe=[f"resources/slim_recombination/{d}/sfs.fastdfe.csv" for d in
+                 ("default", "r_1e-8", "r_1e-9", "s_d_100")]
+    output:
+        "results/graphs/slim/spectra_recombination.pdf"
+    params:
+        labels=["default ($r=10^{-7}$)", "normal ($r=10^{-8}$)",
+                "reduced ($r=10^{-9}$)", "strongly purifying ($s_d=100$)"],
+        subtitles=["$s_d=0.3$, $b=0.3$, $p_b=0$, $s_b=10^{-3}$"] * 3 + ["$s_d=100$, $b=0.3$, $p_b=0$, $s_b=10^{-3}$"]
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_spectra_recombination.py"
 
 # Copy a single pipeline figure to its manuscript filename. The wildcard is
 # constrained to the keys of MANUSCRIPT_FIGURE_MAP so the rule won't match
