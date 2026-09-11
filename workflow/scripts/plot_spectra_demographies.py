@@ -66,6 +66,9 @@ for ax, label, f_slim, f_fd in zip(axes.flat, labels, slim, fastdfe):
     ax.ticklabel_format(style="sci", axis="y", scilimits=(0, 0))
     ax.yaxis.get_offset_text().set_fontsize(9)
 
+for ax in axes[:, 0]:
+    ax.set_ylabel("SFS count", fontsize=10)
+
 for ax in axes.flat[len(labels):]:
     ax.set_visible(False)
 
