@@ -12,6 +12,7 @@ from populations import Populations
 from regression import Regression
 
 
+
 class DFEvsNePlotter:
     """
     End-to-end engine for plotting DFE-derived statistics against effective
@@ -108,6 +109,7 @@ class DFEvsNePlotter:
             raise ValueError(style)
 
         #plt.title(title, y=-0.25)
+
 
         if file is not None:
             fig.savefig(file, bbox_inches="tight")
@@ -284,6 +286,7 @@ class DFEvsNePlotter:
         ax.set_xscale("log")
         ax.xaxis.set_major_locator(LogLocator(base=10, subs=(1.0, 2.0, 5.0)))
         ax.xaxis.set_major_formatter(FuncFormatter(self.log_label_pow))
+
 
         if file is not None:
             fig.savefig(file)
@@ -533,6 +536,7 @@ class DFEvsNePlotter:
 
         fig.tight_layout()
         fig.subplots_adjust(hspace=0)
+
 
         if file is not None:
             fig.savefig(file)

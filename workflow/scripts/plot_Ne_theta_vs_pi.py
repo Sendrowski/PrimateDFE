@@ -113,7 +113,7 @@ for axis in (ax.xaxis, ax.yaxis):
     axis.set_major_formatter(FuncFormatter(DFEvsNePlotter.log_label_pow))
 
 plt.tight_layout()
-plt.savefig(out, bbox_inches="tight")
+plt.gcf().savefig(out, bbox_inches="tight")
 
 if testing:
     plt.show()

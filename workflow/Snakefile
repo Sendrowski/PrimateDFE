@@ -211,8 +211,8 @@ rule all:
             #expand("results/dfe/catarrhini/dfe.unfolded.8.{model}.recessive.noeps.csv", model=['discrete', 'gamma']),
             #expand("results/dfe/catarrhini/dfe.unfolded.8.discrete.fixed_h={h}.noeps.csv", h=[0.1, 0.3]),
             expand("results/tables/dfe/{group}/dfe.{folded}.{n}.{model}.{full}.{eps}.csv", group='catarrhini', folded='unfolded', n=8, model=['discrete', 'gamma'], full=['full', 'del'], eps='noeps'),
-            expand("results/graphs/comp/dfe_vs_Ne/bgc_comparison/{group}/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.{eps}.png", group='catarrhini', n=8, parametrization=['discrete', 'gamma'], sub_model=['full', 'del'], eps='noeps'),
-            expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.{eps}.scaled.{style}.png", group='catarrhini', n=8, parametrization=['discrete', 'gamma'], sub_model=['full', 'del'], eps='noeps', style='stacked'),
+            expand("results/graphs/comp/dfe_vs_Ne/bgc_comparison/{group}/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.{eps}.pdf", group='catarrhini', n=8, parametrization=['discrete', 'gamma'], sub_model=['full', 'del'], eps='noeps'),
+            expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.{eps}.scaled.{style}.pdf", group='catarrhini', n=8, parametrization=['discrete', 'gamma'], sub_model=['full', 'del'], eps='noeps', style='stacked'),
             #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/S1+S2+S3/dfe_vs_Ne.unfolded.{n}.discrete.del.noeps.png",group='catarrhini',n=8),
             #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/S1+S2+S3/dfe_vs_Ne.folded.{n}.discrete.del.noeps.png",group='catarrhini',n=8),
             #expand("results/graphs/dfe_vs_Ne/{group}/marginal/original_ref/dfe_vs_Ne.folded.{n}.discrete.del.noeps.png",group='all',n=[8]),
@@ -2266,7 +2266,7 @@ rule plot_divergence_dfe_vs_Ne:
         ne="results/stats/Ne/comp/original_ref/{group}/{n}.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree",
     output:
-        "results/graphs/divergence/{group}/dfe_vs_Ne.{stats}.{div}.{n}.png"
+        "results/graphs/divergence/{group}/dfe_vs_Ne.{stats}.{div}.{n}.pdf"
     wildcard_constraints:
         div="div_on|div_off",
         stats="del|full",
@@ -2319,7 +2319,7 @@ rule plot_dfe_vs_Ne_div_param_comparison:
         ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        "results/graphs/divergence/{group}/dfe_vs_Ne.div_param_4way.{n}.png"
+        "results/graphs/divergence/{group}/dfe_vs_Ne.div_param_4way.{n}.pdf"
     params:
         populations=lambda w: get_pops(w.n, w.group),
         labels=lambda w: [get_group_from_pop(p) for p in get_pops(w.n, w.group)],
@@ -2348,7 +2348,7 @@ rule plot_dfe_vs_Ne_div_filt_comparison:
         ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        "results/graphs/divergence/{group}/dfe_vs_Ne.div_filt_4way.{n}.png"
+        "results/graphs/divergence/{group}/dfe_vs_Ne.div_filt_4way.{n}.pdf"
     params:
         populations=lambda w: get_pops(w.n, w.group),
         labels=lambda w: [get_group_from_pop(p) for p in get_pops(w.n, w.group)],
@@ -2467,7 +2467,7 @@ rule plot_marginal_DFE_against_Ne:
         pops="results/stats/sample_names/counts/population_counts.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        "results/graphs/dfe_vs_Ne/{group}/marginal/{ref}/dfe_vs_Ne.{folded}.{n}.{parametrization}.{sub_model}.{eps}.{scaled}.{style}.png"
+        "results/graphs/dfe_vs_Ne/{group}/marginal/{ref}/dfe_vs_Ne.{folded}.{n}.{parametrization}.{sub_model}.{eps}.{scaled}.{style}.pdf"
     params:
         populations=lambda w: get_pops(max(int(w.n),8),w.group),
         labels=lambda w: (
@@ -2517,7 +2517,7 @@ rule plot_epistasis_quantile_threshold:
         ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        plot="results/graphs/epistasis/{group}/epistasis.{folded}.{n}.{eps}.png",
+        plot="results/graphs/epistasis/{group}/epistasis.{folded}.{n}.{eps}.pdf",
         table="results/tables/epistasis/{group}/epistasis.{folded}.{n}.{eps}.tex"
     params:
         populations=lambda w: get_pops(max(int(w.n),8),w.group),
@@ -2535,7 +2535,7 @@ rule plot_dfe_vs_Ne_bgc_comparison:
         ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        "results/graphs/comp/dfe_vs_Ne/bgc_comparison/{group}/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.{eps}.png"
+        "results/graphs/comp/dfe_vs_Ne/bgc_comparison/{group}/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.{eps}.pdf"
     params:
         populations=lambda w: get_pops(max(int(w.n),8), w.group),
         labels=lambda w: [get_group_from_pop(p) for p in get_pops(max(int(w.n),8), w.group)],
@@ -2563,7 +2563,7 @@ rule plot_dfe_vs_Ne_orthologous_comparison:
         ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        "results/graphs/comp/dfe_vs_Ne/orthologous_comparison/{group}/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.{eps}.png"
+        "results/graphs/comp/dfe_vs_Ne/orthologous_comparison/{group}/dfe_vs_Ne.unfolded.{n}.{parametrization}.{sub_model}.{eps}.pdf"
     params:
         populations=lambda w: get_pops(max(int(w.n),8), w.group),
         labels=lambda w: [get_group_from_pop(p) for p in get_pops(max(int(w.n),8), w.group)],
@@ -2591,7 +2591,7 @@ rule plot_dfe_vs_Ne_model_comparison:
         ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        "results/graphs/comp/dfe_vs_Ne/model_comparison/{group}/dfe_vs_Ne.{folded}.{n}.{sub_model}.{eps}.png"
+        "results/graphs/comp/dfe_vs_Ne/model_comparison/{group}/dfe_vs_Ne.{folded}.{n}.{sub_model}.{eps}.pdf"
     params:
         populations=lambda w: get_pops(max(int(w.n),8), w.group),
         labels=lambda w: [get_group_from_pop(p) for p in get_pops(max(int(w.n),8), w.group)],
@@ -2619,7 +2619,7 @@ rule plot_dfe_vs_Ne_dominance_comparison:
         ne=lambda w: f"results/stats/Ne/comp/original_ref/{w.group}/{max(int(w.n),8)}.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        "results/graphs/comp/dfe_vs_Ne/dominance_comparison/{group}/dfe_vs_Ne.unfolded.{n}.{eps}.png"
+        "results/graphs/comp/dfe_vs_Ne/dominance_comparison/{group}/dfe_vs_Ne.unfolded.{n}.{eps}.pdf"
     params:
         populations=lambda w: get_pops(max(int(w.n),8), w.group),
         labels=lambda w: [get_group_from_pop(p) for p in get_pops(max(int(w.n),8), w.group)],
@@ -2695,7 +2695,7 @@ rule plot_dfe_vs_Ne_castellano_comparison:
         ne_new="results/stats/Ne/comp/original_ref/Castellano/8.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        "results/graphs/comp/dfe_vs_Ne/Castellano_Kuderna_comparison.png"
+        "results/graphs/comp/dfe_vs_Ne/Castellano_Kuderna_comparison.pdf"
     params:
         populations=populations_castellano
     conda:
@@ -2941,7 +2941,7 @@ rule plot_observed_spectra:
         ],
         order="results/tables/phylogeny/{group}/species_order.{n}.csv"
     output:
-        "results/graphs/comp/sfs/observed/{group}/spectra.{n}.png"
+        "results/graphs/comp/sfs/observed/{group}/spectra.{n}.pdf"
     params:
         pops=lambda w: get_pops(w.n,w.group)
     conda:
@@ -2959,7 +2959,7 @@ rule plot_Ne_theta_vs_pi:
         ],
         species="resources/Kuderna/species.csv"
     output:
-        "results/graphs/Ne_vs_pi/{group}/Ne_theta_vs_pi.{n}.png"
+        "results/graphs/Ne_vs_pi/{group}/Ne_theta_vs_pi.{n}.pdf"
     params:
         pops=lambda w: get_pops(w.n,w.group),
         mus=lambda w: [get_mu(p) for p in get_pops(w.n,w.group)]
@@ -2976,7 +2976,7 @@ rule plot_Ne_against_Kuderna_Ne:
         y="resources/Kuderna/species.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        "results/graphs/Ne_vs_Kuderna/{group}/regression.{n}_vs_Kuderna.png"
+        "results/graphs/Ne_vs_Kuderna/{group}/regression.{n}_vs_Kuderna.pdf"
     params:
         labels=lambda w: {p: get_group_from_pop(p) for p in get_pops(w.n,w.group)}
     conda:
@@ -2992,7 +2992,7 @@ rule plot_Ne_against_pNpS:
         y="results/stats/pNpS/comp/original_ref/{group}/{n}.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree"
     output:
-        "results/graphs/Ne_vs_pNpS/{group}/regression.{n}.png"
+        "results/graphs/Ne_vs_pNpS/{group}/regression.{n}.pdf"
     params:
         labels=lambda w: [get_group_from_pop(p) for p in get_pops(w.n,w.group)],
         populations=lambda w: get_pops(w.n,w.group),
@@ -3141,8 +3141,7 @@ rule plot_tree_with_dfe:
         dfe="results/dfe/{group}/dfe.{folded}.{n}.{parametrization}.{sub_model}.{eps}.csv"
     output:
         tree="results/graphs/phylogeny_dfe/{group}/{folded}.{n}.{parametrization}.{sub_model}.{eps}.tree.png",
-        dfe="results/graphs/phylogeny_dfe/{group}/{folded}.{n}.{parametrization}.{sub_model}.{eps}.dfe.png",
-        full="results/graphs/phylogeny_dfe/{group}/{folded}.{n}.{parametrization}.{sub_model}.{eps}.png"
+        full="results/graphs/phylogeny_dfe/{group}/{folded}.{n}.{parametrization}.{sub_model}.{eps}.pdf"
     params:
         populations=lambda w: get_pops(max(int(w.n),8), w.group),
         legend=True,
@@ -3266,36 +3265,58 @@ rule assemble_dfe_table:
         "scripts/assemble_dfe_table.py"
 
 
-# Mapping from manuscript figure stem (basename without .png) to the pipeline
-# output that should populate it. Keep in sync with figures referenced in
-# reports/manuscript/manuscript.tex and appendix.tex. Simulation figures and
-# Ne-only figures are intentionally omitted (regenerated separately).
+# Mapping from manuscript figure stem to the pipeline PDF that should populate it.
+# Keep in sync with figures referenced in reports/manuscript/manuscript.tex and
+# appendix.tex. The SLiM validation figures of Appendix C are committed by hand.
 MANUSCRIPT_FIGURE_MAP = {
     # main text
-    "phylogeny_dfe":      "results/graphs/phylogeny_dfe/catarrhini/unfolded.8.discrete.del.noeps.png",
-    "dfe_vs_ne":          "results/graphs/comp/dfe_vs_Ne/model_comparison/catarrhini/dfe_vs_Ne.unfolded.8.del.noeps.png",
-    "dominance":          "results/graphs/comp/dfe_vs_Ne/dominance_comparison/catarrhini/dfe_vs_Ne.unfolded.8.noeps.png",
+    "phylogeny_dfe":      "results/graphs/phylogeny_dfe/catarrhini/unfolded.8.discrete.del.noeps.pdf",
+    "dfe_vs_ne":          "results/graphs/comp/dfe_vs_Ne/model_comparison/catarrhini/dfe_vs_Ne.unfolded.8.del.noeps.pdf",
+    "dominance":          "results/graphs/comp/dfe_vs_Ne/dominance_comparison/catarrhini/dfe_vs_Ne.unfolded.8.noeps.pdf",
     # appendix A
-    "sfs_comparison":     "results/graphs/comp/sfs/Castellano_residuals.png",
-    "castellano_comparison": "results/graphs/comp/dfe_vs_Ne/Castellano_Kuderna_comparison.png",
-    "full_dfe":           "results/graphs/comp/dfe_vs_Ne/model_comparison/catarrhini/dfe_vs_Ne.unfolded.8.full.noeps.png",
-    "divergence_dfe":     "results/graphs/divergence/catarrhini/dfe_vs_Ne.div_param_4way.8.png",
-    "deleterious_dfe":    "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.folded.8.gamma.del.noeps.scaled.stacked.png",
-    "low_sample_size":    "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.folded.2.gamma.del.noeps.scaled.stacked.png",
-    "unscaled_dfe":       "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.unfolded.8.gamma.del.noeps.unscaled.stacked.png",
-    "discretized_dfes":   "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.unfolded.8.gamma.full.noeps.scaled.dfe.png",
-    "bgc_comparison":     "results/graphs/comp/dfe_vs_Ne/bgc_comparison/catarrhini/dfe_vs_Ne.unfolded.8.gamma.del.noeps.png",
-    "divergence_bgc":     "results/graphs/divergence/catarrhini/dfe_vs_Ne.div_filt_4way.8.png",
-    "epistasis_quantile": "results/graphs/epistasis/catarrhini/epistasis.unfolded.8.noeps.png",
-    "ne_comparison":      "results/graphs/Ne_vs_Kuderna/catarrhini/regression.8_vs_Kuderna.png",
-    "ne_theta_vs_pi":     "results/graphs/Ne_vs_pi/catarrhini/Ne_theta_vs_pi.8.png",
-    "observed_spectra":   "results/graphs/comp/sfs/observed/catarrhini/spectra.8.png",
-    "orthologous_comparison": "results/graphs/comp/dfe_vs_Ne/orthologous_comparison/catarrhini/dfe_vs_Ne.unfolded.8.discrete.del.noeps.png",
-    "pnps":               "results/graphs/Ne_vs_pNpS/catarrhini/regression.8.png",
-    "sample_size_accuracy": "results/graphs/slim/sample_size_accuracy.png",
-    "drift_replicates":   "results/graphs/slim/drift_replicates.png",
-    "demographic_sfs":    "results/graphs/slim/spectra_demographies.png",
+    "sfs_comparison":     "results/graphs/comp/sfs/Castellano_residuals.pdf",
+    "castellano_comparison": "results/graphs/comp/dfe_vs_Ne/Castellano_Kuderna_comparison.pdf",
+    "divergence_dfe":     "results/graphs/divergence/catarrhini/dfe_vs_Ne.div_param_4way.8.pdf",
+    "deleterious_dfe":    "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.folded.8.gamma.del.noeps.scaled.stacked.pdf",
+    "low_sample_size":    "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.folded.2.gamma.del.noeps.scaled.stacked.pdf",
+    "unscaled_dfe":       "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.unfolded.8.gamma.del.noeps.unscaled.stacked.pdf",
+    "discretized_dfes":   "results/graphs/dfe_vs_Ne/catarrhini/marginal/original_ref/dfe_vs_Ne.unfolded.8.gamma.full.noeps.scaled.dfe.pdf",
+    "bgc_comparison":     "results/graphs/comp/dfe_vs_Ne/bgc_comparison/catarrhini/dfe_vs_Ne.unfolded.8.gamma.del.noeps.pdf",
+    "divergence_bgc":     "results/graphs/divergence/catarrhini/dfe_vs_Ne.div_filt_4way.8.pdf",
+    "epistasis_quantile": "results/graphs/epistasis/catarrhini/epistasis.unfolded.8.noeps.pdf",
+    "ne_comparison":      "results/graphs/Ne_vs_Kuderna/catarrhini/regression.8_vs_Kuderna.pdf",
+    "ne_theta_vs_pi":     "results/graphs/Ne_vs_pi/catarrhini/Ne_theta_vs_pi.8.pdf",
+    "observed_spectra":   "results/graphs/comp/sfs/observed/catarrhini/spectra.8.pdf",
+    "orthologous_comparison": "results/graphs/comp/dfe_vs_Ne/orthologous_comparison/catarrhini/dfe_vs_Ne.unfolded.8.discrete.del.noeps.pdf",
+    "pnps":               "results/graphs/Ne_vs_pNpS/catarrhini/regression.8.pdf",
+    "sample_size_accuracy": "results/graphs/slim/sample_size_accuracy.pdf",
+    "drift_replicates":   "results/graphs/slim/drift_replicates.pdf",
+    "demographic_sfs":    "results/graphs/slim/spectra_demographies.pdf",
+    "dfe_invariance":     "results/graphs/simulations/dfe_invariance.pdf",
+    "simulated_unscaled_dfe": "results/graphs/simulations/unscaled_dfe_vs_Ne.pdf",
 }
+
+# Spectra scaled by a constant factor yield the same inferred DFE with narrower intervals.
+rule plot_dfe_invariance:
+    output:
+        "results/graphs/simulations/dfe_invariance.pdf"
+    conda:
+        "envs/base.yaml"
+    script:
+        "scripts/plot_DFE_invariance.py"
+
+# Bin fractions of a fixed unscaled DFE across the observed Ne range, with the unscaled
+# parameters averaged over the per-population estimates.
+rule plot_simulated_unscaled_dfe:
+    input:
+        dfe="results/tables/dfe/catarrhini/dfe.unfolded.8.gamma.full.noeps.csv",
+        ne="results/stats/Ne/comp/original_ref/catarrhini/8.csv"
+    output:
+        "results/graphs/simulations/unscaled_dfe_vs_Ne.pdf"
+    conda:
+        "envs/regression.yaml"
+    script:
+        "scripts/plot_theoretical_dfe_vs_Ne.py"
 
 # Inferred and ground-truth DFEs across SFS sample sizes, from the SLiM runs used to
 # validate fastDFE. The simulated DFE is recovered from the parameters encoded in each
@@ -3310,7 +3331,7 @@ rule plot_sample_size_accuracy:
             for n in [8, 20, 100]
         ]
     output:
-        "results/graphs/slim/sample_size_accuracy.png"
+        "results/graphs/slim/sample_size_accuracy.pdf"
     params:
         sample_sizes=[8, 20, 100]
     conda:
@@ -3328,7 +3349,7 @@ rule plot_sfs_residuals_castellano:
         theirs_selected=[f"resources/Castellano/sfs/{populations_castellano_mapping[p]}_0fold_all_sfs.txt"
                          for p in populations_castellano]
     output:
-        "results/graphs/comp/sfs/Castellano_residuals.png"
+        "results/graphs/comp/sfs/Castellano_residuals.pdf"
     params:
         labels=populations_castellano
     conda:
@@ -3342,7 +3363,7 @@ rule plot_slim_replicates:
         slim=[f"resources/slim_replicates/slim/n_replicate={r}/sfs.csv" for r in (1, 2, 3)],
         fastdfe=[f"resources/slim_replicates/sfs_slim/n_replicate={r}/sfs.csv" for r in (1, 2, 3)]
     output:
-        "results/graphs/slim/drift_replicates.png"
+        "results/graphs/slim/drift_replicates.pdf"
     params:
         labels=[f"replicate {r}" for r in (1, 2, 3)]
     conda:
@@ -3361,7 +3382,7 @@ rule plot_spectra_demographies:
                  ("constant", "expansion_4", "reduction_4", "bottleneck_20",
                   "substructure_0.0001", "dominance_0.2")]
     output:
-        "results/graphs/slim/spectra_demographies.png"
+        "results/graphs/slim/spectra_demographies.pdf"
     params:
         labels=["constant", "expansion", "reduction", "bottleneck", "substructure", "recessiveness"]
     conda:
@@ -3377,7 +3398,7 @@ rule copy_manuscript_figure:
     input:
         lambda w: MANUSCRIPT_FIGURE_MAP[w.figure]
     output:
-        "reports/manuscript/figures/{figure}.png"
+        "reports/manuscript/figures/{figure}.pdf"
     wildcard_constraints:
         figure='|'.join(re.escape(k) for k in MANUSCRIPT_FIGURE_MAP.keys())
     shell:
@@ -3386,7 +3407,7 @@ rule copy_manuscript_figure:
 # Aggregate target: build all manuscript figures listed above.
 rule manuscript_figures:
     input:
-        expand("reports/manuscript/figures/{figure}.png", figure=MANUSCRIPT_FIGURE_MAP.keys())
+        expand("reports/manuscript/figures/{figure}.pdf", figure=MANUSCRIPT_FIGURE_MAP.keys())
 
 # Per-population LL/AIC/LRT across the four DFE model variants. Inputs are the
 # per-population BaseInference result JSONs (typically rsynced from gdk; see

@@ -21,8 +21,14 @@ _disc = fd.Discretization(n=20)
 # --------------------------------------------------------------------------- #
 # Derive unscaled DFE parameters from inferred per-population estimates        #
 # --------------------------------------------------------------------------- #
-dfe_file = "results/tables/dfe/catarrhini/dfe.unfolded.8.gamma.full.noeps.csv"
-ne_file = "results/stats/Ne/comp/original_ref/catarrhini/8.csv"
+try:
+    dfe_file = snakemake.input.dfe
+    ne_file = snakemake.input.ne
+    out = snakemake.output[0]
+except NameError:
+    dfe_file = "results/tables/dfe/catarrhini/dfe.unfolded.8.gamma.full.noeps.csv"
+    ne_file = "results/stats/Ne/comp/original_ref/catarrhini/8.csv"
+    out = "scratch/theoretical_dfe_vs_Ne.png"
 
 dfe_df = pd.read_csv(dfe_file)
 dfe_df['params'] = dfe_df['params'].apply(ast.literal_eval)
@@ -127,4 +133,4 @@ from matplotlib.ticker import MaxNLocator
 for ax in fig.axes[:len(stat_list)]:
     ax.yaxis.set_major_locator(MaxNLocator(nbins=3, prune="both"))
 
-fig.savefig("scratch/theoretical_dfe_vs_Ne.png", dpi=400)
+fig.savefig(out, dpi=400)

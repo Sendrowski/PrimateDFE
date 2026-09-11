@@ -6,6 +6,11 @@ import numpy as np
 from matplotlib.container import BarContainer
 from matplotlib.patches import Patch
 
+try:
+    out = snakemake.output[0]
+except NameError:
+    out = "scratch/dfe_invariance.png"
+
 param = dict(S_d=-300, b=0.3, p_b=0, S_b=1)
 intervals_del = (-1e8, -1e-5, 1000)
 intervals_ben = (1e-5, 1e4, 1000)
@@ -125,7 +130,7 @@ handles = [
 ax_dfe.legend(handles=handles, fontsize=8)
 
 plt.tight_layout()
-plt.savefig("scratch/dfe_invariance.png", dpi=400)
+fig.savefig(out, dpi=400)
 plt.show()
 
 pass

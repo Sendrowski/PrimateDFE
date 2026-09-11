@@ -10,7 +10,6 @@ import pandas as pd
 import toyplot.png
 import toytree
 from PIL import Image
-from PIL import ImageDraw, ImageFont
 from PIL import ImageOps
 from fastdfe.visualization import Visualization
 from matplotlib.collections import LineCollection
@@ -27,7 +26,6 @@ try:
     legend = snakemake.params.legend
     sub_model = snakemake.params.sub_model
     out_tree = snakemake.output.tree
-    out_dfe = snakemake.output.dfe
     out_full = snakemake.output.full
 except NameError:
     testing = True
@@ -37,7 +35,6 @@ except NameError:
     legend = True
     sub_model = "del"
     out_tree = "scratch/tree.png"
-    out_dfe = "scratch/dfe.png"
     out_full = "scratch/tree_plus_dfe.png"
 
 
@@ -187,17 +184,20 @@ tree_img = ImageOps.expand(tree_img, border=(180, 0, 0, 0), fill='white')
 tree_img.save(out_tree)
 tree_img = np.array(tree_img)
 
-# ---- TREE FIGURE ----
-fig_tree = plt.figure(figsize=(10, 5))
-ax_tree = fig_tree.add_subplot(111)
+# ---- COMPOSED FIGURE: tree on top, DFE bars below ----
+tree_h, tree_w = tree_img.shape[:2]
+width = 10
+tree_height = width * tree_h / tree_w
+
+fig = plt.figure(figsize=(width, tree_height + 2.5))
+gs = fig.add_gridspec(2, 1, height_ratios=[tree_height, 2.5], hspace=0.08)
+
+ax_tree = fig.add_subplot(gs[0])
 ax_tree.imshow(tree_img)
 ax_tree.axis("off")
+ax_tree.text(0.5, -0.01, "Time (Ma)", transform=ax_tree.transAxes, ha="center", va="top", fontsize=10)
 
-fig_tree.savefig(out_tree, dpi=300, bbox_inches="tight")
-plt.close(fig_tree)
-
-# ---- DFE FIGURE ----
-fig_dfe, ax_dfe = plt.subplots(figsize=(10, 2.5))
+ax_dfe = fig.add_subplot(gs[1])
 
 Visualization.plot_discretized(
     ax=ax_dfe,
@@ -277,48 +277,7 @@ leg = ax_dfe.legend(
     fontsize=7,
 )
 
-fig_dfe.savefig(out_dfe, dpi=300, bbox_inches="tight")
-plt.close(fig_dfe)
+fig.savefig(out_full, dpi=300, bbox_inches="tight")
 
-img1 = Image.open(out_tree)
-img2 = Image.open(out_dfe)
-
-# target width = minimum width
-w = min(img1.width, img2.width)
-
-
-def resize_to_width(img, w):
-    h = int(img.height * (w / img.width))
-    return img.resize((w, h), Image.LANCZOS)
-
-
-img1 = resize_to_width(img1, w)
-img2 = resize_to_width(img2, w)
-
-h = img1.height + img2.height
-
-canvas = Image.new("RGBA", (w, h), (255, 255, 255, 255))
-canvas.paste(img1, (0, 0))
-canvas.paste(img2, (0, img1.height))
-
-draw = ImageDraw.Draw(canvas)
-
-text = "Time (Ma)"
-try:
-    font = ImageFont.truetype("Arial.ttf", 40)
-except OSError:
-    try:
-        font = ImageFont.truetype("DejaVuSans.ttf", 40)
-    except OSError:
-        font = ImageFont.load_default()
-
-# center under the tree
-tw, th = draw.textbbox((0, 0), text, font=font)[2:]
-x = (canvas.width - tw) // 2
-y = img1.height - 10  # slightly above boundary to DFE panel
-
-draw.text((x, y), text, fill="black", font=font)
-
-canvas.save(out_full)
 if testing:
-    canvas.show()
+    plt.show()

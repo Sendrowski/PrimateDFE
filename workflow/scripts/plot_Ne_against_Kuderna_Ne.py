@@ -113,7 +113,7 @@ for ax in [ax.xaxis, ax.yaxis]:
 # Lay out + save after the tick formatters are set, with a tight bbox, so the
 # wide log tick labels don't push the y-axis label off the canvas.
 plt.tight_layout()
-plt.savefig(out, bbox_inches="tight")
+plt.gcf().savefig(out, bbox_inches="tight")
 
 if testing:
     plt.show()
