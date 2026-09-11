@@ -2266,7 +2266,7 @@ rule plot_divergence_dfe_vs_Ne:
         ne="results/stats/Ne/comp/original_ref/{group}/{n}.csv",
         tree="resources/Kuderna/supplementary_files/science.abn7829_data_s4.nex.tree",
     output:
-        "results/graphs/divergence/{group}/dfe_vs_Ne.{stats}.{div}.{n}.pdf"
+        "results/graphs/divergence/{group}/dfe_vs_Ne.{stats}.{div}.{n}.png"
     wildcard_constraints:
         div="div_on|div_off",
         stats="del|full",
@@ -3267,7 +3267,8 @@ rule assemble_dfe_table:
 
 # Mapping from manuscript figure stem to the pipeline PDF that should populate it.
 # Keep in sync with figures referenced in reports/manuscript/manuscript.tex and
-# appendix.tex. The SLiM validation figures of Appendix C are committed by hand.
+# appendix.tex. The Appendix C figures absent from this map come from the fastDFE
+# workflow and are copied in by hand.
 MANUSCRIPT_FIGURE_MAP = {
     # main text
     "phylogeny_dfe":      "results/graphs/phylogeny_dfe/catarrhini/unfolded.8.discrete.del.noeps.pdf",

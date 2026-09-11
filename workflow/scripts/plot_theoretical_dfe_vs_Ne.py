@@ -28,7 +28,7 @@ try:
 except NameError:
     dfe_file = "results/tables/dfe/catarrhini/dfe.unfolded.8.gamma.full.noeps.csv"
     ne_file = "results/stats/Ne/comp/original_ref/catarrhini/8.csv"
-    out = "scratch/theoretical_dfe_vs_Ne.png"
+    out = "scratch/theoretical_dfe_vs_Ne.pdf"
 
 dfe_df = pd.read_csv(dfe_file)
 dfe_df['params'] = dfe_df['params'].apply(ast.literal_eval)

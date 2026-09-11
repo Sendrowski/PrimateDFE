@@ -35,7 +35,7 @@ except NameError:
     legend = True
     sub_model = "del"
     out_tree = "scratch/tree.png"
-    out_full = "scratch/tree_plus_dfe.png"
+    out_full = "scratch/tree_plus_dfe.pdf"
 
 
 def darken(color, factor=0.7):

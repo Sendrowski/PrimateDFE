@@ -22,7 +22,7 @@ except NameError:
     slim = [f"resources/slim_demographies/{d}/sfs.csv" for d in scenarios]
     fastdfe = [f"resources/slim_demographies/{d}/sfs.fastdfe.csv" for d in scenarios]
     labels = ["constant", "expansion", "reduction", "bottleneck", "substructure", "recessiveness"]
-    out = "scratch/spectra_demographies.png"
+    out = "scratch/spectra_demographies.pdf"
 
 N_COLS = 2
 
