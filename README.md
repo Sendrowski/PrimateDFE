@@ -1,7 +1,7 @@
 # PrimateDFE <img align="right" width="100" src="resources/logo/small.png">
-[![DOI](https://img.shields.io/badge/DOI-10.64898/2026.03.25.714151-blue)](https://doi.org/10.64898/2026.03.25.714151)
+[![DOI](https://img.shields.io/badge/DOI-10.1093/genetics/iyag252-blue)](https://doi.org/10.1093/genetics/iyag252)
 
-This repository contains the analysis pipeline used in the study *Comparison of the Distribution of Fitness Effects Across Primates*. The project investigates how DFEs vary across **38 catarrhine primates** and to what extent interspecific differences are explained by variation in effective population size Nₑ.
+This repository contains the analysis pipeline used in the study [*Comparison of the Distribution of Fitness Effects Across Primates*](https://doi.org/10.1093/genetics/iyag252) (Genetics, 2026). The project investigates how DFEs vary across **38 catarrhine primates** and to what extent interspecific differences are explained by variation in effective population size Nₑ.
 
 ## Overview
 
